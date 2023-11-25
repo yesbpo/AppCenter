@@ -143,7 +143,7 @@ const Users = (props) => {
 
     const verifyUserAuthState = () => {
         if (!authState) {
-            router.push("/login");
+            router.push("/api/auth/signin");
         }
     };
 
