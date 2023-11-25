@@ -187,6 +187,7 @@ const Sends = (props) => {
                     ))}
                   </select>
                 </div>
+                
               )}
 
               {/* Nuevo botón para mostrar el contenido del archivo */}

@@ -36,7 +36,7 @@ const Sidebar = (props) => {
 
 
   const wrapperClasses = classNames(
-      "h-screen pt-8 pb-4 bg-primary flex justify-between flex-col",
+      "h-screen pt-70 pb-4 bg-primary flex justify-between flex-col",
       {
         ['w-60']: !toggleCollapse,
         ['w-32']: toggleCollapse
