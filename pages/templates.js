@@ -4,15 +4,17 @@ import Layout from '../components/Layout';
 import styled from 'styled-components';
 
 const Reports = (props) => {
-  const [languageCode, setLanguageCode] = useState('');
+  const [languageCode, setLanguageCode] = useState('es_MX');
   const [templateBody, setTemplateBody] = useState('');
   const [templateFooter, setTemplateFooter] = useState('');
   const [templateExample, setTemplateExample] = useState('');
   const [templateName, setTemplateName] = useState('');
-  const [templateCategory, setTemplateCategory] = useState('');
+  const [templateCategory, setTemplateCategory] = useState('MARKETING');
   const [templateType, setTemplateType] = useState('');
   const [showTemplateOptions, setShowTemplateOptions] = useState(false);
   const [selectedOption, setSelectedOption] = useState('none');
+  const [digitHeader, setDigitHeader] = useState('');
+  const [headerExample, SetHeaderExample] = useState('');
 
 //Crear plantilla
   const apiUrl = 'https://api.gupshup.io/wa/app/cef6cd40-330f-4b25-8ff2-9c8fcc434d90/template';
@@ -29,8 +31,8 @@ const Reports = (props) => {
       vertical: 'TEXT',
       elementName: templateName,
       templateType: 'TEXT',
-      header: '',
-      exampleHeader: '',
+      header: digitHeader,
+      exampleHeader: headerExample,
     });
   
     // Agregar el campo "footer" solo si no está vacío
@@ -129,6 +131,8 @@ const Reports = (props) => {
           </RequirementText>
         </InputContainer>
 
+      <Separador />
+     
         <div>
       <label>
         Categoria: * 
@@ -147,6 +151,8 @@ const Reports = (props) => {
         </RequirementText>
       )}
     </div>
+
+    <Separador />
 
     <div>
       <div>
@@ -171,6 +177,8 @@ const Reports = (props) => {
         </label>
       </div>
 
+
+
       {showTemplateOptions && (
         <div>
           <p>Formato de plantilla: </p>
@@ -187,6 +195,8 @@ const Reports = (props) => {
       )}
     </div>
 
+    <Separador />
+
     <div>
 <label>
   Idioma: *  
@@ -201,7 +211,74 @@ const Reports = (props) => {
   </select>
 </label>
 </div>
-      
+
+<Separador />
+
+<div>
+  <label>
+    Cabecera:
+    <select value={selectedOption} onChange={handleSelectChange}>
+      <option >Ninguna</option>
+      <option value="TEXT">Texto</option>
+      <option value="IMAGE">Imagen</option>
+      <option value="VIDEO">Video</option>
+      <option value="DOCUMENT">Documento</option>
+      <option value="LOCATION">Ubicación</option>
+    </select>
+  </label>
+</div>
+
+<Separador />
+
+{selectedOption === 'TEXT' && (
+  <div>
+    <label>
+      Escribe la cabecera:
+      <input type='text' value={digitHeader} onChange={(e) => setDigitHeader(e.target.value)}/>
+      Escribe un ejemplo:
+      <input type='text' value={headerExample} onChange={(e) => SetHeaderExample(e.target.value)}/>
+    </label>
+  </div>
+)}
+
+{selectedOption === 'IMAGE' && (
+  <div>
+    <label>
+      Selecciona la imagen:
+      <input type='text' value={digitHeader} onChange={(e) => setDigitHeader(e.target.value)}/>
+    </label>
+  </div>
+)}
+
+{selectedOption === 'VIDEO' && (
+  <div>
+    <label>
+      Selecciona el video:
+      <input type='text' value={digitHeader} onChange={(e) => setDigitHeader(e.target.value)}/>
+    </label>
+  </div>
+)}
+
+{selectedOption === 'DOCUMENT' && (
+  <div>
+    <label>
+      Selecciona el documento:
+      <input type='text' value={digitHeader} onChange={(e) => setDigitHeader(e.target.value)}/>
+    </label>
+  </div>
+)}
+
+{selectedOption === 'LOCATION' && (
+  <div>
+    <label>
+      Selecciona la ubicacion:
+    </label>
+  </div>
+)}
+
+
+<Separador />
+
 <div>
       <label>
         Texto:  * 
@@ -217,6 +294,8 @@ const Reports = (props) => {
       </RequirementText>
     </div>
 
+    <Separador />
+
       <div>
         <label>
         Pie de pagina:
@@ -226,6 +305,8 @@ const Reports = (props) => {
           Opcional
         </RequirementText>
       </div>
+
+      <Separador />
 
       <div>
       <label>
@@ -238,12 +319,16 @@ const Reports = (props) => {
       </label>
     </div>
 
+    <Separador /> 
+
       <div>
       <label>
       Escribe un ejemplo:
       <input type="text" value={templateExample} onChange={(e) => setTemplateExample(e.target.value)} />
       </label>
       </div>
+
+      <Separador />
 
       <div>
       <button type="submit">Crear Plantilla</button>
@@ -342,5 +427,12 @@ const SelectInput = styled.select`
   border-radius: 5px;
   margin-top: 5px;
 `;
+
+
+const Separador = styled.div`
+  border-bottom: 1px solid #ccc; /* Puedes ajustar el color según tus preferencias */
+  margin: 10px 0; /* Puedes ajustar el margen según tus preferencias */
+`;
+
 
 export default Reports;
