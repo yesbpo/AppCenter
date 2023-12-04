@@ -20,6 +20,7 @@ const menuItems = [
   {id: 4, label: "Plantillas", icon: TemplateIcon, link: "/templates"},
   {id: 5, label: "Datos", icon: DatabaseIcon, link: "/datasources"},
   {id: 6, label: "Envíos", icon: PaperAirplaneIcon, link: "/sends"},
+  {id: 6, label: "chats", icon: PaperAirplaneIcon, link: "/chats"}
 ]
 
 const Sidebar = (props) => {

@@ -42,15 +42,29 @@ const Sends = (props) => {
     const selectedTemplateName = event.target.value;
     setSelectedTemplate(selectedTemplateName);
 
+
     // Encuentra el objeto de plantilla seleccionado basado en elementName
     const selectedTemplateObject = templates.find(template => template.elementName === selectedTemplateName);
-
+    function contarRepeticionesPatron(str, nuevovalor) {
+      // Utilizamos una expresión regular global para encontrar todas las ocurrencias del patrón
+      const patron = /\{\{\d+\}\}/g; // \d+ representa uno o más dígitos
+      const coincidencias = str.replace(patron, nuevovalor);
+      let contar = str.match(patron)
+      if(contar === null){
+        contar = 0
+      }
+      // Devolvemos el número de ocurrencias
+      return coincidencias && contar.length;
+  }
+  
     // Accede al atributo 'data' de la plantilla seleccionada y actualiza el estado
     if (selectedTemplateObject) {
       setSelectedTemplateData(selectedTemplateObject.data);
 
       // Verifica si la plantilla tiene variables
-      const hasVariables = Object.keys(selectedTemplateObject.data).length > 0;
+      const hasVariables = contarRepeticionesPatron(selectedTemplateObject.data,"lo que sea");
+      console.log(hasVariables)
+      console.log(selectedTemplateObject)
 
       // Actualiza el estado para habilitar o deshabilitar la edición
       setIsTemplateEditable(hasVariables);
@@ -178,7 +192,7 @@ const Sends = (props) => {
 
               {sheetname.length > 0 && (
                 <div>
-                  <h1>Elige un variable</h1>
+                  <h1>Elige la columna que contiene el numero destino</h1>
                   <select className="var-select" value={selectvar} onChange={asignarDestino}>
                     {Object.keys(sheetname[0]).map((columnName, index) => (
                       <option key={index} value={columnName} onChange={asignarDestino}>

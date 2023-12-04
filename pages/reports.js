@@ -2,7 +2,8 @@ import React from 'react';
 import { useState } from 'react';
 
 import { saveAs } from 'file-saver';
-
+import Sidebar from '../components/Sidebar'
+import Layout from '../components/Layout';
 function Reports() {
   const [fechaInicio, setFechaInicio] = useState('');
   const [fechaFin, setFechaFin] = useState('');
@@ -41,21 +42,24 @@ function Reports() {
   };
 
   return (
-    <div>
-    <h1>Generador de Reportes WhatsApp</h1>
-    <label>
+    
+    <Layout >
+      
+      <div className="min-h-screen bg-light text-gray-900">
+      <h1>Generador de Reportes WhatsApp</h1>
+    <label >
       Fecha de Inicio:
       <input type="date" value={fechaInicio} onChange={(e) => setFechaInicio(e.target.value)} />
     </label>
-    <label>
+    <label >
       Fecha de Fin:
       <input type="date" value={fechaFin} onChange={(e) => setFechaFin(e.target.value)} />
-    </label>
-    <label>
+    </label >
+    <label >
       Nombre de Campaña:
       <input type="text" value={nombreCampaña} onChange={(e) => setNombreCampaña(e.target.value)} />
-    </label>
-    <label>
+    </label >
+    <label >
       Tipo de Mensajes:
       <select value={tipoMensajes} onChange={(e) => setTipoMensajes(e.target.value)}>
         <option value="ambos">Ambos</option>
@@ -64,7 +68,10 @@ function Reports() {
       </select>
     </label>
     <button onClick={generarReporte}>Generar Reporte</button>
-  </div>
+
+      </div>
+        
+  </Layout>
   );
 }
 

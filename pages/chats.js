@@ -1,31 +1,36 @@
 import React, { useState, useEffect } from 'react'; 
 import Layout from '../components/Layout';
 import styled from 'styled-components';
-import axios from 'axios'; // Importa axios aquí
+import axios from 'axios'; // Importa axios aquíimport io from 'socket.io-client';
+import MiComponente from '../components/websocket';
 
-const Chat = (props) => {
-  const [messages, setMessages] = useState([
-    { tipo: 'texto', contenido: 'Hola, ¿cómo estás?' },
-    { tipo: 'imagen', contenido: 'url_de_la_imagen' },
-    { tipo: 'audio', contenido: 'url_del_audio' },
-    { tipo: 'video', contenido: 'url_del_video' },
-  ]);
-  const [inputValue, setInputValue] = useState('');
-  const [apiResponse, setApiResponse] = useState(null);
+const Chat = () => {
+  const [chatState, setChatState] = useState({
+    mensaje: '',
+    messages: [
+      { tipo: 'texto', contenido: 'Hola, ¿cómo estás?' },
+      { tipo: 'imagen', contenido: 'url_de_la_imagen' },
+      { tipo: 'audio', contenido: 'url_del_audio' },
+      { tipo: 'video', contenido: 'url_del_video' },
+    ],
+    inputValue: '',
+  });
 
-  // Define la función handleInputChange
-  const handleInputChange = (event) => {
-    setInputValue(event.target.value);
-  };
+  const [webhookData, setWebhookData] = useState(null);
 
-  // Define la función ResCha
-  const ResCha = () => {
+  const enviarMensaje = () => {
+    if (!chatState.inputValue.trim()) {
+      console.log('Mensaje vacío, no se enviará.');
+      return;
+    }
+
+    // Lógica para enviar el mensaje
     const apiKey = '6ovjpik6ouhlyoalchzu4r2csmeqwlbg';
 
     const data = {
       message: {
         type: 'text',
-        text: 'Hola, este es un mensaje normal',
+        text: chatState.inputValue,
       },
       channel: 'whatsapp',
       'src.name': 'Pb1yes',
@@ -40,36 +45,39 @@ const Chat = (props) => {
         'apikey': apiKey,
       },
     })
-      .then(response => {
-        // Manejar la respuesta aquí
-        console.log(response.data);
-      })
-      .catch(error => {
-        // Manejar errores aquí
-        console.error('Error:', error);
-      });
+    .then(response => {
+      // Manejar la respuesta aquí
+      console.log(response.data);
+    })
+    .catch(error => {
+      // Manejar errores aquí
+      console.error('Error:', error);
+    });
   };
 
-//Llamar a los registros
-useEffect(() => {
-  const apiKey = '6ovjpik6ouhlyoalchzu4r2csmeqwlbg'; // Reemplaza 'API' con tu clave API
+  useEffect(() => {
+    const apiKey = '6ovjpik6ouhlyoalchzu4r2csmeqwlbg'; // Reemplaza 'API' con tu clave API
 
-  axios.get('https://api.gupshup.io/sm/api/v1/users/Pb1yes?maxResult=1000', {
-    headers: {
-      'apikey': apiKey,
-    },
-  })
+    axios.get('https://api.gupshup.io/sm/api/v1/users/Pb1yes?maxResult=1000', {
+      headers: {
+        'apikey': apiKey,
+      },
+    })
     .then(response => {
       // Almacena la respuesta en el estado local
-      setApiResponse(response.data);
+      setChatState(prevState => ({
+        ...prevState,
+        apiResponse: response.data,
+      }));
     })
     .catch(error => {
       console.error('Error:', error);
     });
-}, []); 
+  }, []);
 
   return (
     <Layout>
+      <MiComponente/>
       <Box>
         <ButtonContainer>
           <CustomButton onClick={() => console.log('Activos')}>Activos</CustomButton>
@@ -81,9 +89,13 @@ useEffect(() => {
 
       <Container>
         <Box>
+          <div>
+            <p>Mensaje del servidor: {chatState.mensaje}</p>
+          </div>
           <div className="chat-container">
-            {messages.map((mensaje, index) => (
+            {chatState.messages.map((mensaje, index) => (
               <div key={index} className="mensaje">
+                <MiComponente/>
                 {mensaje.tipo === 'texto' && <p>{mensaje.contenido}</p>}
                 {mensaje.tipo === 'imagen' && <img src={mensaje.contenido} alt="Imagen" />}
                 {mensaje.tipo === 'video' && <video src={mensaje.contenido} controls />}
@@ -93,12 +105,11 @@ useEffect(() => {
           </div>
         </Box>
 
-    
         <Box>
           <div className="chat-container">
             {/* Muestra la respuesta de la API en la interfaz */}
-            {apiResponse && (
-              <pre>{JSON.stringify(apiResponse, null, 2)}</pre>
+            {chatState.apiResponse && (
+              <pre>{JSON.stringify(chatState.apiResponse, null, 2)}</pre>
             )}
           </div>
         </Box>
@@ -109,10 +120,10 @@ useEffect(() => {
           <input
             type="text"
             placeholder="Escribe un mensaje..."
-            value={inputValue}
-            onChange={handleInputChange}
+            value={chatState.inputValue}
+            onChange={(e) => setChatState(prevState => ({ ...prevState, inputValue: e.target.value }))}
           />
-          <button onClick={ResCha}>Enviar</button>
+          <button onClick={enviarMensaje}>Enviar</button>
         </div>
       </Box>
     </Layout>

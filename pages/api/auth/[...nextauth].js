@@ -12,7 +12,10 @@ export const authOptions = {
     CredentialsProvider({
       name: 'Yes',
       credentials: {
-         
+         user :{
+            type: 'string',
+            label: 'Usuario'
+         },
          password: {
             type: 'password',
             label:'ingresa tu contraseña',

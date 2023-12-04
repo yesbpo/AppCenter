@@ -3,10 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "start": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "npm run start"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -19,8 +18,10 @@
     "bootstrap": "^5.3.2",
     "classnames": "^2.3.1",
     "cors-anywhere": "^0.4.4",
+    "express": "^4.18.2",
     "file-saver": "^2.0.5",
     "firebase": "^10.6.0",
+    "http": "^0.0.1-security",
     "next": "^12.1.6",
     "next-auth": "^4.24.5",
     "next-redux-wrapper": "^8.0.0",
@@ -37,6 +38,8 @@
     "reactstrap": "^9.2.1",
     "redux-persist": "^6.0.0",
     "request": "^2.88.2",
+    "socket.io": "^4.7.2",
+    "socket.io-client": "^4.7.2",
     "styled-components": "^6.1.1",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.0/xlsx-0.20.0.tgz"
   },

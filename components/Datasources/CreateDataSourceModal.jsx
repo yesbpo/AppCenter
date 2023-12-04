@@ -32,7 +32,15 @@ const CreateDataSourceModal = ({closeModal, editDataSource }) => {
 
     // File explorer
     const [displayFileExplorer, setDisplayFileExplorer] = useState(false);
-
+    function closeModal (){
+        setName("");
+        setGroup("");
+        setType("");
+        setNameError(true);
+        setGroupError(true);
+        setTypeError(true);
+        
+     }
     // Done button hanlding.
     const handleDone = async () => {
         const nameVerification = name && name.length >= 3;
@@ -43,7 +51,7 @@ const CreateDataSourceModal = ({closeModal, editDataSource }) => {
         setNameError(nameVerification);
         setGroupError(groupVerification);
         setTypeError(typeVerification);
-
+         
         // If verification passes, create Datasource.
         if (nameVerification && groupVerification && typeVerification) {
             try {
@@ -56,25 +64,36 @@ const CreateDataSourceModal = ({closeModal, editDataSource }) => {
                     type: type,
                     sentCount: 0
                 }, {merge: true});
-
-                closeModal();
+                function closeModal (){
+                    setName("");
+                    setGroup("");
+                    setType("");
+                    setNameError(true);
+                    setGroupError(true);
+                    setTypeError(true);
+                    
+                 }
+            closeModal();
             } catch (e) {
                 console.log(e);
                 setNameError("* Hubo un error guardando en la base de datos.")
             }
         }
     }
-
+    
     // Cancel button handling.
     const close = () => {
+        function closeModal (){
+            setName("");
+            setGroup("");
+            setType("");
+            setNameError(true);
+            setGroupError(true);
+            setTypeError(true);
+            
+         }
         // Reset all values.
-        setName("");
-        setGroup("");
-        setType("");
-        setNameError(true);
-        setGroupError(true);
-        setTypeError(true);
-        closeModal();
+
     };
 
     const handleDeleteDataSource = () => {
