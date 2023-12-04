@@ -18,24 +18,19 @@ const Sends = (props) => {
   const [filename, setFilename] = useState([]);
   const [showFileContent, setShowFileContent] = useState(false);
 
-
   useEffect(() => {
-    const apiUrl2 = 'https://api.gupshup.io/sm/api/v1/template/list/Pb1yes';
-    const apiKey = '6ovjpik6ouhlyoalchzu4r2csmeqwlbg';
-
+  const apiUrl2 = 'https://3d29bmtd-8080.use2.devtunnels.ms/api/templates';
     fetch(apiUrl2, {
-      method: 'GET',
-      headers: {
-        'apikey': apiKey,
-      },
-    })
-      .then(response => response.json())
-      .then(data => {
-        setTemplates(data.templates);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+    method: 'GET',
+  })
+    .then(response => response.json())
+    .then(data => {
+    setTemplates(data);
+    console.log(templates)
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
   }, []); // Empty dependency array to run the effect only once when the component mounts
 
   const handleTemplateChange = (event) => {

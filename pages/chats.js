@@ -15,8 +15,8 @@ const Chat = () => {
     ],
     inputValue: '',
   });
-
-  const [webhookData, setWebhookData] = useState(null);
+  const [contactos, setContactos] = useState([]);
+ 
 
   const enviarMensaje = () => {
     if (!chatState.inputValue.trim()) {
@@ -54,30 +54,24 @@ const Chat = () => {
       console.error('Error:', error);
     });
   };
-
-  useEffect(() => {
-    const apiKey = '6ovjpik6ouhlyoalchzu4r2csmeqwlbg'; // Reemplaza 'API' con tu clave API
-
-    axios.get('https://api.gupshup.io/sm/api/v1/users/Pb1yes?maxResult=1000', {
-      headers: {
-        'apikey': apiKey,
-      },
-    })
-    .then(response => {
-      // Almacena la respuesta en el estado local
-      setChatState(prevState => ({
-        ...prevState,
-        apiResponse: response.data,
-      }));
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
-  }, []);
-
-  return (
+// usuarios
+useEffect(() => {
+  const apiUrl2 = 'https://3d29bmtd-8080.use2.devtunnels.ms/api/users';
+    fetch(apiUrl2, {
+    method: 'GET',
+  })
+    .then(response => response.json())
+    .then(data => {
+    setContactos(data.users);
+    console.log(data)
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+  }, []);   
+return (
     <Layout>
-      <MiComponente/>
+      
       <Box>
         <ButtonContainer>
           <CustomButton onClick={() => console.log('Activos')}>Activos</CustomButton>
@@ -89,28 +83,40 @@ const Chat = () => {
 
       <Container>
         <Box>
-          <div>
-            <p>Mensaje del servidor: {chatState.mensaje}</p>
-          </div>
+         
+          
           <div className="chat-container">
-            {chatState.messages.map((mensaje, index) => (
-              <div key={index} className="mensaje">
-                <MiComponente/>
-                {mensaje.tipo === 'texto' && <p>{mensaje.contenido}</p>}
-                {mensaje.tipo === 'imagen' && <img src={mensaje.contenido} alt="Imagen" />}
-                {mensaje.tipo === 'video' && <video src={mensaje.contenido} controls />}
-                {mensaje.tipo === 'audio' && <audio src={mensaje.contenido} controls />}
-              </div>
-            ))}
+      <div className="message-list">
+        {messages.map((message) => (
+          <div key={message.id} className={`message ${message.type}`}>
+            {message.text}
           </div>
+        ))}
+      </div>
+      <div className="input-container">
+        <input
+          type="text"
+          placeholder="Escribe un mensaje..."
+          onKeyPress={(e) => {
+            if (e.key === 'Enter') {
+              sendMessage(e.target.value);
+              e.target.value = '';
+            }
+          }}
+        />
+      </div>
+    </div>
+          
         </Box>
 
         <Box>
           <div className="chat-container">
-            {/* Muestra la respuesta de la API en la interfaz */}
-            {chatState.apiResponse && (
-              <pre>{JSON.stringify(chatState.apiResponse, null, 2)}</pre>
-            )}
+            <ul>
+            {contactos.map((elemento) => (
+          <li key={elemento.id}>{elemento.phoneCode}</li>
+            ))}
+            </ul>
+            
           </div>
         </Box>
       </Container>
