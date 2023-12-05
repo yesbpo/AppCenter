@@ -84,15 +84,10 @@ return (
       <Container>
         <Box>
          
-          
+          <MiComponente/>
           <div className="chat-container">
-      <div className="message-list">
-        {messages.map((message) => (
-          <div key={message.id} className={`message ${message.type}`}>
-            {message.text}
-          </div>
-        ))}
-      </div>
+        
+      
       <div className="input-container">
         <input
           type="text"

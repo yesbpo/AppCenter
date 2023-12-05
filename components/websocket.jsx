@@ -6,7 +6,7 @@ const MiComponente = () => {
     
   useEffect(() => {
     // En tu aplicación de React
-const socket = io('https://3d29bmtd-3001.use2.devtunnels.ms');
+const socket = io('https://3d29bmtd-8080.use2.devtunnels.ms/');
 
 
     // Escuchar el evento 'cambio' y actualizar el estado del componente
