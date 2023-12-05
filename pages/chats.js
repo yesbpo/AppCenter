@@ -3,23 +3,65 @@ import Layout from '../components/Layout';
 import styled from 'styled-components';
 import axios from 'axios'; // Importa axios aquíimport io from 'socket.io-client';
 import MiComponente from '../components/websocket';
-
+import io from 'socket.io-client';
 const Chat = () => {
-  const [chatState, setChatState] = useState({
-    mensaje: '',
-    messages: [
-      { tipo: 'texto', contenido: 'Hola, ¿cómo estás?' },
-      { tipo: 'imagen', contenido: 'url_de_la_imagen' },
-      { tipo: 'audio', contenido: 'url_del_audio' },
-      { tipo: 'video', contenido: 'url_del_video' },
-    ],
+  
+  const [mensajes, setMensajes] = useState({
+    mensajeSaliente: [
+      {numeroDestino:'',tipo: '', contenido:''}],
+    mensajesEntrantes: [
+      {numeroEntrante:'', tipo: '', contenido:'' }
+      ],
     inputValue: '',
   });
-  const [contactos, setContactos] = useState([]);
- 
+  const [contactos, setContactos] = useState([{user: null, fecha:null}]);
+  const [webhookData, setWebhookData] = useState(null);
+  const [num, setNum] =useState(null)  
+  useEffect(() => {
+    // En tu aplicación de React
+const socket = io('https://3d29bmtd-8080.use2.devtunnels.ms/');
+
+
+    // Escuchar el evento 'cambio' y actualizar el estado del componente
+socket.on('cambio', data => {
+  console.log('Información del webhook recibida:', data);
+  const nuevosContactos = [...contactos,  {
+    
+    user: data.payload.source,
+    fecha: new Date(data.timestamp).toLocaleString('es-ES', {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      timeZoneName: 'short',
+    
+  })}];
+
+  // Establece el estado de los contactos
+  if (contactos.fecha !== nuevosContactos.fecha) {
+    setContactos(nuevosContactos);
+  }
+;
+  // Verificar si data.payload existe antes de acceder a data.payload.payload.text
+  const webhookText = data ? data.payload.payload.text : null;
+  const webhookNum = data ? data.payload.sender.phone : null;
+  // Llamar a setWebhookData con el texto del webhook solo si existe
+  setWebhookData(webhookText);
+  setNum(webhookNum)
+});
+
+
+    // Limpiar el evento al desmontar el componente
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
 
   const enviarMensaje = () => {
-    if (!chatState.inputValue.trim()) {
+    if (!mensajes.inputValue.trim()) {
       console.log('Mensaje vacío, no se enviará.');
       return;
     }
@@ -30,13 +72,24 @@ const Chat = () => {
     const data = {
       message: {
         type: 'text',
-        text: chatState.inputValue,
+        text: mensajes.inputValue,
       },
       channel: 'whatsapp',
       'src.name': 'Pb1yes',
       destination: '573124228889',
       source: '5718848135',
     };
+    const nuevoMensaje = {
+      numeroDestino: '123456789', // Ingresa el número de destino
+      tipo: 'saliente',
+      contenido: mensajes.inputValue,
+    };
+
+    setMensajes((prevMensajes) => ({
+      ...prevMensajes,
+      mensajeSaliente: [...prevMensajes.mensajeSaliente, nuevoMensaje],
+      inputValue: '', // Limpia el valor de entrada después de enviar
+    }));
 
     axios.post('https://api.gupshup.io/sm/api/v1/msg', data, {
       headers: {
@@ -62,8 +115,24 @@ useEffect(() => {
   })
     .then(response => response.json())
     .then(data => {
-    setContactos(data.users);
-    console.log(data)
+      // Procesa los datos y configura los contactos
+    const nuevosContactos = data.users.map((usuario) => ({
+      user: usuario.phoneCode,
+      fecha: new Date(usuario.lastMessageTimeStamp).toLocaleString('es-ES', {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        timeZoneName: 'short',
+      }),
+    }));
+
+    // Establece el estado de los contactos
+    setContactos(nuevosContactos);
+  
+      
   })
   .catch(error => {
     console.error('Error:', error);
@@ -84,22 +153,25 @@ return (
       <Container>
         <Box>
          
-          <MiComponente/>
           <div className="chat-container">
         
+      <p> Numero: {num} mensaje:{webhookData}</p>
+      {/* Mostrar mensajes entrantes */}
+      {mensajes.mensajesEntrantes.map((mensaje, index) => (
+        <div key={index} className="mensaje entrante">
+          {mensaje.contenido}
+        </div>
+      ))}
+
+      {/* Mostrar mensajes salientes */}
+      {mensajes.mensajeSaliente.map((mensaje, index) => (
+        <div key={index} className="mensaje saliente">
+          {mensaje.contenido}
+        </div>
+      ))}
+
+      {/* Input para enviar mensajes */}
       
-      <div className="input-container">
-        <input
-          type="text"
-          placeholder="Escribe un mensaje..."
-          onKeyPress={(e) => {
-            if (e.key === 'Enter') {
-              sendMessage(e.target.value);
-              e.target.value = '';
-            }
-          }}
-        />
-      </div>
     </div>
           
         </Box>
@@ -107,9 +179,11 @@ return (
         <Box>
           <div className="chat-container">
             <ul>
-            {contactos.map((elemento) => (
-          <li key={elemento.id}>{elemento.phoneCode}</li>
-            ))}
+            {contactos.map((contacto, index) => (
+          <li key={index}>
+            <strong>Usuario:</strong> {contacto.user}, <strong>Fecha:</strong> {contacto.fecha}
+          </li>
+        ))}
             </ul>
             
           </div>
@@ -121,8 +195,8 @@ return (
           <input
             type="text"
             placeholder="Escribe un mensaje..."
-            value={chatState.inputValue}
-            onChange={(e) => setChatState(prevState => ({ ...prevState, inputValue: e.target.value }))}
+            value={mensajes.inputValue}
+            onChange={(e) => setMensajes(prevState => ({ ...prevState, inputValue: e.target.value }))}
           />
           <button onClick={enviarMensaje}>Enviar</button>
         </div>
