@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../components/Layout';
 
+
 const MonitoringPage = () => {
+  
+
   return (
     <Layout>
-      {/* Your component content goes here */}
+        <p>Chats activos</p>
+
     </Layout>
   );
 };

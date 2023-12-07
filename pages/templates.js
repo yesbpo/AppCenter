@@ -15,6 +15,7 @@ const Reports = (props) => {
   const [selectedOption, setSelectedOption] = useState('none');
   const [digitHeader, setDigitHeader] = useState('');
   const [headerExample, SetHeaderExample] = useState('');
+  const [templates, setTemplates] = useState([]);
 
 //Crear plantilla
   const apiUrl = 'https://api.gupshup.io/wa/app/cef6cd40-330f-4b25-8ff2-9c8fcc434d90/template';
@@ -59,26 +60,20 @@ const Reports = (props) => {
 
 
   //Llama las plantillas existentes y las muestra 
-  const [apiData, setApiData] = useState(null);
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(
-        'https://api.gupshup.io/sm/api/v1/template/list/Pb1yes',
-        {
-          headers: {
-            apikey: '6ovjpik6ouhlyoalchzu4r2csmeqwlbg',
-          },
-        }
-      );
-      // Almacena los datos de la API en el estado
-      setApiData(response.data);
-    } catch (error) {
-      console.error('Error al obtener datos de la API:', error.message);
-    }
-  };
   useEffect(() => {
-    fetchData(); // Llama a la función para obtener datos al montar el componente
-  }, []); // El segundo argumento [] significa que se ejecutará solo al montar y desmontar el componente
+    const apiUrl = 'https://3d29bmtd-8080.use2.devtunnels.ms/api/templates';
+
+    fetch(apiUrl, {
+      method: 'GET',
+    })
+      .then(response => response.json())
+      .then(data => {
+        setTemplates(data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }, []);
 
 //Tipo de plantilla
   const handleTemplateTypeChange = (event) => {
@@ -339,41 +334,47 @@ const Reports = (props) => {
 
 
 
-      {apiData && apiData.templates && (
-        <Box>
-          <div>
-            <h2>Plantillas actuales:</h2>
-            {apiData.templates.map((template, index) => (
-              <StyledTemplateBox key={index}>
-                <h3>Nombre plantilla: {template.elementName}</h3>
-                <p>Categoría: {template.category}</p>
-                <p>Texto: {template.data}</p>
-                <p>
-                  Lenguaje:{' '}
-                  {template.languageCode === 'es_MX' ? 'Español México': 
-                  template.languageCode === 'en_US' ? 'Ingles Estados Unidos': 
-                  template.languageCode === 'es_ARG' ? 'Español Argentina': 
-                  template.languageCode === 'es_ES' ? 'Español España': 
-                  template.languageCode}
-                </p>
-                <p>
-                  Estado:{' '}
-                  {template.status === 'APPROVED' ? ' Aprobada por WhatsApp' : 
-                  template.status === 'PENDING' ? ' Pendiente por aprobación' : 
-                  template.status === 'REJECTED' ? ' Rechazada por politicas de WhatsApp' : 
-                  template.status}
-                </p>
-                <p>
-                  Tipo de plantilla:{' '}
-                  {template.templateType === 'TEXT'
-                    ? 'Texto'
-                    : template.templateType}
-                </p>
-              </StyledTemplateBox>
-            ))}
-          </div>
-        </Box>
-      )}
+       <Box>
+       <div>
+         <h2>Plantillas actuales:</h2>
+         {templates.map((template, index) => (
+           <StyledTemplateBox key={index}>
+             <h3>Nombre plantilla: {template.elementName}</h3>
+             <p>Categoría: {template.category}</p>
+             <p>Texto: {template.data}</p>
+             <p>
+               Lenguaje:{' '}
+               {template.languageCode === 'es_MX'
+                 ? 'Español México'
+                 : template.languageCode === 'en_US'
+                 ? 'Ingles Estados Unidos'
+                 : template.languageCode === 'es_ARG'
+                 ? 'Español Argentina'
+                 : template.languageCode === 'es_ES'
+                 ? 'Español España'
+                 : template.languageCode}
+             </p>
+             <p>
+               Estado:{' '}
+               {template.status === 'APPROVED'
+                 ? ' Aprobada por WhatsApp'
+                 : template.status === 'PENDING'
+                 ? ' Pendiente por aprobación'
+                 : template.status === 'REJECTED'
+                 ? ' Rechazada por politicas de WhatsApp'
+                 : template.status}
+             </p>
+             <p>
+               Tipo de plantilla:{' '}
+               {template.templateType === 'TEXT'
+                 ? 'Texto'
+                 : template.templateType}
+             </p>
+           </StyledTemplateBox>
+         ))}
+       </div>
+     </Box>
+      
 
     </Layout>
   );
