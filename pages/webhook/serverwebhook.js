@@ -6,7 +6,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "https://3d29bmtd-3000.use2.devtunnels.ms", // Reemplaza con tu dominio
+    origin: "https://3d29bmtd-8080.use2.devtunnels.ms", // Reemplaza con tu dominio
     methods: ["GET", "POST"]
   }
 });
