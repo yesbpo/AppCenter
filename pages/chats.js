@@ -1,34 +1,51 @@
-import React, { useState, useEffect } from 'react'; 
 import Layout from '../components/Layout';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import io from 'socket.io-client';
-const Chat = () => {
-  const [chats, setChats] = useState([])
-  const [mensajes, setMensajes] = useState({
-    mensajeSaliente: [
-      {numeroDestino:'',tipo: '', contenido:'',date:''}],
-    mensajesEntrantes: [
-      {numeroEntrante:'', tipo: '', contenido:'',estado:'',date:''}
-      ],
-    inputValue: '',
-  });
+import { useSession, signIn, signOut } from "next-auth/react"
+const Chats = () => {
   
-  const [contactos, setContactos] = useState([{user: null, fecha:null, mensajes: [{tipomensaje:'',datemessage:'', content:''}]}]);
+  const socket = io('https://j068dv68-8080.use2.devtunnels.ms/');
+  const [contactos, setContactos] = useState([
+    { user: null, fecha: null, mensajes: [{ tipomensaje: '', datemessage: '', content: '' }] },
+  ]);
   const [webhookData, setWebhookData] = useState(null);
-  const [num, setNum] =useState(null)  
-  const [numsaliente, setNumsaliente] = useState(null)
-  useEffect(() => {
-    // En tu aplicación de React
-    const socket = io('https://3d29bmtd-8080.use2.devtunnels.ms/');
+  
+  const [mensajes, setMensajes] = useState(
+     [
+      { numero: '', tipo: '', contenido: '', estado: '', date: '' },
+    ]
+   
+);
+  const [numeroEspecifico, setNumeroEspecifico] = useState(''); // Reemplaza esto con el número que necesites
+  const [inputValue, setInputValue] = useState('')
+// Combina los mensajes entrantes y salientes en una sola lista
 
 
-    // Escuchar el evento 'cambio' y actualizar el estado del componente
-    socket.on('cambio', data => {
+ 
+  
+  const [msg, setMsg] = useState([]);
+
+
+  const handleCambio = (data) => {
     console.log('Información del webhook recibida:', data);
-    const nuevosContactos = [...contactos,  {
     
-    user: data.payload.source,
-    fecha: new Date(data.timestamp).toLocaleString('es-ES', {
+    const nuevosContactos = [
+      ...contactos,
+      {
+        user: data.payload.source,
+        fecha: new Date(data.timestamp).toLocaleString('es-ES', {
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+          second: 'numeric',
+          timeZoneName: 'short',
+        }),
+      },
+    ];
+    let fecha = new Date(data.timestamp).toLocaleString('es-ES', {
       year: 'numeric',
       month: 'numeric',
       day: 'numeric',
@@ -36,119 +53,155 @@ const Chat = () => {
       minute: 'numeric',
       second: 'numeric',
       timeZoneName: 'short',
+    })
+    const nuevoMensaje = {
+      numero: data.payload.destination,
+      tipo: 'message-event',
+      contenido: inputValue,
+      estado: data.payload.type,
+      date: fecha
+
+    };
+    setMsg((prevMsg) => [...prevMsg, mensajes.inputValue]);
+    const nuevoMensajeEntrante = {
+      numero: data.payload.source,
+      tipo: data.type,
+      contenido: data.payload.payload.text,
+      date: fecha,
+    };
+    if(data.payload.payload == undefined){
+      setMensajes((prevMensajes) => [...prevMensajes, nuevoMensaje]);
+    }
+    else{
+      setMensajes((prevMensajes)=>[...prevMensajes, nuevoMensajeEntrante]);
+    }
     
-  })}];
-  const nuevoMensajeEntrante = {
-    numeroEntrante: data.payload.source, // Ingresa el número de destino
-    tipo: data.type,
-    contenido: data.payload.payload.text,
-    date: data.timestamp
+    if (contactos.fecha !== nuevosContactos.fecha) {
+      setContactos(nuevosContactos);
+    }
+    const cont = parseInt(msg.length);
+    console.log(cont);
+    const webhookText = data ? data.payload.payload.text : null;
+    setWebhookData(webhookText);
+    
   };
 
-  setMensajes((prevMensajes) => ({
-    ...prevMensajes,
-    mensajesEntrantes: [...prevMensajes.mensajesEntrantes, nuevoMensajeEntrante],
-     // Limpia el valor de entrada después de enviar
-  }));
-  // Establece el estado de los contactos
-  if (contactos.fecha !== nuevosContactos.fecha) {
-    setContactos(nuevosContactos);
-  };
-  // Verificar si data.payload existe antes de acceder a data.payload.payload.text
-  const webhookText = data ? data.payload.payload.text : null;
-  const webhookNum = data ? data.payload.sender.phone : null;
-  const webhookNumsaliente = data ? data.payload.destination : null;
-  // Llamar a setWebhookData con el texto del webhook solo si existe
-  setWebhookData(webhookText);
-  setNum(webhookNum);
-  setNumsaliente(webhookNumsaliente);
-});
-  // Limpiar el evento al desmontar el componente
+  useEffect(() => {
+    socket.on('cambio', handleCambio);
     return () => {
+      socket.off('cambio', handleCambio);
       socket.disconnect();
     };
-    }, []);
-  // funciopn de llamado de api para envios simples
-  const enviarMensaje =  async () => {
-    if (!mensajes.inputValue.trim()) {
+  }, [contactos]);
+
+  const enviarMensaje = async () => {
+    
+    if (!inputValue.trim()) {
       console.log('Mensaje vacío, no se enviará.');
       return;
     }
-// Lógica para enviar el mensaje
-  const data = {
-      channel: 'whatsapp',
-      source: '5718848135',
-      'src.name': 'Pb1yes',
-      destination: '573044575414',
-      message: mensajes.inputValue,
-      disablePreview: true,
-    };
-   
+    
+
     try {
-      const response = await fetch('https://3d29bmtd-8080.use2.devtunnels.ms/api/envios', {
+      const mensajeData = {
+        channel: 'whatsapp',
+        source: '5718848135',
+        'src.name': 'Pb1yes',
+        destination: numeroEspecifico,
+        message: inputValue,
+        disablePreview: true,
+      };
+      console.log(mensajes)
+      setMsg((prevMsg) => [...prevMsg, inputValue]);
+      
+      setMensajes((prevMensajes) => (
+        [
+          ...prevMensajes,
+          {
+            numero: numeroEspecifico,
+            tipo: 'message-event',
+            contenido: inputValue,
+            date: new Date().toLocaleString(),
+          },
+        ]
+      ));
+      const response = await fetch('https://j068dv68-8080.use2.devtunnels.ms/api/envios', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: new URLSearchParams(data).toString(),
+        body: new URLSearchParams(mensajeData).toString(),
       });
+      
       if (!response.ok) {
         throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
       }
 
       const responseData = await response.json();
       console.log('Respuesta del servidor:', responseData);
-      } catch (error) {
-      console.error('Error al realizar la solicitud:', error);
-      }
-    //nuevo mensaje saliente
-    const nuevoMensaje = {
-      numeroDestino: numsaliente, // Ingresa el número de destino
-      tipo: data.type,
-      contenido: mensajes.inputValue,
-      estado: data.payload.type
-    };
-
-    setMensajes((prevMensajes) => ({
-      ...prevMensajes,
-      mensajeSaliente: [...prevMensajes.mensajeSaliente, nuevoMensaje],
-      inputValue: '', // Limpia el valor de entrada después de enviar
-    }));
-  };
-// usuarios
-useEffect(() => {
-  const apiUrl2 = 'https://3d29bmtd-8080.use2.devtunnels.ms/api/users';
-    fetch(apiUrl2, {
-    method: 'GET',
-  })
-    .then(response => response.json())
-    .then(data => {
-      // Procesa los datos y configura los contactos
-    const nuevosContactos = data.users.map((usuario) => ({
-      user: usuario.phoneCode,
-      fecha: new Date(usuario.lastMessageTimeStamp).toLocaleString('es-ES', {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
-        timeZoneName: 'short',
-      }),
-    }));
-
-    // Establece el estado de los contactos
-
-    setContactos(nuevosContactos);
-  
       
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
-  }, []);   
-return (
-    <Layout>
+    } catch (error) {
+      console.error('Error al realizar la solicitud:', error);
+    }
+  };
+
+  useEffect(() => {
+    const apiUrl2 = 'https://j068dv68-8080.use2.devtunnels.ms/api/users';
+    fetch(apiUrl2, {
+      method: 'GET',
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const nuevosContactos = data.users.map((usuario) => ({
+          user: usuario.countryCode + usuario.phoneCode,
+          fecha: new Date(usuario.lastMessageTimeStamp).toLocaleString('es-ES', {
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            timeZoneName: 'short',
+          }),
+        }));
+
+        setContactos(nuevosContactos);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+
+      
+  }, []);
+ 
+  const renderMensajes = (mensajesOrdenados) => {
+    console.log(mensajes)
+    const mensajesConContenido = mensajesOrdenados.filter(
+      mensaje => mensaje.contenido && mensaje.contenido.trim() !== ''
+    );
+  
+    if (mensajesConContenido.length === 0) {
+      return mensajesConContenido.map((mensaje, index) => (
+        <div key={index} className={`mensaje ${mensaje.tipo}`}>
+          <p>{inputValue}</p>
+          <span>{mensaje.date}</span>
+        </div>
+      ));  
+    }
+  
+    return mensajesConContenido.map((mensaje, index) => (
+      <div key={index} className={`mensaje ${mensaje.tipo}`}>
+        <p>{mensaje.contenido}</p>
+        <span>{mensaje.numero}</span>
+      </div>
+    ));
+  };  
+  const { data: session } = useSession()
+  if (session) {
+    return (
+      <>
+        Signed in as {session.user.email} <br />
+        <Layout>
       <Box>
         <ButtonContainer>
           <CustomButton onClick={() => console.log('Activos')}>Activos</CustomButton>
@@ -159,53 +212,69 @@ return (
       </Box>
       <Container>
         <Box>
-         
-        <div className="chat-container">
-          <p> Numero: {num} mensaje:{webhookData}</p>
-          {/* Mostrar mensajes entrantes */}
-          {mensajes.mensajesEntrantes.map((mensaje, index) => (
-          <div key={index} className="mensaje entrante">
-          {mensaje.contenido}
-        </div>
-        ))}
+          <ContainerBox>
+            <p>  mensaje:{webhookData}</p>
+            <div>
+            <h2>Todos los mensajes</h2>
+            {renderMensajes(mensajes)}
 
-        {/* Mostrar mensajes salientes */}
-        {mensajes.mensajeSaliente.map((mensaje, index) => (
-        <div key={index} className="mensaje saliente">
-          {mensaje.contenido}
-        </div>
-        ))}
-
-        {/* Input para enviar mensajes */}
       
-      </div>
-          
+      <h2>Mensajes Ordenados para {numeroEspecifico}</h2>
+      {(() => {
+
+        // Filtra los mensajes por el número específico
+        const mensajesFiltrados = mensajes.filter(
+          (mensaje) => mensaje.numero === numeroEspecifico) ;
+        // Ordena los mensajes por fecha de forma ascendente (de la más antigua a la más reciente)
+        return mensajesFiltrados.map((mensaje, index) => (
+          <div key={index} className={`mensaje ${mensaje.tipo}`}>
+            <p>{mensaje.contenido}</p>
+            <span>{mensaje.date}</span>
+          </div>
+        ));
+      })()}
+    </div>
+ 
+
+            
+          </ContainerBox>
+          <InputContainer>
+            <InputMensaje
+              type="text"
+              placeholder="Escribe un mensaje..."
+              value={inputValue}
+              onChange={(e) =>
+                setInputValue(e.target.value)
+              }
+            />
+            
+          </InputContainer>
+          <BotonEnviar onClick={enviarMensaje}>Enviar</BotonEnviar>
         </Box>
         <Box>
           <div className="chat-container">
             <ul>
-            {contactos.map((contacto, index) => (
-              <li key={index}>
-                <strong onClick={<div>{contacto.user}</div>}>Usuario:</strong> {contacto.user}, <strong>Fecha:</strong> {contacto.fecha}
-              </li>
+              {contactos.map((contacto, index) => (
+                <li key={index}>
+                  <strong onClick={() => setNumeroEspecifico(contacto.user)}>Usuario:</strong> {contacto.user},{' '}
+                  <strong>Fecha:</strong> {contacto.fecha}
+                </li>
               ))}
             </ul>
           </div>
         </Box>
       </Container>
-      <Box>
-        <div className="input-container">
-          <input
-            type="text"
-            placeholder="Escribe un mensaje..."
-            value={mensajes.inputValue}
-            onChange={(e) => setMensajes(prevState => ({ ...prevState, inputValue: e.target.value }))}
-          />
-          <button onClick={enviarMensaje}>Enviar</button>
-        </div>
-      </Box>
     </Layout>
-  );
+      </>
+    )
+  }
+  return (
+    <>
+      Not signed in <br />
+      <button onClick={() => signIn()}>Sign in</button>
+    </>
+    )
+
 };
 
 const Box = styled.div`
@@ -241,4 +310,51 @@ const Container = styled.div`
   gap: 20px;
 `;
 
-export default Chat;
+const ContainerBox = styled.div`
+  background-color: #f7f7f7;
+  padding: 15px;
+  border-radius: 10px;
+  overflow-y: scroll;
+  max-height: 400px;
+`;
+
+const p = styled.div`
+  background-color: ${(props) => (props.tipo === 'message-event' ? '#6e6e6' : '#4caf50')};
+  color: ${(props) => (props.tipo === 'message-event' ? 'black' : 'white')};
+  padding: 10px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+`;
+
+
+
+const InputContainer = styled.div`
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+`;
+
+const InputMensaje = styled.input`
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-right: 10px;
+`;
+
+const BotonEnviar = styled.button`
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #45a049;
+  }
+`;
+
+export default Chats;
