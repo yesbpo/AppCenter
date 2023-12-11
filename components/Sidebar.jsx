@@ -12,13 +12,14 @@ import Link from "next/link";
 import {useDispatch} from "react-redux";
 import {setAuthState} from "../store/authSlice";
 import {setCurrentUser} from "../store/userSlice";
+import { useSession, signIn, signOut } from "next-auth/react"
 
 const menuItems = [
-  {id: 1, label: "Usuarios", icon: UserGroupIcon, link: "/users"},
+  {id: 1, label: "Usuarios", icon: UserGroupIcon, link: "/Component"},
   {id: 2, label: "Monitoreo", icon: PresentationChartLineIcon, link: "/monitoring"},
   {id: 3, label: "Reportes", icon: DocumentReportIcon, link: "/reports"},
   {id: 4, label: "Plantillas", icon: TemplateIcon, link: "/templates"},
-  {id: 5, label: "Datos", icon: DatabaseIcon, link: "/datasources"},
+  {id: 5, label: "em", icon: DatabaseIcon, link: "/em"},
   {id: 6, label: "Envíos", icon: PaperAirplaneIcon, link: "/sends"},
   {id: 7, label: "chats", icon: PaperAirplaneIcon, link: "/chats"},
   {id: 8, label: "pruebas", icon: PaperAirplaneIcon, link: "/pruebas"}
@@ -63,11 +64,9 @@ const Sidebar = (props) => {
     })
   }
 
-  const handleLogout = () => {
-    dispatch(setAuthState(false));
-    dispatch(setCurrentUser({}));
-  }
-
+  
+  const { data: session } = useSession()
+  
   // TODO: - Change the icon for an actual logo
   return (
       <div
@@ -78,6 +77,7 @@ const Sidebar = (props) => {
             transition: "width 300ms cubic-bezier(0.2, 0, 0, 1) 0s"
           }}
       >
+        
         <div className="flex flex-col">
           <div className="flex items-center justify-between relative">
             <div className="flex items-center ml-8">
@@ -95,6 +95,7 @@ const Sidebar = (props) => {
               menuItems.map(({icon: Icon, ...menu}) =>{
                 const classes = getNavItemClasses(menu);
                 return (
+                    // eslint-disable-next-line react/jsx-key
                     <div className={classes}>
                       <Link href={menu.link}>
                        <a className="flex py-4 px-3 items-center w-full h-full">
@@ -111,8 +112,8 @@ const Sidebar = (props) => {
           </div>
         </div>
         <div className={`${getNavItemClasses({})} px-3 py-4 flex justify-items-center`}>
-          <button onClick={handleLogout}>
-            <Link href="login">
+          <button onClick={() => signOut()}>
+            <Link href="/api/auth/signin">
               <a className="flex py-4 px-3 items-center w-full h-full">
                 <div>
                   <LogoutIcon className="h-10 w-10 text-light-lighter mr-4"/>
