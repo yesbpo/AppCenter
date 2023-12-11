@@ -4,7 +4,7 @@ import Layout from '../components/Layout';
 const MonitoringPage = () => {
   return (
     <Layout>
-      {/* Your component content goes here */}
+      
     </Layout>
   );
 };

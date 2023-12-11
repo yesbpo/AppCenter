@@ -1,43 +1,124 @@
-import { collection, endBefore, getCountFromServer, getDocs, limit, orderBy, query, startAfter, doc, getDoc } from "firebase/firestore";
-import { useRouter } from "next/router";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import Layout from "../components/Layout";
-import { UIButton } from "../components/PageButton";
-import Table from "../components/Table";
-import CreateUserModal from "../components/Users/CreateUserModal";
-import { selectAuthState } from "../store/authSlice";
-import {
-    selectCurrentUser,
-    selectUserUID,
-    selectUserUsername,
-    setCurrentUser,
-} from "../store/userSlice";
-    import { firestore } from "../utils/firebase";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import Layout from '../components/Layout';
 
-    // User Table Component
-    const Users = (props) => {
-        const [users, setUsers] = useState([]);
-        ;
-        const authState = useSelector(selectAuthState);
-       
-    const verifyUserAuthState = () => {
-        if (!authState) {
-            router.push("/api/auth/signin");
-        }
+
+const Users = () => {
+    const [users, setUsers] = useState([]);
+  const [userData, setUserData] = useState({
+    Nombre: '',
+    Apellido: '',
+    Email: '',
+    Usuario: '',
+    Password: '',
+    TypeUser: 'Asesor',
+  });
+
+
+//Aca enviamos los datos del usuario creado
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setUserData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const response = await axios.post('https://dxzb9smq-8080.use2.devtunnels.ms/crear-usuario', userData);
+      console.log('Respuesta del servidor:', response.data);
+      // Puedes realizar acciones adicionales después de la creación del usuario
+    } catch (error) {
+      console.error('Error al hacer la solicitud:', error.message);
+    }
+  };
+
+//Obtener los usuarios en la db
+useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get('https://dxzb9smq-8080.use2.devtunnels.ms/obtener-usuarios');
+        setUsers(response.data.usuarios);
+      } catch (error) {
+        console.error('Error al obtener los usuarios:', error.message);
+      }
     };
 
-    useEffect(() => {
-        verifyUserAuthState();
-    }, [currentUserLogged]);
+    fetchUsers();
+  }, []);
 
-    
-    
-    return (
-        <Layout>
-           
-        </Layout>
-    );
+  return (
+    <Layout>
+      <p>Crear Usuario:</p>
+      <form onSubmit={handleSubmit}>
+
+        <div>
+          <label>
+            Nombre:
+            <input type="text" name="Nombre" value={userData.Nombre} onChange={handleChange} />
+          </label>
+          
+          <label>
+            Apellido:
+            <input type="text" name="Apellido" value={userData.Apellido} onChange={handleChange} />
+          </label>
+
+          <label>
+            Correo:
+            <input type="text" name="Email" value={userData.Email} onChange={handleChange} />
+          </label>
+
+          <label>
+            Usuario:
+            <input type="text" name="Usuario" value={userData.Usuario} onChange={handleChange} />
+          </label>
+
+          <label>
+            Contraseña:
+            <input type="text" name="Password" value={userData.Password} onChange={handleChange} />
+          </label>
+
+          <label>
+              Asesor:
+              <input
+                type="radio"
+                name="TypeUser"
+                value="Asesor"
+                checked={userData.TypeUser === 'Asesor'}
+                onChange={handleChange}
+              />
+            </label>
+
+            <label>
+              Coordinador:
+              <input
+                type="radio"
+                name="TypeUser"
+                value="Coordinador"
+                checked={userData.TypeUser === 'Coordinador'}
+                onChange={handleChange}
+              />
+            </label>
+        </div>
+
+        <div>
+          <button type="submit">Crear Usuario</button>
+        </div>
+      </form>
+
+      <p>Usuarios:</p>
+      <ul>
+        {users.map((user) => (
+          <li key={user.id}>
+            Nombre: {user.Nombre}, Apellido: {user.Apellido}, Email: {user.Email}, Usuario: {user.Usuario}, Tipo de usuario: {user.TypeUser}
+          </li>
+        ))}
+      </ul>
+    </Layout>
+  );
 };
 
 export default Users;
