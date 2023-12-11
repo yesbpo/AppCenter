@@ -1,6 +1,6 @@
-
-
 type User = {
-    name: string,
-    email:string
+    
+    Nombre: string,
+    Id: string,
+    TypeUser: string
 }

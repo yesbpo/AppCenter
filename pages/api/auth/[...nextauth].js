@@ -1,10 +1,14 @@
 
-
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 
 export const authOptions = {
-   theme: 'light',
+   theme: {
+      colorScheme: "light",
+      brandColor: "#320df1", 
+      logo: "https://1bb437.a2cdn1.secureserver.net/wp-content/uploads/2023/08/Logo-500-full-150x150.jpg", 
+      buttonText: "#346df1" 
+    },
    debug: true,
    session: {},
    jwt: {},
@@ -14,7 +18,7 @@ export const authOptions = {
       credentials: {
          user :{
             type: 'string',
-            label: 'Usuario'
+            label: 'Usuario',
          },
          password: {
             type: 'password',

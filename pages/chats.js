@@ -2,32 +2,49 @@ import Layout from '../components/Layout';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import io from 'socket.io-client';
-import { useSession, signIn, signOut } from "next-auth/react"
-const Chats = () => {
-  
-  const socket = io('https://j068dv68-8080.use2.devtunnels.ms/');
+import { getSession } from 'next-auth/react';
+import EmojiPicker from 'emoji-picker-react';
+import { Pendientes } from '../components/Pendientes';
+const Chats = ({session}) => {
+  async function getServerSideProps(context) {
+    // Obtén la información de la sesión en el servidor
+    const session = await getSession(context);
+  console.log(session)}
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+  const handleEmojiClick = (_, emojiObject) => {
+    setInputValue((prevValue) => prevValue + emojiObject.target);
+    console.log(emojiObject.target.src)
+  };
+  const toggleEmojiPicker = () => {
+    
+    setShowEmojiPicker((prevShow) => !prevShow);
+  };
+  const socket = io('https://3d29bmtd-8080.use2.devtunnels.ms/');
   const [contactos, setContactos] = useState([
     { user: null, fecha: null, mensajes: [{ tipomensaje: '', datemessage: '', content: '' }] },
   ]);
   const [webhookData, setWebhookData] = useState(null);
-  
   const [mensajes, setMensajes] = useState(
      [
-      { numero: '', tipo: '', contenido: '', estado: '', date: '' },
-    ]
-   
+      { numero: '', tipo: '', contenido: '', estado: '', date: ''},
+    ]   
 );
-  const [numeroEspecifico, setNumeroEspecifico] = useState(''); // Reemplaza esto con el número que necesites
+    
+  const [mostrarPendientes, setMostrarPendientes] = useState(false);
+  const [mostrarEngestion, setMostrarEngestion] = useState(false);
+  const handlePendientesClick = () => {
+    setMostrarPendientes(true);
+  };
+  const handleEngestionClick = () => {
+    setMostrarEngestion(true);
+  };
+  const [numeroEspecifico, setNumeroEspecifico] = useState('');
+   // Reemplaza esto con el número que necesites
   const [inputValue, setInputValue] = useState('')
-// Combina los mensajes entrantes y salientes en una sola lista
-
-
- 
-  
   const [msg, setMsg] = useState([]);
-
-
   const handleCambio = (data) => {
+    
     console.log('Información del webhook recibida:', data);
     
     const nuevosContactos = [
@@ -87,15 +104,17 @@ const Chats = () => {
   };
 
   useEffect(() => {
+    
     socket.on('cambio', handleCambio);
     return () => {
       socket.off('cambio', handleCambio);
       socket.disconnect();
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contactos]);
 
   const enviarMensaje = async () => {
-    
+  
     if (!inputValue.trim()) {
       console.log('Mensaje vacío, no se enviará.');
       return;
@@ -125,7 +144,7 @@ const Chats = () => {
           },
         ]
       ));
-      const response = await fetch('https://j068dv68-8080.use2.devtunnels.ms/api/envios', {
+      const response = await fetch('https://3d29bmtd-8080.use2.devtunnels.ms/api/envios', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -146,7 +165,7 @@ const Chats = () => {
   };
 
   useEffect(() => {
-    const apiUrl2 = 'https://j068dv68-8080.use2.devtunnels.ms/api/users';
+    const apiUrl2 = 'https://3d29bmtd-8080.use2.devtunnels.ms/api/users';
     fetch(apiUrl2, {
       method: 'GET',
     })
@@ -164,64 +183,39 @@ const Chats = () => {
             timeZoneName: 'short',
           }),
         }));
-
         setContactos(nuevosContactos);
       })
       .catch((error) => {
         console.error('Error:', error);
-      });
-
-      
+      });  
   }, []);
- 
-  const renderMensajes = (mensajesOrdenados) => {
-    console.log(mensajes)
-    const mensajesConContenido = mensajesOrdenados.filter(
-      mensaje => mensaje.contenido && mensaje.contenido.trim() !== ''
-    );
   
-    if (mensajesConContenido.length === 0) {
-      return mensajesConContenido.map((mensaje, index) => (
-        <div key={index} className={`mensaje ${mensaje.tipo}`}>
-          <p>{inputValue}</p>
-          <span>{mensaje.date}</span>
-        </div>
-      ));  
-    }
-  
-    return mensajesConContenido.map((mensaje, index) => (
-      <div key={index} className={`mensaje ${mensaje.tipo}`}>
-        <p>{mensaje.contenido}</p>
-        <span>{mensaje.numero}</span>
-      </div>
-    ));
-  };  
-  const { data: session } = useSession()
-  if (session) {
-    return (
+  return (
       <>
-        Signed in as {session.user.email} <br />
-        <Layout>
+        
+    <Layout>
       <Box>
         <ButtonContainer>
-          <CustomButton onClick={() => console.log('Activos')}>Activos</CustomButton>
-          <CustomButton onClick={() => console.log('Pendientes')}>Pendientes</CustomButton>
+          <CustomButton onClick={handleEngestionClick}>En gestion</CustomButton>
+           {/* Mostrar Activos si 'mostrarActivos' es true */}
+      
+          <CustomButton onClick={handlePendientesClick}>Pendientes</CustomButton>
           <CustomButton onClick={() => console.log('Cerrados')}>Cerrados</CustomButton>
           <CustomButton onClick={() => console.log('Agregar Número')}>Agregar Número</CustomButton>
         </ButtonContainer>
       </Box>
       <Container>
         <Box>
+          
           <ContainerBox>
-            <p>  mensaje:{webhookData}</p>
+            
             <div>
-            <h2>Todos los mensajes</h2>
-            {renderMensajes(mensajes)}
+            
 
       
       <h2>Mensajes Ordenados para {numeroEspecifico}</h2>
+      
       {(() => {
-
         // Filtra los mensajes por el número específico
         const mensajesFiltrados = mensajes.filter(
           (mensaje) => mensaje.numero === numeroEspecifico) ;
@@ -233,11 +227,8 @@ const Chats = () => {
           </div>
         ));
       })()}
-    </div>
- 
-
-            
-          </ContainerBox>
+    </div> 
+      </ContainerBox>
           <InputContainer>
             <InputMensaje
               type="text"
@@ -247,11 +238,15 @@ const Chats = () => {
                 setInputValue(e.target.value)
               }
             />
-            
+             <button onClick={toggleEmojiPicker}>😊</button>
           </InputContainer>
+          {showEmojiPicker && (
+        <EmojiPicker onEmojiClick={handleEmojiClick} />
+      )}
           <BotonEnviar onClick={enviarMensaje}>Enviar</BotonEnviar>
         </Box>
         <Box>
+        {mostrarPendientes && <Pendientes mensajes={mensajes} acivarengestion={mostrarEngestion} />}
           <div className="chat-container">
             <ul>
               {contactos.map((contacto, index) => (
@@ -266,16 +261,8 @@ const Chats = () => {
       </Container>
     </Layout>
       </>
-    )
-  }
-  return (
-    <>
-      Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
-    </>
-    )
-
-};
+  )
+  };
 
 const Box = styled.div`
   padding: 30px;
