@@ -15,7 +15,7 @@ import {setCurrentUser} from "../store/userSlice";
 import { useSession, signIn, signOut } from "next-auth/react"
 
 const menuItems = [
-  {id: 1, label: "Usuarios", icon: UserGroupIcon, link: "/Component"},
+  {id: 1, label: "Usuarios", icon: UserGroupIcon, link: "/users"},
   {id: 2, label: "Monitoreo", icon: PresentationChartLineIcon, link: "/monitoring"},
   {id: 3, label: "Reportes", icon: DocumentReportIcon, link: "/reports"},
   {id: 4, label: "Plantillas", icon: TemplateIcon, link: "/templates"},

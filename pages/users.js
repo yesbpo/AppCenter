@@ -13,6 +13,8 @@ const Users = () => {
     Password: '',
     TypeUser: 'Asesor',
   });
+  const [creationStatus, setCreationStatus] = useState(null);
+
 
 
 //Aca enviamos los datos del usuario creado
@@ -27,12 +29,39 @@ const Users = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    // Validar que todos los campos estén llenos
+    if (!userData.Nombre || !userData.Apellido || !userData.Email || !userData.Usuario || !userData.Password) {
+      alert('Faltan campos. Por favor, complete todos los campos.');
+      return;
+    }
+
+    // Validar que el nombre de usuario y el correo electrónico no estén en uso
+    const isUsernameTaken = users.some((user) => user.Usuario === userData.Usuario);
+    const isEmailTaken = users.some((user) => user.Email === userData.Email);
+
+    if (isUsernameTaken) {
+      alert('El nombre de usuario ya está en uso. Por favor, elija otro.');
+      return;
+    }
+
+    if (isEmailTaken) {
+      alert('El correo electrónico ya está en uso. Por favor, elija otro.');
+      return;
+    }
+
     try {
       const response = await axios.post('https://dxzb9smq-8080.use2.devtunnels.ms/crear-usuario', userData);
       console.log('Respuesta del servidor:', response.data);
-      // Puedes realizar acciones adicionales después de la creación del usuario
+      setCreationStatus('Usuario creado exitosamente.');
+      setTimeout(() => {
+        setCreationStatus(null);
+      }, 3000);
     } catch (error) {
       console.error('Error al hacer la solicitud:', error.message);
+      setCreationStatus('Error al crear el usuario.');
+      setTimeout(() => {
+        setCreationStatus(null);
+      }, 3000);
     }
   };
 
@@ -108,6 +137,8 @@ useEffect(() => {
           <button type="submit">Crear Usuario</button>
         </div>
       </form>
+
+      {creationStatus && <p>{creationStatus}</p>}
 
       <p>Usuarios:</p>
       <ul>
