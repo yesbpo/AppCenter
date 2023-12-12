@@ -2,14 +2,11 @@ import Layout from '../components/Layout';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import io from 'socket.io-client';
-import { getSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import EmojiPicker from 'emoji-picker-react';
 import { Pendientes } from '../components/Pendientes';
-const Chats = ({session}) => {
-  async function getServerSideProps(context) {
-    // Obtén la información de la sesión en el servidor
-    const session = await getSession(context);
-  console.log(session)}
+const Chats = () => {
+  
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const handleEmojiClick = (_, emojiObject) => {
@@ -165,7 +162,7 @@ const Chats = ({session}) => {
   };
 
   useEffect(() => {
-    const apiUrl2 = 'https://3d29bmtd-8080.use2.devtunnels.ms/api/users';
+    const apiUrl2 = "https://3d29bmtd-8080.use2.devtunnels.ms/api/users";
     fetch(apiUrl2, {
       method: 'GET',
     })
@@ -189,12 +186,13 @@ const Chats = ({session}) => {
         console.error('Error:', error);
       });  
   }, []);
-  
+  const { data: session } = useSession()
   return (
       <>
-        
+        Signed in as {session.user.Nombre} <br />
     <Layout>
       <Box>
+
         <ButtonContainer>
           <CustomButton onClick={handleEngestionClick}>En gestion</CustomButton>
            {/* Mostrar Activos si 'mostrarActivos' es true */}
