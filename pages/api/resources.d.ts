@@ -1,6 +1,7 @@
 type User = {
     
-    Nombre: string,
+    nombre: string,
     Id: string,
-    TypeUser: string
+    TypeUser: string,
+    
 }

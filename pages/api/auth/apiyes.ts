@@ -2,6 +2,7 @@ import type { NextApiHandler } from "next";
 
 
 const credentialsAuth: NextApiHandler<User> = (request, response) => {
+    
 
     if (request.method !== 'POST'){
         response.status(405).end()
@@ -10,7 +11,7 @@ const credentialsAuth: NextApiHandler<User> = (request, response) => {
     
     if ( request.body.user === 'password' && request.body.password === 'password'){
         const yesuser: User = {
-            Nombre: 'yesusuario',
+            nombre: 'yesusuario',
             Id: 'mesadeayudaqyebpo.co',
             TypeUser: 'Asesor'
         }
