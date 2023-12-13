@@ -50,7 +50,7 @@ const Users = () => {
     }
 
     try {
-      const response = await axios.post('https://dxzb9smq-8080.use2.devtunnels.ms/crear-usuario', userData);
+      const response = await axios.post('https://3d29bmtd-8080.use2.devtunnels.ms/crear-usuario', userData);
       console.log('Respuesta del servidor:', response.data);
       setCreationStatus('Usuario creado exitosamente.');
       setTimeout(() => {
@@ -69,7 +69,7 @@ const Users = () => {
 useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('https://dxzb9smq-8080.use2.devtunnels.ms/obtener-usuarios');
+        const response = await axios.get('https://3d29bmtd-8080.use2.devtunnels.ms/obtener-usuarios');
         setUsers(response.data.usuarios);
       } catch (error) {
         console.error('Error al obtener los usuarios:', error.message);

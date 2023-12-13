@@ -17,6 +17,8 @@ const Sends = (props) => {
   const [sheetname, setSheetname] = useState([]);
   const [filename, setFilename] = useState([]);
   const [showFileContent, setShowFileContent] = useState(false);
+  const [uniqueNumber, setUniqueNumber] = useState('');
+
 
   useEffect(() => {
   const apiUrl2 = 'https://3d29bmtd-8080.use2.devtunnels.ms/api/templates';
@@ -31,7 +33,7 @@ const Sends = (props) => {
   .catch(error => {
     console.error('Error:', error);
   });
-  }, []); // Empty dependency array to run the effect only once when the component mounts
+  }, []); 
 
   const handleTemplateChange = (event) => {
     const selectedTemplateName = event.target.value;
@@ -87,52 +89,103 @@ const Sends = (props) => {
 
 
 
-  const enviar = () =>{
-    sheetname.map((dest)=>{console.log(dest[selectvar])
-      const url = 'https://api.gupshup.io/wa/api/v1/msg';
-      const apiKey = '6ovjpik6ouhlyoalchzu4r2csmeqwlbg';
-      const data = {
-        channel: 'whatsapp',
-        source: '5718848135',
-        'src.name': 'Pb1yes',
-        destination: dest[selectvar],
-        message: selectedTemplateData,
-        channel: 'whatsapp',
-        disablePreview: true,
-      };
-      
-      const headers = {
-        'Cache-Control': 'no-cache',
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'apikey': apiKey,
-      };
-      
-      const formData = new URLSearchParams();
-      Object.entries(data).forEach(([key, value]) => {
-        formData.append(key, value);
-      });
-      
-      fetch(url, {
-        method: 'POST',
-        headers: headers,
-        body: formData,
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
-          }
-        })
-        .then((responseData) => {
-          console.log('Respuesta del servidor:', responseData);
-        })
-        .catch((error) => {
-          console.error('Error al realizar la solicitud:', error);
+  const enviar = () => {
+    if (checkboxValue === 'Unico' && uniqueNumber) {
+      console.log('Número Único:', uniqueNumber);
+      sheetname.map((dest) => {
+        console.log(dest[selectvar]);
+        const url = 'https://api.gupshup.io/wa/api/v1/msg';
+        const apiKey = '6ovjpik6ouhlyoalchzu4r2csmeqwlbg';
+        const data = {
+          channel: 'whatsapp',
+          source: '5718848135',
+          'src.name': 'Pb1yes',
+          destination: uniqueNumber,
+          message: selectedTemplateData,
+          channel: 'whatsapp',
+          disablePreview: true,
+        };
+  
+        const headers = {
+          'Cache-Control': 'no-cache',
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'apikey': apiKey,
+        };
+  
+        const formData = new URLSearchParams();
+        Object.entries(data).forEach(([key, value]) => {
+          formData.append(key, value);
         });
-      
-      })
-  }
+  
+        fetch(url, {
+          method: 'POST',
+          headers: headers,
+          body: formData,
+        })
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            } else {
+              throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+            }
+          })
+          .then((responseData) => {
+            console.log('Respuesta del servidor:', responseData);
+          })
+          .catch((error) => {
+            console.error('Error al realizar la solicitud:', error);
+          });
+      });
+    } else if (checkboxValue === 'Masivo' && sheetname.length > 0) {
+      sheetname.map((dest) => {
+        console.log(dest[selectvar]);
+        const url = 'https://api.gupshup.io/wa/api/v1/msg';
+        const apiKey = '6ovjpik6ouhlyoalchzu4r2csmeqwlbg';
+        const data = {
+          channel: 'whatsapp',
+          source: '5718848135',
+          'src.name': 'Pb1yes',
+          destination: dest[selectvar],
+          message: selectedTemplateData,
+          channel: 'whatsapp',
+          disablePreview: true,
+        };
+  
+        const headers = {
+          'Cache-Control': 'no-cache',
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'apikey': apiKey,
+        };
+  
+        const formData = new URLSearchParams();
+        Object.entries(data).forEach(([key, value]) => {
+          formData.append(key, value);
+        });
+  
+        fetch(url, {
+          method: 'POST',
+          headers: headers,
+          body: formData,
+        })
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            } else {
+              throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+            }
+          })
+          .then((responseData) => {
+            console.log('Respuesta del servidor:', responseData);
+          })
+          .catch((error) => {
+            console.error('Error al realizar la solicitud:', error);
+          });
+      });
+    } else {
+      // Manejo para el caso en que no se proporciona un número único ni hay datos masivos
+      console.log('No se proporcionó un número único o no hay datos masivos.');
+    }
+  };
 
   const handleShowContent = () => {
     setShowFileContent(true);
@@ -230,11 +283,16 @@ const Sends = (props) => {
           )}
           </div>
     
-        {checkboxValue === 'Unico' && (
-        <div>
-          <p>Escribe los numeros separados por coma</p>
-        </div>
-        )}
+          {checkboxValue === 'Unico' && (
+  <div>
+    <p>Escribe el número:</p>
+    <input
+      type="text"
+      value={uniqueNumber}
+      onChange={(e) => setUniqueNumber(e.target.value)}
+    />
+  </div>
+)}
       </Box>
    
       <Box>
