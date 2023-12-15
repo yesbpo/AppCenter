@@ -16,6 +16,9 @@ const Reports = (props) => {
   const [digitHeader, setDigitHeader] = useState('');
   const [headerExample, SetHeaderExample] = useState('');
   const [templates, setTemplates] = useState([]);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [isSuccessMessageVisible, setIsSuccessMessageVisible] = useState(false);
+
 
 //Crear plantilla
   const apiUrl = 'https://api.gupshup.io/wa/app/cef6cd40-330f-4b25-8ff2-9c8fcc434d90/template';
@@ -53,6 +56,12 @@ const Reports = (props) => {
   
       const data = await response.json();
       console.log('Response:', data);
+      setSuccessMessage('¡Plantilla creada con éxito!');
+      setIsSuccessMessageVisible(true);
+
+      setTimeout(() => {
+        setIsSuccessMessageVisible(false);
+      }, 5000);
     } catch (error) {
       console.error('Error:', error);
     }
@@ -328,6 +337,13 @@ const Reports = (props) => {
       <div>
       <button type="submit">Crear Plantilla</button>
       </div>
+
+      {isSuccessMessageVisible && (
+        <div>
+          <p>{successMessage}</p>
+        </div>
+      )}
+      
       
     </form>
       </Box>
@@ -374,7 +390,8 @@ const Reports = (props) => {
          ))}
        </div>
      </Box>
-      
+
+     
 
     </Layout>
   );

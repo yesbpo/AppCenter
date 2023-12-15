@@ -6,12 +6,11 @@ import Layout from '../components/Layout';
 const Users = () => {
     const [users, setUsers] = useState([]);
   const [userData, setUserData] = useState({
-    Nombre: '',
-    Apellido: '',
-    Email: '',
-    Usuario: '',
-    Password: '',
-    TypeUser: 'Asesor',
+    usuario: '',
+    password: '',
+    email: '',
+    type_user: '',
+    complete_name: '',
   });
   const [creationStatus, setCreationStatus] = useState(null);
 
@@ -30,14 +29,14 @@ const Users = () => {
     event.preventDefault();
 
     // Validar que todos los campos estén llenos
-    if (!userData.Nombre || !userData.Apellido || !userData.Email || !userData.Usuario || !userData.Password) {
-      alert('Faltan campos. Por favor, complete todos los campos.');
+    if (!userData.email || !userData.usuario || !userData.password || !userData.type_user || !userData.complete_name) {
+      alert('Faltan campos. Por favor, complete todos los campos con *.');
       return;
     }
 
     // Validar que el nombre de usuario y el correo electrónico no estén en uso
-    const isUsernameTaken = users.some((user) => user.Usuario === userData.Usuario);
-    const isEmailTaken = users.some((user) => user.Email === userData.Email);
+    const isUsernameTaken = users.some((user) => user.usuario === userData.usuario);
+    const isEmailTaken = users.some((user) => user.email === userData.email);
 
     if (isUsernameTaken) {
       alert('El nombre de usuario ya está en uso. Por favor, elija otro.');
@@ -70,7 +69,7 @@ useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await axios.get('https://3d29bmtd-8080.use2.devtunnels.ms/obtener-usuarios');
-        setUsers(response.data.usuarios);
+        setUsers(response.data.User);
       } catch (error) {
         console.error('Error al obtener los usuarios:', error.message);
       }
@@ -87,27 +86,22 @@ useEffect(() => {
         <div>
           <label>
             Nombre:
-            <input type="text" name="Nombre" value={userData.Nombre} onChange={handleChange} />
-          </label>
-          
-          <label>
-            Apellido:
-            <input type="text" name="Apellido" value={userData.Apellido} onChange={handleChange} />
+            <input type="text" name="Nombre" value={userData.complete_name} onChange={handleChange} />
           </label>
 
           <label>
             Correo:
-            <input type="text" name="Email" value={userData.Email} onChange={handleChange} />
+            <input type="text" name="Email" value={userData.email} onChange={handleChange} />
           </label>
 
           <label>
             Usuario:
-            <input type="text" name="Usuario" value={userData.Usuario} onChange={handleChange} />
+            <input type="text" name="Usuario" value={userData.usuario} onChange={handleChange} />
           </label>
 
           <label>
             Contraseña:
-            <input type="text" name="Password" value={userData.Password} onChange={handleChange} />
+            <input type="text" name="Password" value={userData.password} onChange={handleChange} />
           </label>
 
           <label>
@@ -116,7 +110,7 @@ useEffect(() => {
                 type="radio"
                 name="TypeUser"
                 value="Asesor"
-                checked={userData.TypeUser === 'Asesor'}
+                checked={userData.type_user === 'Asesor'}
                 onChange={handleChange}
               />
             </label>
@@ -127,7 +121,7 @@ useEffect(() => {
                 type="radio"
                 name="TypeUser"
                 value="Coordinador"
-                checked={userData.TypeUser === 'Coordinador'}
+                checked={userData.type_user === 'Coordinador'}
                 onChange={handleChange}
               />
             </label>
@@ -144,7 +138,7 @@ useEffect(() => {
       <ul>
         {users.map((user) => (
           <li key={user.id}>
-            Nombre: {user.Nombre}, Apellido: {user.Apellido}, Email: {user.Email}, Usuario: {user.Usuario}, Tipo de usuario: {user.TypeUser}
+            Nombre: {user.complete_name}, Email: {user.email}, Usuario: {user.usuario}, Tipo de usuario: {user.type_user}
           </li>
         ))}
       </ul>
