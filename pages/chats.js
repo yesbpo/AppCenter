@@ -6,9 +6,8 @@ import { useSession } from 'next-auth/react';
 import EmojiPicker from 'emoji-picker-react';
 import { Pendientes } from '../components/Pendientes';
 const Chats = () => {
-  
+  const { data: session } = useSession()
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-
   const handleEmojiClick = (_, emojiObject) => {
     setInputValue((prevValue) => prevValue + emojiObject.target);
     console.log(emojiObject.target.src)
@@ -186,17 +185,46 @@ const Chats = () => {
         console.error('Error:', error);
       });  
   }, []);
-  const { data: session } = useSession()
+  const actualizarUsuario = async () => {
+    const url = 'https://3d29bmtd-8080.use2.devtunnels.ms/actualizarUsuario'; // Asegúrate de que la URL sea correcta
+  
+    const usuario = session.user.name; // Reemplaza con el nombre de usuario que deseas actualizar
+    const nuevoDato = 'Activo'; // Reemplaza con el nuevo valor que deseas asignar
+  
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          usuario: usuario,
+          nuevoDato: nuevoDato,
+        }),
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data); // Aquí puedes manejar la respuesta del servidor
+      } else {
+        console.error('Error al actualizar el usuario:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error de red:', error.message);
+    }
+  };
+  
+  
+  
+  
   return (
-      <>
-        Signed in as {session.user.Nombre} <br />
-    <Layout>
-      <Box>
-
+  <>
+    Signed in as {session.user.name} <br />
+      <Layout>
+        <Box onLoad={actualizarUsuario()}>
         <ButtonContainer>
           <CustomButton onClick={handleEngestionClick}>En gestion</CustomButton>
            {/* Mostrar Activos si 'mostrarActivos' es true */}
-      
           <CustomButton onClick={handlePendientesClick}>Pendientes</CustomButton>
           <CustomButton onClick={() => console.log('Cerrados')}>Cerrados</CustomButton>
           <CustomButton onClick={() => console.log('Agregar Número')}>Agregar Número</CustomButton>

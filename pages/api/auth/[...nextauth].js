@@ -1,46 +1,49 @@
 
-import NextAuth from "next-auth"
-import CredentialsProvider from "next-auth/providers/credentials"
+import NextAuth from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import db from '../../../libs/db';
+import bcrypt from 'bcrypt'
+
+
 
 export const authOptions = {
-   theme: {
-      colorScheme: "light",
-      brandColor: "#320df1", 
-      logo: "https://1bb437.a2cdn1.secureserver.net/wp-content/uploads/2023/08/Logo-500-full-150x150.jpg", 
-      buttonText: "#346df1" 
-    },
-   debug: true,
-   session: {},
-   jwt: {},
    providers: [
-    CredentialsProvider({
-      name: 'Yes',
-      credentials: {
-         user :{
-            type: 'string',
-            label: 'Usuario',
-         },
-         password: {
-            type: 'password',
-            label:'ingresa tu contraseña',
-         }
-
-      },
-      async authorize(credentials){
-        const res =  await fetch('http://localhost:3000/api/auth/apiyes',{
-            method: 'POST',
-            body: JSON.stringify(credentials),
-            headers: {'Content-type': 'application/json'}
+      CredentialsProvider({
+        name: "Credentials",
+        credentials: {
+          usuario: { label: "Usuario", type: "text", placeholder: "jsmith" },
+          password: { label: "Password", type: "password", placeholder: "*****" },
+        },   async authorize(credentials, req) {
+         console.log(credentials)
+ 
+         const userFound = await db.user.findUnique({
+             where: {
+                 usuario: credentials.usuario
+             }
          })
-
-         const user  = await res.json()
-         if(res.ok && user ){
-            return user
+ 
+         if (!userFound) throw new Error('No user found')
+ 
+         console.log(userFound)
+ 
+         const matchPassword = bcrypt.compare(credentials.password, userFound.password)
+ 
+         if (!matchPassword) throw new Error('Wrong password')
+ 
+         return {
+             id: userFound.id,
+             name: userFound.usuario,
+             email:  userFound.email,
          }
-         return null
-      }
-    }),
+       },
+     }),
+   ],
+   pages: {
+     signIn: "/auth/login",
+   }
     // ...add more providers here
-  ],
+  
 }
-export default NextAuth(authOptions)
+export default NextAuth(authOptions);
+
+
