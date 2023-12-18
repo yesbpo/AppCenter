@@ -1,296 +1,159 @@
+import React, { useState } from 'react';
+import axios from 'axios';
 import Layout from '../components/Layout';
-import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import io from 'socket.io-client';
-import { useSession, signIn, signOut } from "next-auth/react"
-const MonitoringPage = () => {
-  
-  const socket = io('https://3d29bmtd-8080.use2.devtunnels.ms/');
-  const [contactos, setContactos] = useState([
-    { user: null, fecha: null, mensajes: [{ tipomensaje: '', datemessage: '', content: '' }] },
-  ]);
-  const [webhookData, setWebhookData] = useState(null);
-  
-  const [mensajes, setMensajes] = useState(
-     [
-      { numero: '', tipo: '', contenido: '', estado: '', date: '' },
-    ]
-   
-);
-  const [numeroEspecifico, setNumeroEspecifico] = useState(''); // Reemplaza esto con el número que necesites
-  const [inputValue, setInputValue] = useState('')
-// Combina los mensajes entrantes y salientes en una sola lista
+import EmojiPicker from 'react-emoji-picker';
 
+const Reports = (props) => {
+  const [responseData, setResponseData] = useState(null);
+  const [elementName, setElementName] = useState('');
+  const [languageCode, setLanguageCode] = useState('es_MX');
+  const [category, setCategory] = useState('MARKETING');
+  const [header, setHeader] = useState(''); 
+  const [exampleHeader, setExampleHeader] = useState('Encabezado de la plantilla');
+  const [content, setContent] = useState('Contenido de la plantilla {{1}}');
+  const [variables, setVariables] = useState([1]); // Arreglo para rastrear variables
+  const [emojis, setEmojis] = useState([]);
 
- 
-  
-  const [msg, setMsg] = useState([]);
-
-
-  socket.on ('cambio', async (data) => {
-    console.log('Información del webhook recibida:', data);
-    
-    const nuevosContactos = [
-      ...contactos,
-      {
-        user: data.payload.source,
-        fecha: new Date(data.timestamp).toLocaleString('es-ES', {
-          year: 'numeric',
-          month: 'numeric',
-          day: 'numeric',
-          hour: 'numeric',
-          minute: 'numeric',
-          second: 'numeric',
-          timeZoneName: 'short',
-        }),
-      },
-    ];
-    let fecha = new Date(data.timestamp).toLocaleString('es-ES', {
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-      timeZoneName: 'short',
-    })
-    const nuevoMensaje = {
-      numeroDestino: data.payload.destination,
-      tipo: 'message-event',
-      contenido: inputValue,
-      estado: data.payload.type,
-      date: fecha
-
-    };
-    setMsg((prevMsg) => [...prevMsg, mensajes.inputValue]);
-    const nuevoMensajeEntrante = {
-      numeroEntrante: data.payload.source,
-      tipo: data.type,
-      contenido: data.payload.payload.text,
-      date: fecha,
-    };
-    if(data.payload.payload == undefined){
-      setMensajes([...mensajes, nuevoMensaje]);
+  const handleAddPlaceholder = () => {
+    // Verifica si ya existe {{1}} en el encabezado
+    if (!header.includes('{{1}}') && header.length + 7 <= 160) {
+      // Agrega {{1}} al encabezado
+      setHeader(`${header}{{1}}`);
     }
-    else{
-      setMensajes([...mensajes, nuevoMensajeEntrante]);
-    }
-    
-    if (contactos.fecha !== nuevosContactos.fecha) {
-      setContactos(nuevosContactos);
-    }
-    const cont = parseInt(msg.length);
-    console.log(cont);
-    const webhookText = data ? data.payload.payload.text : null;
-    setWebhookData(webhookText);
-  
-    
-  });
-
-  useEffect(() => {
-    const apiUrl2 = 'https://3d29bmtd-8080.use2.devtunnels.ms/api/users';
-    fetch(apiUrl2, {
-      method: 'GET',
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        const nuevosContactos = data.users.map((usuario) => ({
-          user: usuario.phoneCode,
-          fecha: new Date(usuario.lastMessageTimeStamp).toLocaleString('es-ES', {
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric',
-            second: 'numeric',
-            timeZoneName: 'short',
-          }),
-        }));
-
-        setContactos(nuevosContactos);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-      
-  }, []);
- 
-  const renderMensajes = (mensajesOrdenados) => {
-    const mensajesConContenido = mensajesOrdenados.filter(
-      mensaje => mensaje.contenido.trim() !== '' || undefined
-    );
-  
-    if (mensajesConContenido.length === 0) {
-      return <p>No hay mensajes con contenido.</p>;
-    }
-  
-    return mensajesConContenido.map((mensaje, index) => (
-      <div key={index} className={`mensaje ${mensaje.tipo}`}>
-        <p>{mensaje.contenido}</p>
-        <span>{mensaje.date}</span>
-      </div>
-    ));
   };
-  
-  const { data: session } = useSession()
-  if (session) {
-    return (
-      <>
-        Signed in as {session.user.email} <br />
-        <Layout>
-      <Box>
-        <ButtonContainer>
-          <CustomButton onClick={() => console.log('Activos')}>Activos</CustomButton>
-          <CustomButton onClick={() => console.log('Pendientes')}>Pendientes</CustomButton>
-          <CustomButton onClick={() => console.log('Cerrados')}>Cerrados</CustomButton>
-          <CustomButton onClick={() => console.log('Agregar Número')}>Agregar Número</CustomButton>
-        </ButtonContainer>
-      </Box>
-      <Container>
-        <Box>
-          <ContainerBox>
-            <p>  mensaje:{webhookData}</p>
-            <div>
-            <h2>Entrantes</h2>
-            {renderMensajes(mensajes)}
 
-      
-      <h2>Mensajes Ordenados para {numeroEspecifico}</h2>
-      {(() => {
+  const handleAddVariable = () => {
+    const nextVariable = variables.length + 1;
+    setContent(`${content} {{${nextVariable}}}`);
+    setVariables([...variables, nextVariable]);
+  };
 
-        // Filtra los mensajes por el número específico
-        const mensajesFiltrados = mensajes.filter(
-          (mensaje) => mensaje.numero === numeroEspecifico);
-        // Ordena los mensajes por fecha de forma ascendente (de la más antigua a la más reciente)
-        return mensajesFiltrados.map((mensaje, index) => (
-          <div key={index} className={`mensaje ${mensaje.tipo}`}>
-            <p>{mensaje.contenido}</p>
-            <span>{mensaje.date}</span>
-          </div>
-        ));
-      })()}
-    </div>
- 
+  // Función para agregar un emoji al contenido
+  const handleAddEmoji = (emoji) => {
+    setContent(`${content} ${emoji}`);
+    setEmojis([...emojis, emoji]);
+  };
 
-            
-          </ContainerBox>
-          <InputContainer>
-            <InputMensaje
-              type="text"
-              placeholder="Escribe un mensaje..."
-              value={inputValue}
-              onChange={(e) =>
-                setInputValue(e.target.value)
-              }
-            />
-            
-          </InputContainer>
-          <BotonEnviar onClick={enviarMensaje}>Enviar</BotonEnviar>
-        </Box>
-        <Box>
-          <div className="chat-container">
-            <ul>
-              {contactos.map((contacto, index) => (
-                <li key={index}>
-                  <strong onClick={() => setNumeroEspecifico(contacto.user)}>Usuario:</strong> {contacto.user},{' '}
-                  <strong>Fecha:</strong> {contacto.fecha}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </Box>
-      </Container>
-    </Layout>
-      </>
-    )
-  }
+  const handleCreateTemplate = async () => {
+    try {
+      const templateData = {
+        elementName: elementName,
+        languageCode: languageCode,
+        category: category,
+        templateType: 'TEXT',
+        vertical: 'TEXT',
+        content: content,
+        example: content,
+        header: header,
+        exampleHeader: exampleHeader,
+        footer: 'Pie de la plantilla',
+        allowTemplateCategoryChange: false,
+        enableSample: true,
+      };
+
+      // Realiza la solicitud al servidor
+      const response = await axios.post('http://localhost:5000/createTemplates', templateData);
+
+      // Verifica el estado de la respuesta
+      if (response.status >= 200 && response.status < 300) {
+        // La solicitud fue exitosa
+        setResponseData(response.data);
+      } else {
+        // La solicitud falló
+        console.error('Error en la respuesta del servidor:', response.status, response.data);
+      }
+    } catch (error) {
+      // Error en la solicitud
+      console.error('Error:', error.message || error);
+    }
+  };
+
   return (
-    <>
-      Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
-    </>
-    )
+    <Layout>
 
+      <label>
+        Nombre plantilla:
+        <input
+          type="text"
+          value={elementName}
+          onChange={(e) => setElementName(e.target.value)}
+        />
+      </label>
+
+      <label>
+        Categoria:
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        >
+          <option value="MARKETING">Marketing</option>
+          <option value="UTILITY">Utilidad</option>
+          <option value="AUTHEM">Autenticación</option>
+        </select>
+      </label>
+
+      <label>
+        Idioma:
+        <select
+          value={languageCode}
+          onChange={(e) => setLanguageCode(e.target.value)}
+        >
+          <option value="es_MX">Español Mexico</option>
+          <option value="es_ARG">Español Argentina</option>
+          <option value="es_ES">Español España</option>
+          <option value="en_US">Ingles Estados Unidos</option>
+        </select>
+      </label>
+      
+
+      <label>
+        Header:
+        <input
+          type="text"
+          value={header}
+          onChange={(e) => setHeader(e.target.value)}
+          maxLength={160}
+        />
+        <button onClick={handleAddPlaceholder}>Agregar variable</button>
+      </label>
+
+      {/* Campo de entrada para el ejemplo de encabezado */}
+      <label>
+        Example Header:
+        <input
+          type="text"
+          value={exampleHeader}
+          onChange={(e) => setExampleHeader(e.target.value)}
+        />
+      </label>
+
+      <label>
+        Content:
+        <textarea
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        />
+        <button onClick={handleAddVariable}>Agregar Variable</button>
+      </label>
+
+      {/* Sección para emojis */}
+      <div>
+        <label>Emojis:</label>
+        <EmojiPicker onEmojiSelected={(emoji) => handleAddEmoji(emoji)} />
+      </div>
+    
+      <button onClick={handleCreateTemplate}>Crear Plantilla</button>
+
+      {/* Puedes mostrar la respuesta del servidor si es necesario */}
+      {responseData && (
+        <div>
+          <h2>Respuesta del Servidor:</h2>
+          <pre>{JSON.stringify(responseData, null, 2)}</pre>
+        </div>
+      )}
+    </Layout>
+  );
 };
 
-const Box = styled.div`
-  padding: 30px;
-  margin: 30px;
-  border-radius: 10px;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-`;
-
-const CustomButton = styled.button`
-  background-color: #4caf50;
-  color: white;
-  padding: 10px 20px;
-  font-size: 16px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  width: 100%;
-
-  &:hover {
-    background-color: #45a049;
-  }
-`;
-
-const ButtonContainer = styled.div`
-  display: flex;
-  gap: 10px;
-`;
-
-const Container = styled.div`
-  display: flex;
-  gap: 20px;
-`;
-
-const ContainerBox = styled.div`
-  background-color: #f7f7f7;
-  padding: 15px;
-  border-radius: 10px;
-  overflow-y: scroll;
-  max-height: 400px;
-`;
-
-const p = styled.div`
-  background-color: ${(props) => (props.tipo === 'message-event' ? '#6e6e6' : '#4caf50')};
-  color: ${(props) => (props.tipo === 'message-event' ? 'black' : 'white')};
-  padding: 10px;
-  margin-bottom: 5px;
-  border-radius: 5px;
-`;
-
-
-
-const InputContainer = styled.div`
-  margin-top: 15px;
-  display: flex;
-  align-items: center;
-`;
-
-const InputMensaje = styled.input`
-  flex: 1;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  margin-right: 10px;
-`;
-
-const BotonEnviar = styled.button`
-  background-color: #4caf50;
-  color: white;
-  padding: 10px 20px;
-  font-size: 16px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: #45a049;
-  }
-`;
-
-export default MonitoringPage;
+export default Reports;
