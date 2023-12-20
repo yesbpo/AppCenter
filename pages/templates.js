@@ -27,6 +27,7 @@ const Reports = (props) => {
   const [deleteMessage, setDeleteMessage] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
+//Constants buy page templates
   const templatesPerPage = 5;
 
   // Calculate the index of the first and last template to display on the current page
@@ -35,35 +36,27 @@ const Reports = (props) => {
   const currentTemplates = templates.slice(indexOfFirstTemplate, indexOfLastTemplate);
 
   // Calculate the total number of pages
-  const totalPages = Math.ceil(templates.length / templatesPerPage);
-
-  // ... (your existing functions)
-
+  const totalPages = Math.ceil(templates.length / templatesPerPage)
   const handleNextPage = () => {
     setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
   };
-
   const handlePrevPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
 
-
+//Constants delete templates
   const resetDeleteMessage = () => {
     setDeleteMessage('');
   };
-
   const showTemporaryDeleteMessage = (msg, duration = 3000) => {
     setDeleteMessage(msg);
     setTimeout(() => {
       resetDeleteMessage();
     }, duration);
   };
-
-
   const resetMessage = () => {
     setMessage('');
   };
-
   const showTemporaryMessage = (msg, duration = 3000) => {
     setMessage(msg);
     setTimeout(() => {
@@ -71,7 +64,7 @@ const Reports = (props) => {
     }, duration);
   };
 
-
+//Constant to reset fields to 0 when changing template type
   const resetFields = () => {
     setElementName('');
     setLanguageCode('es_MX');
@@ -87,6 +80,7 @@ const Reports = (props) => {
     setExampleMedia('');
   };
 
+//Handling of template type buttons and template creation 
   const handleToggleTemplateButtons = () => {
     resetFields();
     setShowTemplateButtons(!showTemplateButtons);
@@ -98,6 +92,7 @@ const Reports = (props) => {
     setShowTemplateButtons(false);
   };
 
+//Function for uploading files, whether image, video or document and getting the handleId
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     setSelectedFile(file);
@@ -128,6 +123,7 @@ const Reports = (props) => {
     }
   };
 
+//Here we have the handling of the variables, so that you can count from the last one 
   const handleAddPlaceholder = () => {
     if (!header.includes('{{1}}') && header.length + 7 <= 160) {
       setHeader(`${header}{{1}}`);
@@ -148,18 +144,21 @@ const Reports = (props) => {
     }
   };
 
+//This is how to handle the emojis, for deployment
   const handleAddEmoji = (emoji) => {
     setContent(`${content} ${emoji}`);
     setEmojis([...emojis, emoji]);
     setShowEmojiPicker(false);
   };
 
+//This function is to alert the user that the indicated fields are missing.  
   const handleCreateTemplate = async () => {
     if (!content || !exampleContent || !exampleMedia) {
       showTemporaryMessage('Por favor, complete los campos de contenido, contenido de ejemplo y archivo multimedia.');
       return;
     }
-
+    
+//Fields to send the request to create templates 
     const templateData = {
       elementName,
       languageCode,
@@ -191,7 +190,7 @@ const Reports = (props) => {
     }
   };
 
-//Get template
+//Request to obtain the templates
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -270,12 +269,12 @@ const Reports = (props) => {
     }
   };
 
+//This is the application to delete the templates
   const handleDeleteTemplate = async (elementName) => {
     try {
       const response = await axios.delete(`http://localhost:5000/deleteTemplate/${elementName}`);
 
       if (response.status === 200 && response.data.status === 'success') {
-        // Elimina la plantilla de la lista después de la eliminación exitosa
         const updatedTemplates = templates.filter((template) => template.elementName !== elementName);
         setTemplates(updatedTemplates);
         setDeleteMessage('Plantilla eliminada exitosamente.');
@@ -292,10 +291,11 @@ const Reports = (props) => {
     }
   };
 
+//This temporary message shows whether or not the template was deleted.
   useEffect(() => {
     const deleteMessageTimer = setTimeout(() => {
       resetDeleteMessage();
-    }, 3000); // 3000 milisegundos (3 segundos) de duración del mensaje
+    }, 3000); 
 
     return () => {
       clearTimeout(deleteMessageTimer);
@@ -320,7 +320,6 @@ const Reports = (props) => {
 
       {(selectedTemplateType === 'TEXT' || selectedTemplateType === 'IMAGE' || selectedTemplateType === 'VIDEO' || selectedTemplateType === 'DOCUMENT') && (
         <>
-          {/* Common fields for TEXT, IMAGE, VIDEO, and DOCUMENT templates */}
           <label>
             Nombre plantilla:
             <input
