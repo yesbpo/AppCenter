@@ -25,6 +25,28 @@ const Reports = (props) => {
   const [templates, setTemplates] = useState([]);
   const [error, setError] = useState(null);
   const [deleteMessage, setDeleteMessage] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const templatesPerPage = 5;
+
+  // Calculate the index of the first and last template to display on the current page
+  const indexOfLastTemplate = currentPage * templatesPerPage;
+  const indexOfFirstTemplate = indexOfLastTemplate - templatesPerPage;
+  const currentTemplates = templates.slice(indexOfFirstTemplate, indexOfLastTemplate);
+
+  // Calculate the total number of pages
+  const totalPages = Math.ceil(templates.length / templatesPerPage);
+
+  // ... (your existing functions)
+
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
 
   const resetDeleteMessage = () => {
     setDeleteMessage('');
@@ -447,9 +469,9 @@ const Reports = (props) => {
 
 <div>
         {error && <p>{error}</p>}
-        {templates.length > 0 && (
+        {currentTemplates.length > 0 && (
           <ul>
-            {templates.map((template) => (
+            {currentTemplates.map((template) => (
               <li key={template.elementName}>
                 <strong>Categoria:</strong> {template.category}<br />
                 <strong>Tipo de plantilla:</strong> {getTemplateType(template.templateType)}<br />
@@ -465,12 +487,31 @@ const Reports = (props) => {
             ))}
           </ul>
         )}
+
+        {/* Pagination controls */}
+        {templates.length > templatesPerPage && (
+          <Pagination>
+            <button onClick={handlePrevPage} disabled={currentPage === 1}>
+              Anterior
+            </button>
+            <span>{`Página ${currentPage} de ${totalPages}`}</span>
+            <button onClick={handleNextPage} disabled={currentPage === totalPages}>
+              Siguiente
+            </button>
+          </Pagination>
+        )}
       </div>
 
 
     </Layout>
   );
 };
+
+const Pagination = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+`;
 
 const Separador = styled.div`
   border-bottom: 1px solid #ccc; /* Puedes ajustar el color según tus preferencias */
