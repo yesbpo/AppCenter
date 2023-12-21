@@ -1,456 +1,548 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
 import Layout from '../components/Layout';
 import styled from 'styled-components';
+import EmojiPicker from 'emoji-picker-react';
 
 const Reports = (props) => {
+  const [responseData, setResponseData] = useState(null);
+  const [elementName, setElementName] = useState('');
   const [languageCode, setLanguageCode] = useState('es_MX');
-  const [templateBody, setTemplateBody] = useState('');
-  const [templateFooter, setTemplateFooter] = useState('');
-  const [templateExample, setTemplateExample] = useState('');
-  const [templateName, setTemplateName] = useState('');
-  const [templateCategory, setTemplateCategory] = useState('MARKETING');
-  const [templateType, setTemplateType] = useState('');
-  const [showTemplateOptions, setShowTemplateOptions] = useState(false);
-  const [selectedOption, setSelectedOption] = useState('none');
-  const [digitHeader, setDigitHeader] = useState('');
-  const [headerExample, SetHeaderExample] = useState('');
+  const [category, setCategory] = useState('MARKETING');
+  const [header, setHeader] = useState('');
+  const [exampleHeader, setExampleHeader] = useState('');
+  const [content, setContent] = useState('');
+  const [emojis, setEmojis] = useState([]);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [footer, setFooter] = useState('');
+  const [allowCategoryChange, setAllowCategoryChange] = useState(false);
+  const [showTemplateButtons, setShowTemplateButtons] = useState(false);
+  const [selectedTemplateType, setSelectedTemplateType] = useState('');
+  const [exampleContent, setExampleContent] = useState('');
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [exampleMedia, setExampleMedia] = useState('');
+  const [message, setMessage] = useState('');
   const [templates, setTemplates] = useState([]);
-  const [successMessage, setSuccessMessage] = useState('');
-  const [isSuccessMessageVisible, setIsSuccessMessageVisible] = useState(false);
+  const [error, setError] = useState(null);
+  const [deleteMessage, setDeleteMessage] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
+//Constants buy page templates
+  const templatesPerPage = 5;
 
-//Crear plantilla
-  const apiUrl = 'https://api.gupshup.io/wa/app/cef6cd40-330f-4b25-8ff2-9c8fcc434d90/template';
-  const apiKey = '6ovjpik6ouhlyoalchzu4r2csmeqwlbg';
+  // Calculate the index of the first and last template to display on the current page
+  const indexOfLastTemplate = currentPage * templatesPerPage;
+  const indexOfFirstTemplate = indexOfLastTemplate - templatesPerPage;
+  const currentTemplates = templates.slice(indexOfFirstTemplate, indexOfLastTemplate);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-  
-    const requestData = new URLSearchParams({
-      languageCode,
-      content: templateBody,
-      category: templateCategory,
-      example: templateExample,
-      vertical: 'TEXT',
-      elementName: templateName,
-      templateType: 'TEXT',
-      header: digitHeader,
-      exampleHeader: headerExample,
-    });
-  
-    // Agregar el campo "footer" solo si no está vacío
-    if (templateFooter.trim() !== '') {
-      requestData.append('footer', templateFooter);
-    }
-  
+  // Calculate the total number of pages
+  const totalPages = Math.ceil(templates.length / templatesPerPage)
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+  };
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+//Constants delete templates
+  const resetDeleteMessage = () => {
+    setDeleteMessage('');
+  };
+  const showTemporaryDeleteMessage = (msg, duration = 3000) => {
+    setDeleteMessage(msg);
+    setTimeout(() => {
+      resetDeleteMessage();
+    }, duration);
+  };
+  const resetMessage = () => {
+    setMessage('');
+  };
+  const showTemporaryMessage = (msg, duration = 3000) => {
+    setMessage(msg);
+    setTimeout(() => {
+      resetMessage();
+    }, duration);
+  };
+
+//Constant to reset fields to 0 when changing template type
+  const resetFields = () => {
+    setElementName('');
+    setLanguageCode('es_MX');
+    setCategory('MARKETING');
+    setHeader('');
+    setExampleHeader('');
+    setContent('');
+    setEmojis([]);
+    setShowEmojiPicker(false);
+    setFooter('');
+    setAllowCategoryChange(false);
+    setSelectedFile(null);
+    setExampleMedia('');
+  };
+
+//Handling of template type buttons and template creation 
+  const handleToggleTemplateButtons = () => {
+    resetFields();
+    setShowTemplateButtons(!showTemplateButtons);
+  };
+
+  const handleTemplateButtonClick = (templateType) => {
+    resetFields();
+    setSelectedTemplateType(templateType);
+    setShowTemplateButtons(false);
+  };
+
+//Function for uploading files, whether image, video or document and getting the handleId
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
+    if (file) handleFileUpload();
+  };
+
+  const handleFileUpload = async () => {
+    const apiUrl = 'https://partner.gupshup.io/partner/app/cef6cd40-330f-4b25-8ff2-9c8fcc434d90/upload/media';
+    const partnerAppToken = 'sk_ce0c81f1783e4e86828863ebf2d9c3fa';
+
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+    formData.append('file_type', 'image/png');
+
     try {
-      const response = await fetch(apiUrl, {
-        method: 'POST',
+      const response = await axios.post(apiUrl, formData, {
         headers: {
-          'apikey': apiKey,
-          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': partnerAppToken,
+          'Content-Type': 'multipart/form-data',
         },
-        body: requestData,
       });
-  
-      const data = await response.json();
-      console.log('Response:', data);
-      setSuccessMessage('¡Plantilla creada con éxito!');
-      setIsSuccessMessageVisible(true);
 
-      setTimeout(() => {
-        setIsSuccessMessageVisible(false);
-      }, 5000);
+      setExampleMedia(response.data.handleId.message);
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error:', error.message || error);
+      setMessage('Error al cargar el archivo. Por favor, inténtelo de nuevo.');
+
     }
   };
 
+//Here we have the handling of the variables, so that you can count from the last one 
+  const handleAddPlaceholder = () => {
+    if (!header.includes('{{1}}') && header.length + 7 <= 160) {
+      setHeader(`${header}{{1}}`);
+    }
+  };
 
-  //Llama las plantillas existentes y las muestra 
+  const getNextVariableNumber = () => {
+    const matches = content.match(/{{(\d+)}}/g);
+    return (matches && matches.length > 0) ? parseInt(matches[matches.length - 1].match(/\d+/)[0]) + 1 : 1;
+  };
+
+  const handleAddVariable = () => {
+    const nextVariable = getNextVariableNumber();
+    const variable = `{{${nextVariable}}}`;
+
+    if (!content.includes(variable) && !exampleContent.includes(variable)) {
+      setContent(`${content} ${variable}`);
+    }
+  };
+
+//This is how to handle the emojis, for deployment
+  const handleAddEmoji = (emoji) => {
+    setContent(`${content} ${emoji}`);
+    setEmojis([...emojis, emoji]);
+    setShowEmojiPicker(false);
+  };
+
+//This function is to alert the user that the indicated fields are missing.  
+  const handleCreateTemplate = async () => {
+    if (!content || !exampleContent || !exampleMedia) {
+      showTemporaryMessage('Por favor, complete los campos de contenido, contenido de ejemplo y archivo multimedia.');
+      return;
+    }
+    
+//Fields to send the request to create templates 
+    const templateData = {
+      elementName,
+      languageCode,
+      category,
+      templateType: selectedTemplateType,
+      vertical: selectedTemplateType,
+      content,
+      example: exampleContent,
+      exampleMedia,
+      header,
+      exampleHeader,
+      footer,
+      allowTemplateCategoryChange: false,
+      enableSample: true,
+    };
+
+    try {
+      const response = await axios.post('http://localhost:5000/createTemplates', templateData);
+
+      if (response.status >= 200 && response.status < 300) {
+        setResponseData(response.data);
+        showTemporaryMessage('Plantilla creada exitosamente.');
+      } else {
+        console.error('Error en la respuesta del servidor:', response.status, response.data);
+        showTemporaryMessage('Error al crear la plantilla. Por favor, inténtelo de nuevo.');
+      }
+    } catch (error) {
+      console.error('Error:', error.message || error);
+    }
+  };
+
+//Request to obtain the templates
   useEffect(() => {
-    const apiUrl = 'https://3d29bmtd-8080.use2.devtunnels.ms/api/templates';
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/gupshup-templates');
 
-    fetch(apiUrl, {
-      method: 'GET',
-    })
-      .then(response => response.json())
-      .then(data => {
-        setTemplates(data);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data.status === "success") {
+          const processedTemplates = data.templates.map(template => ({
+            category: template.category,
+            createdOn: template.createdOn,
+            data: template.data,
+            elementName: template.elementName,
+            languageCode: template.languageCode,
+            status: template.status,
+            templateType: template.templateType,
+            modifiedOn: template.modifiedOn,
+          }));
+
+          setTemplates(processedTemplates);
+        } else {
+          setError(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        setError(`Fetch error: ${error.message}`);
+      }
+    };
+
+    fetchData();
   }, []);
 
-//Tipo de plantilla
-  const handleTemplateTypeChange = (event) => {
-    setTemplateType(event.target.value);
-    setShowTemplateOptions(event.target.value === 'product');
-  };
-  
-  const handleInputChange = (e) => {
-    const inputValue = e.target.value;
-
-    // Limitar la longitud del texto a 1024 caracteres
-    if (inputValue.length <= 1024) {
-      setTemplateBody(inputValue);
+  const getLanguageText = (languageCode) => {
+    switch (languageCode) {
+      case 'es_MX':
+        return 'Español México';
+      case 'es_ARG':
+        return 'Español Argentina';
+      case 'es_ES':
+        return 'Español España';
+      case 'en_US':
+        return 'Inglés Estados Unidos';
+      default:
+        return languageCode;
     }
   };
 
-  const charactersRemaining = 1024 - templateBody.length;
-
-  const handleSelectChange = (e) => {
-    setSelectedOption(e.target.value);
-    setTemplateCategory(e.target.value);
+  const getStatusText = (status) => {
+    switch (status) {
+      case 'APPROVED':
+        return 'Aprobada';
+      case 'PENDING':
+        return 'Pendiente';
+      case 'REJECT':
+        return 'Rechazada';
+      default:
+        return status;
+    }
   };
 
-  let categoryRequirementText = null;
+  const getTemplateType = (templateType) => {
+    switch (templateType) {
+      case 'TEXT':
+        return 'Texto';
+      case 'IMAGE':
+        return 'Imagen';
+      case 'VIDEO':
+        return 'Video';
+      case 'DOCUMENT':
+        return 'Documento';
+      default:
+        return templateType;
+    }
+  };
 
-  if (templateCategory === 'MARKETING') {
-    categoryRequirementText = 'Envíe ofertas, promociones de productos y otras catalogos para aumentar tu eficacia y productividad.';
-  } else if (templateCategory === 'UTILITY') {
-    categoryRequirementText = 'Envíe actualizaciones de cuentas, pedidos, recordatorios y mucho más. Podras enviar información importante .';
-  } else if (templateCategory === 'AUTHEM') {
-    categoryRequirementText = 'Envíe codigos que autoricen accesos o de confirmación.';
-  }
+//This is the application to delete the templates
+  const handleDeleteTemplate = async (elementName) => {
+    try {
+      const response = await axios.delete(`http://localhost:5000/deleteTemplate/${elementName}`);
+
+      if (response.status === 200 && response.data.status === 'success') {
+        const updatedTemplates = templates.filter((template) => template.elementName !== elementName);
+        setTemplates(updatedTemplates);
+        setDeleteMessage('Plantilla eliminada exitosamente.');
+        showTemporaryMessage('Plantilla eliminada exitosamente.');
+      } else {
+        console.error('Error al eliminar la plantilla:', response.status, response.data);
+        setDeleteMessage('Error al eliminar la plantilla. Por favor, inténtelo de nuevo.');
+        showTemporaryMessage('Error al eliminar la plantilla. Por favor, inténtelo de nuevo.');
+      }
+    } catch (error) {
+      console.error('Error:', error.message || error);
+      setDeleteMessage('Error al eliminar la plantilla. Por favor, inténtelo de nuevo.');
+      showTemporaryMessage('Error al eliminar la plantilla. Por favor, inténtelo de nuevo.');
+    }
+  };
+
+//This temporary message shows whether or not the template was deleted.
+  useEffect(() => {
+    const deleteMessageTimer = setTimeout(() => {
+      resetDeleteMessage();
+    }, 3000); 
+
+    return () => {
+      clearTimeout(deleteMessageTimer);
+    };
+  }, [deleteMessage]);
+
 
   return (
     <Layout>
+      <Container>
+        <Button onClick={handleToggleTemplateButtons}>Creación de Plantillas</Button>
+        {showTemplateButtons && (
+          <TemplateButtons>
+            {['TEXT', 'IMAGE', 'VIDEO', 'DOCUMENT'].map(type => (
+              <TemplateButton key={type} onClick={() => handleTemplateButtonClick(type)}>
+                Plantilla de {type.toLowerCase()}
+              </TemplateButton>
+            ))}
+          </TemplateButtons>
+        )}
+      </Container>
 
-<Box>
-      <form onSubmit={handleSubmit}>
-        <InputContainer>
+      {(selectedTemplateType === 'TEXT' || selectedTemplateType === 'IMAGE' || selectedTemplateType === 'VIDEO' || selectedTemplateType === 'DOCUMENT') && (
+        <>
           <label>
-            Nombre plantilla: * 
-            <Input
+            Nombre plantilla:
+            <input
               type="text"
-              value={templateName}
-              onChange={(e) => setTemplateName(e.target.value)}
+              value={elementName}
+              onChange={(e) => setElementName(e.target.value)}
             />
+            <RequirementText>
+              *No se aceptan mayúsculas - Los espacios deben ir separados por guiones bajos -
+            </RequirementText>
           </label>
-          <RequirementText>
-            Requisitos: Todo en minúsculas, espacios separados por barras al piso (_), sin caracteres especiales.
-          </RequirementText>
-        </InputContainer>
+
+          <Separador />
+
+          <label>
+            Categoría:
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              <option value="MARKETING">Marketing</option>
+              <option value="UTILITY">Utilidad</option>
+              <option value="AUTHEM">Autenticación</option>
+            </select>
+          </label>
+
+          <Separador />
+
+          <label>
+            Idioma:
+            <select
+              value={languageCode}
+              onChange={(e) => setLanguageCode(e.target.value)}
+            >
+              <option value="es_MX">Español Mexico</option>
+              <option value="es_ARG">Español Argentina</option>
+              <option value="es_ES">Español España</option>
+              <option value="en_US">Inglés Estados Unidos</option>
+            </select>
+          </label>
+
+          <Separador />
+
+          {(selectedTemplateType === 'IMAGE' || selectedTemplateType === 'VIDEO' || selectedTemplateType === 'DOCUMENT') && (
+            <label>
+              {selectedTemplateType === 'IMAGE' ? 'Imagen' : selectedTemplateType === 'VIDEO' ? 'Video' : 'Documento'}:
+              <input type="file" accept={selectedTemplateType === 'IMAGE' ? '.jpg, .jpeg, .png' : selectedTemplateType === 'VIDEO' ? '.MP4, .MOV, .MKV, .AVI, .WMV' : ''} onChange={handleFileUpload} />
+            </label>
+          )}
+
+{selectedTemplateType === 'TEXT' && (
+    <>
+      <label>
+        Header:
+        <input
+          type="text"
+          value={header}
+          onChange={(e) => setHeader(e.target.value)}
+          maxLength={160}
+        />
+        <button onClick={handleAddPlaceholder}>Agregar variable</button>
+      </label>
 
       <Separador />
-     
-        <div>
+
       <label>
-        Categoria: * 
-        <SelectInput 
-          value={templateCategory} 
-          onChange={handleSelectChange}
-        >
-          <option value="MARKETING">Marketing</option>
-          <option value="UTILITY">Utilidad</option>
-          <option value="AUTHEM">Autenticación</option>
-        </SelectInput>
-      </label>
-      {categoryRequirementText && (
-        <RequirementText>
-          {categoryRequirementText}
-        </RequirementText>
-      )}
-    </div>
-
-    <Separador />
-
-    <div>
-      <div>
-        <label>
-          <input
-            type='radio'
-            name='templateType'
-            value='custom'
-            onChange={handleTemplateTypeChange}
-          />
-          Plantilla personalizada
-        </label>
-
-        <label>
-          <input
-            type='radio'
-            name='templateType'
-            value='product'
-            onChange={handleTemplateTypeChange}
-          />
-          Plantilla de producto
-        </label>
-      </div>
-
-
-
-      {showTemplateOptions && (
-        <div>
-          <p>Formato de plantilla: </p>
-          <label>
-            <input type='radio' name='templateFormat' />
-            Plantilla catálogo
-          </label>
-
-          <label>
-            <input type='radio' name='templateFormat' />
-            Plantilla multiproducto
-          </label>
-        </div>
-      )}
-    </div>
-
-    <Separador />
-
-    <div>
-<label>
-  Idioma: *  
-  <select 
-    value={languageCode} 
-    onChange={(e) => setLanguageCode(e.target.value)}
-  >
-    <option value="es_MX">Español México</option>
-    <option value="es_ARG">Español Argentina</option>
-    <option value="es_ES">Español España</option>
-    <option value="en_US">Ingles Estados Unidos</option>
-  </select>
-</label>
-</div>
-
-<Separador />
-
-<div>
-  <label>
-    Cabecera:
-    <select value={selectedOption} onChange={handleSelectChange}>
-      <option >Ninguna</option>
-      <option value="TEXT">Texto</option>
-      <option value="IMAGE">Imagen</option>
-      <option value="VIDEO">Video</option>
-      <option value="DOCUMENT">Documento</option>
-      <option value="LOCATION">Ubicación</option>
-    </select>
-  </label>
-</div>
-
-<Separador />
-
-{selectedOption === 'TEXT' && (
-  <div>
-    <label>
-      Escribe la cabecera:
-      <input type='text' value={digitHeader} onChange={(e) => setDigitHeader(e.target.value)}/>
-      Escribe un ejemplo:
-      <input type='text' value={headerExample} onChange={(e) => SetHeaderExample(e.target.value)}/>
-    </label>
-  </div>
-)}
-
-{selectedOption === 'IMAGE' && (
-  <div>
-    <label>
-      Selecciona la imagen:
-      <input type='text' value={digitHeader} onChange={(e) => setDigitHeader(e.target.value)}/>
-    </label>
-  </div>
-)}
-
-{selectedOption === 'VIDEO' && (
-  <div>
-    <label>
-      Selecciona el video:
-      <input type='text' value={digitHeader} onChange={(e) => setDigitHeader(e.target.value)}/>
-    </label>
-  </div>
-)}
-
-{selectedOption === 'DOCUMENT' && (
-  <div>
-    <label>
-      Selecciona el documento:
-      <input type='text' value={digitHeader} onChange={(e) => setDigitHeader(e.target.value)}/>
-    </label>
-  </div>
-)}
-
-{selectedOption === 'LOCATION' && (
-  <div>
-    <label>
-      Selecciona la ubicacion:
-    </label>
-  </div>
-)}
-
-
-<Separador />
-
-<div>
-      <label>
-        Texto:  * 
-        <StyledTextArea 
-          value={templateBody} 
-          onChange={handleInputChange} 
-          rows="4"
-          maxLength={1024} 
+        Example Header:
+        <input
+          type="text"
+          value={exampleHeader}
+          onChange={(e) => setExampleHeader(e.target.value)}
         />
       </label>
-      <RequirementText>
-        Caracteres restantes: {charactersRemaining}
-      </RequirementText>
-    </div>
+    </>
+  )}
 
-    <Separador />
+          <Separador />
 
-      <div>
-        <label>
-        Pie de pagina:
-        <input type="text" value={templateFooter} onChange={(e) => setTemplateFooter(e.target.value)} />
-        </label>
-        <RequirementText>
-          Opcional
-        </RequirementText>
-      </div>
+          <label>
+            Content:
+            <textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+            />
+            <button onClick={handleAddVariable}>Agregar Variable</button>
+          </label>
 
-      <Separador />
+          <label>
+            <button onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
+              🙂
+            </button>
+            {showEmojiPicker && (
+              <EmojiPicker
+                onEmojiClick={(emoji) => handleAddEmoji(emoji.emoji)}
+                disableAutoFocus
+              />
+            )}
+          </label>
 
-      <div>
-      <label>
-        Tipo de acción:
-        <select value={selectedOption} onChange={handleSelectChange}>
-          <option value="none">Ninguno</option>
-          <option value="callToAction">Llamada a la acción</option>
-          <option value="quickReply">Respuesta rápida</option>
-        </select>
-      </label>
-    </div>
+          <Separador />
 
-    <Separador /> 
+          <label>
+            Example Content:
+            <textarea
+              value={exampleContent}
+              onChange={(e) => setExampleContent(e.target.value)}
+            />
+          </label>
 
-      <div>
-      <label>
-      Escribe un ejemplo:
-      <input type="text" value={templateExample} onChange={(e) => setTemplateExample(e.target.value)} />
-      </label>
-      </div>
+          <Separador />
 
-      <Separador />
+          <label>
+            Pie de Página:
+            <input
+              type="text"
+              value={footer}
+              onChange={(e) => setFooter(e.target.value)}
+            />
+          </label>
 
-      <div>
-      <button type="submit">Crear Plantilla</button>
-      </div>
+          <Separador />
 
-      {isSuccessMessageVisible && (
-        <div>
-          <p>{successMessage}</p>
-        </div>
+          <label>
+            Permitir Cambio de Categoría:
+            <input
+              type="checkbox"
+              checked={allowCategoryChange}
+              onChange={() => setAllowCategoryChange(!allowCategoryChange)}
+            />
+          </label>
+
+          <Separador />
+
+          <button onClick={handleCreateTemplate}>Crear Plantilla</button>
+
+          {message && (
+            <div>
+              <p>{message}</p>
+            </div>
+          )}
+
+        </>
       )}
-      
-      
-    </form>
-      </Box>
 
+<span>{deleteMessage}</span>
 
+<div>
+        {error && <p>{error}</p>}
+        {currentTemplates.length > 0 && (
+          <ul>
+            {currentTemplates.map((template) => (
+              <li key={template.elementName}>
+                <strong>Categoria:</strong> {template.category}<br />
+                <strong>Tipo de plantilla:</strong> {getTemplateType(template.templateType)}<br />
+                <strong>Fecha de creación:</strong> {new Date(template.createdOn).toLocaleString()}<br />
+                <strong>Fecha de modificación:</strong> {new Date(template.modifiedOn).toLocaleString()}<br />
+                <strong>Contenido:</strong> {template.data}<br />
+                <strong>Nombre:</strong> {template.elementName}<br />
+                <strong>Idioma:</strong> {getLanguageText(template.languageCode)}<br />
+                <strong>Estado:</strong> {getStatusText(template.status)}<br />
+                <button onClick={() => handleDeleteTemplate(template.elementName)}>Eliminar Plantilla</button>
+                <hr />
+              </li>
+            ))}
+          </ul>
+        )}
 
-       <Box>
-       <div>
-         <h2>Plantillas actuales:</h2>
-         {templates.map((template, index) => (
-           <StyledTemplateBox key={index}>
-             <h3>Nombre plantilla: {template.elementName}</h3>
-             <p>Categoría: {template.category}</p>
-             <p>Texto: {template.data}</p>
-             <p>
-               Lenguaje:{' '}
-               {template.languageCode === 'es_MX'
-                 ? 'Español México'
-                 : template.languageCode === 'en_US'
-                 ? 'Ingles Estados Unidos'
-                 : template.languageCode === 'es_ARG'
-                 ? 'Español Argentina'
-                 : template.languageCode === 'es_ES'
-                 ? 'Español España'
-                 : template.languageCode}
-             </p>
-             <p>
-               Estado:{' '}
-               {template.status === 'APPROVED'
-                 ? ' Aprobada por WhatsApp'
-                 : template.status === 'PENDING'
-                 ? ' Pendiente por aprobación'
-                 : template.status === 'REJECTED'
-                 ? ' Rechazada por politicas de WhatsApp'
-                 : template.status}
-             </p>
-             <p>
-               Tipo de plantilla:{' '}
-               {template.templateType === 'TEXT'
-                 ? 'Texto'
-                 : template.templateType}
-             </p>
-           </StyledTemplateBox>
-         ))}
-       </div>
-     </Box>
+        {/* Pagination controls */}
+        {templates.length > templatesPerPage && (
+          <Pagination>
+            <button onClick={handlePrevPage} disabled={currentPage === 1}>
+              Anterior
+            </button>
+            <span>{`Página ${currentPage} de ${totalPages}`}</span>
+            <button onClick={handleNextPage} disabled={currentPage === totalPages}>
+              Siguiente
+            </button>
+          </Pagination>
+        )}
+      </div>
 
-     
 
     </Layout>
   );
 };
 
-const Box = styled.div`
-  padding: 30px;
-  margin: 30px;
-  border-radius: 10px;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+const Pagination = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
 `;
-
-const StyledTemplateBox = styled.div`
-  border: 1px solid #ccc;
-  padding: 15px;
-  margin-bottom: 20px;
-  border-radius: 8px;
-  background-color: #f8f8f8;
-  font-size: 16px;
-`;
-
-const InputContainer = styled.div`
-  margin-bottom: 15px;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  box-sizing: border-box;
-`;
-
-const RequirementText = styled.p`
-  color: #555;
-  font-size: 12px;
-`;
-
-const StyledTextArea = styled.textarea`
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  resize: vertical; /* Permite redimensionar verticalmente */
-`;
-
-const SelectInput = styled.select`
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-top: 5px;
-`;
-
 
 const Separador = styled.div`
   border-bottom: 1px solid #ccc; /* Puedes ajustar el color según tus preferencias */
   margin: 10px 0; /* Puedes ajustar el margen según tus preferencias */
 `;
 
+const Container = styled.div`
+  margin: 20px;
+`;
+
+const Button = styled.button`
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+`;
+
+const TemplateButtons = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+`;
+
+const TemplateButton = styled.button`
+  margin-top: 5px;
+  padding: 5px;
+  font-size: 14px;
+  cursor: pointer;
+`;
+
+const RequirementText = styled.p`
+  color: #555;
+  font-size: 12px;
+`;
 
 export default Reports;

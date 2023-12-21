@@ -5,7 +5,6 @@ import * as XLSX from 'xlsx';
 import { FaArrowRight } from 'react-icons/fa';
 import BaseComponent from 'bootstrap/js/dist/base-component';
 
-
 const Sends = (props) => {
   const [templates, setTemplates] = useState([]);
   const [selectedTemplate, setSelectedTemplate] = useState("");
@@ -18,6 +17,9 @@ const Sends = (props) => {
   const [filename, setFilename] = useState([]);
   const [showFileContent, setShowFileContent] = useState(false);
   const [uniqueNumber, setUniqueNumber] = useState('');
+
+  const MAX_ROWS = 20;
+  const MAX_COLUMNS = 10;
 
 
   useEffect(() => {
@@ -187,8 +189,14 @@ const Sends = (props) => {
   };
 
   const handleShowContent = () => {
-    setShowFileContent(true);
+    if (sheetname.length === 0) {
+      // Mostrar mensaje temporal
+      alert('No hay ningún archivo cargado.');
+    } else {
+      setShowFileContent(true);
+    }
   };
+  
 
   return (
     <Layout>
@@ -258,24 +266,26 @@ const Sends = (props) => {
               {showFileContent && (
                 <div>
                   <h2>Contenido del archivo por columnas y filas:</h2>
-                  <table>
-                    <thead>
-                      <tr>
-                        {Object.keys(sheetname[0]).map((columnName, index) => (
-                          <th key={index}>{columnName}</th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {sheetname.map((rowData, rowIndex) => (
-                        <tr key={rowIndex}>
-                          {Object.values(rowData).map((cellData, cellIndex) => (
-                            <td key={cellIndex}>{cellData}</td>
+                  <div className="scrollable-table-container">
+                    <table>
+                      <thead>
+                        <tr>
+                          {Object.keys(sheetname[0]).slice(0, MAX_COLUMNS).map((columnName, index) => (
+                            <th key={index}>{columnName}</th>
                           ))}
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {sheetname.slice(0, MAX_ROWS).map((rowData, rowIndex) => (
+                          <tr key={rowIndex}>
+                            {Object.values(rowData).slice(0, MAX_COLUMNS).map((cellData, cellIndex) => (
+                              <td key={cellIndex}>{cellData}</td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               )}
             </div>
@@ -362,3 +372,4 @@ const styleName = {
 
 
 export default Sends;
+
