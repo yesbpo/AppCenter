@@ -92,8 +92,7 @@ const Sends = (props) => {
   const enviar = () => {
     if (checkboxValue === 'Unico' && uniqueNumber) {
       console.log('Número Único:', uniqueNumber);
-      sheetname.map((dest) => {
-        console.log(dest[selectvar]);
+        console.log(uniqueNumber);
         const url = 'https://api.gupshup.io/wa/api/v1/msg';
         const apiKey = '6ovjpik6ouhlyoalchzu4r2csmeqwlbg';
         const data = {
@@ -135,7 +134,7 @@ const Sends = (props) => {
           .catch((error) => {
             console.error('Error al realizar la solicitud:', error);
           });
-      });
+      
     } else if (checkboxValue === 'Masivo' && sheetname.length > 0) {
       sheetname.map((dest) => {
         console.log(dest[selectvar]);

@@ -64,7 +64,34 @@ const Sidebar = (props) => {
     })
   }
 
+  const updateuser = async () => {
   
+    const usuario = session.user.name; // Reemplaza con el nombre de usuario que deseas actualizar
+    const nuevoDato = 'Inactivo'; // Reemplaza con el nuevo valor que deseas asignar
+  
+    try {
+      const response = await fetch('https://3d29bmtd-8080.use2.devtunnels.ms/actualizar/usuario', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          nuevoDato: nuevoDato,
+          usuario: usuario
+        }),
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data); // Aquí puedes manejar la respuesta del servidor
+        signOut()
+      } else {
+        console.error('Error al actualizar el usuario:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error de red:', error.message);
+    }
+  };
   const { data: session } = useSession()
   
   // TODO: - Change the icon for an actual logo
@@ -112,15 +139,16 @@ const Sidebar = (props) => {
           </div>
         </div>
         <div className={`${getNavItemClasses({})} px-3 py-4 flex justify-items-center`}>
-          <button onClick={() => signOut()}>
-            <Link href="/api/auth/signin">
+        
+          <button onClick={updateuser}>
+            
               <a className="flex py-4 px-3 items-center w-full h-full">
                 <div>
                   <LogoutIcon className="h-10 w-10 text-light-lighter mr-4"/>
                 </div>
                 {!toggleCollapse && <span className={classNames("text-lg font-medium text-text-frozen")}>Cerrar Sesion</span>}
               </a>
-            </Link>
+            
           </button>
         </div>
       </div>
