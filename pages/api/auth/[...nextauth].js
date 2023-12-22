@@ -20,15 +20,13 @@ export const authOptions = {
              where: {
                  usuario: credentials.usuario
              },
-             
-             
-
+          
          })
  
          if (!userFound) throw new Error('No user found')
  
          console.log(userFound)
- 
+          
          const matchPassword =  await (credentials.password, userFound.password)
  
          if (!matchPassword) throw new Error('Wrong password')

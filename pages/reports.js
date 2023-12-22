@@ -1,11 +1,8 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { saveAs } from 'file-saver';
-import Sidebar from '../components/Sidebar'
 import axios from 'axios';
 import * as XLSX from 'xlsx';
 import Layout from '../components/Layout';
-
 
 function Reports() {
   const [fechaInicio, setFechaInicio] = useState('');
@@ -16,36 +13,40 @@ function Reports() {
 
   const generarReporte = async () => {
     try {
-      // Aquí deberías realizar una solicitud a tu servidor para obtener los datos de WhatsApp.
-      //  hacer la solicitud con fetch.
+      if (!fechaInicio || !fechaFin) {
+        console.error('Por favor, selecciona fechas de inicio y fin.');
+        return;
+      }
 
-      // Ejemplo de datos.
-      const datos = [
-        { fecha: '2023-11-25', mensaje: 'Hola', destinatario: '123456789' },
-        
-      ];
-      // Filtrar los datos según los criterios seleccionados.
-      const datosFiltrados = datos.filter(d => {
-      const fechaValida = (!fechaInicio || d.fecha >= fechaInicio) && (!fechaFin || d.fecha <= fechaFin);
-      const campañaValida = !nombreCampaña || d.campaña === nombreCampaña;
-      const tipoValido = tipoMensajes === 'ambos' || d.tipo === tipoMensajes;
-      return fechaValida && campañaValida && tipoValido;
-})
-      // Crear un objeto CSV con los datos.
-      const csvData = "Fecha,Mensaje,Destinatario\n" +
-        datos.map(d => `${d.fecha},${d.mensaje},${d.destinatario}`).join("\n");
+      const response = await fetch(`http://localhost:3001/obtener-mensajes?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`);
 
-      // Crear un Blob con los datos.
+      if (!response.ok) {
+        throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+      }
+
+      const mensajes = await response.json();
+
+      const datosFiltrados = mensajes.map((mensaje) => ({
+        fecha: mensaje.timestamp,
+        mensaje: mensaje.content,
+        destinatario: mensaje.number,
+        tipo: mensaje.type_message,
+        estado: mensaje.status,
+        idMensaje: mensaje.idMessage,
+        // Agrega más campos según sea necesario
+      }));
+
+      const csvData = "Fecha,Mensaje,Destinatario,Tipo,Estado,ID Mensaje\n" +
+        datosFiltrados.map((d) => `${d.fecha},${d.mensaje},${d.destinatario},${d.tipo},${d.estado},${d.idMensaje}`).join("\n");
+
       const blob = new Blob([csvData], { type: 'text/csv' });
 
-      // Descargar el archivo.
       saveAs(blob, 'reporte_whatsapp.csv');
     } catch (error) {
       console.error('Error al generar el reporte:', error);
     }
   };
 
-  //Generar reporte plantillas 
   useEffect(() => {
     axios({
       method: 'get',
@@ -78,7 +79,7 @@ function Reports() {
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Datos');
 
       const fecha = new Date().toISOString().slice(0, 10);
-      const nombreArchivo = `Reórte plantillas ${fecha}.xlsx`;
+      const nombreArchivo = `Reporte plantillas ${fecha}.xlsx`;
 
       XLSX.writeFile(workbook, nombreArchivo);
     } catch (error) {
@@ -87,44 +88,69 @@ function Reports() {
   };
 
   return (
-    
-    <Layout >
-      
-      <div className="min-h-screen bg-light text-gray-900">
-      <h1>Generador de Reportes WhatsApp</h1>
-    <label >
-      Fecha de Inicio:
-      <input type="date" value={fechaInicio} onChange={(e) => setFechaInicio(e.target.value)} />
-    </label>
-    <label >
-      Fecha de Fin:
-      <input type="date" value={fechaFin} onChange={(e) => setFechaFin(e.target.value)} />
-    </label >
-    <label >
-      Nombre de Campaña:
-      <input type="text" value={nombreCampaña} onChange={(e) => setNombreCampaña(e.target.value)} />
-    </label >
-    <label >
-      Tipo de Mensajes:
-      <select value={tipoMensajes} onChange={(e) => setTipoMensajes(e.target.value)}>
-        <option value="ambos">Ambos</option>
-        <option value="entrantes">Entrantes</option>
-        <option value="salientes">Salientes</option>
-      </select>
-    </label>
-    <button onClick={generarReporte}>Generar Reporte</button>
+    <Layout>
+    <div className="min-h-screen bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-black p-8 bg-opacity-80">
+      <h1 className="text-4xl font-bold mb-4">
+        Generador de Reportes WhatsApp
+      </h1>
+      <label className="block mb-4">
+        Fecha de Inicio:
+        <input
+          type="date"
+          value={fechaInicio}
+          onChange={(e) => setFechaInicio(e.target.value)}
+          className="border rounded p-2 ml-2"
+        />
+      </label>
+      <label className="block mb-4">
+        Fecha de Fin:
+        <input
+          type="date"
+          value={fechaFin}
+          onChange={(e) => setFechaFin(e.target.value)}
+          className="border rounded p-2 ml-2"
+        />
+      </label>
+      <label className="block mb-4">
+        Nombre de Campaña:
+        <input
+          type="text"
+          value={nombreCampaña}
+          onChange={(e) => setNombreCampaña(e.target.value)}
+          className="border rounded p-2 ml-2"
+        />
+      </label>
+      <label className="block mb-4">
+        Tipo de Mensajes:
+        <select
+          value={tipoMensajes}
+          onChange={(e) => setTipoMensajes(e.target.value)}
+          className="border rounded p-2 ml-2"
+        >
+          <option value="ambos">Ambos</option>
+          <option value="entrantes">Entrantes</option>
+          <option value="salientes">Salientes</option>
+        </select>
+      </label>
+      <button
+        onClick={generarReporte}
+        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Generar Reporte
+      </button>
 
-    
-        <h1>Exporte de plantillas</h1>
-        {/* Botón para exportar los datos */}
-        <button onClick={generarReportePlan}>Exportar Datos</button>
-      </div>
-        
-  </Layout>
-  );
+      <h1 className="text-4xl font-bold mb-4 mt-8">
+        Exporte de plantillas
+      </h1>
+      {/* Botón para exportar los datos */}
+      <button
+        onClick={generarReportePlan}
+        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Exportar Datos
+      </button>
+    </div>
+  </Layout>  );
 }
-
-
-
 
 export default Reports;

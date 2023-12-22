@@ -3,17 +3,20 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import io from 'socket.io-client';
 import { useSession } from 'next-auth/react';
-import { getSession } from 'next-auth/react';
 import EmojiPicker from 'emoji-picker-react';
 import { Pendientes } from '../components/Pendientes';
-import { useAbsoluteLayout } from 'react-table';
+
+
 
 const Chats = () => {
   const { data: session } = useSession();
+  const manejarPresionarEnter = (event) => {
+    if (event.key === 'Enter') {
+      enviarMensaje();
+    }
+  };
 
   const [emojis, setEmojis] = useState([]);
-  
-  
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const handleAddEmoji = (emoji) => {
     setInputValue(`${inputValue} ${emoji}`);
@@ -25,40 +28,61 @@ const Chats = () => {
   };
   const socket = io('https://3d29bmtd-8080.use2.devtunnels.ms/');
   const [contactos1, setContactos1] = useState([]);
-
   const [contactos, setContactos] = useState([
     { user: null, fecha: null, mensajes: [{ tipomensaje: '', datemessage: '', content: '' }] },
   ]);
   const [webhookData, setWebhookData] = useState(null);
   const [mensajes1, setMensajes1] = useState([]);
-  useEffect(() => {
-    const obtenerMensajes = async () => {
-      try {
-        const response = await fetch('http://localhost:3001/obtener-mensajes');
-        const responseChats = await fetch('http://localhost:3001/obtener-chats');
-        const responseUsers = await fetch('http://localhost:3001/obtener-usuarios');
-        // El usuario está autenticado, puedes acceder a la sesión
-        
-        if (!response.ok) {
-          throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
-        }
-        const users = await responseUsers.json()
-        const Id = users.filter(d => d.usuario == session.user.name)
-        const dataChats =  await responseChats.json();
-        const withoutGest = dataChats.filter(d => d.userId == Id[0].id )
-        console.log(Id)
-        const data = await response.json();
-        setMensajes1(data);
-        setContactos1(withoutGest);
-      } catch (error) {
-        console.error('Error al obtener mensajes:', error);
-        // Puedes manejar el error según tus necesidades
+  
+     const handlePendientesClick = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/obtener-mensajes');
+      const responseChats = await fetch('http://localhost:3001/obtener-chats');
+      const responseUsers = await fetch('http://localhost:3001/obtener-usuarios');
+      // El usuario está autenticado, puedes acceder a la sesión
+      
+      if (!response.ok) {
+        throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
       }
-    };
+      const users = await responseUsers.json()
+      const Id = users.filter(d => d.usuario == session.user.name)
+      const dataChats =  await responseChats.json();
+      const chatsPending = dataChats.filter(d=> d.status == 'pending')
+      const withoutGest = chatsPending.filter(d => d.userId == Id[0].id )
+      console.log(Id)
+      const data = await response.json();
+      setMensajes1(data);
+      setContactos1(withoutGest);
+    } catch (error) {
+      console.error('Error al obtener mensajes:', error);
+      // Puedes manejar el error según tus necesidades
+    }
+  };
+  const handleEngestionClick = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/obtener-mensajes');
+      const responseChats = await fetch('http://localhost:3001/obtener-chats');
+      const responseUsers = await fetch('http://localhost:3001/obtener-usuarios');
+      // El usuario está autenticado, puedes acceder a la sesión
+      
+      if (!response.ok) {
+        throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+      }
+      const users = await responseUsers.json()
+      const Id = users.filter(d => d.usuario == session.user.name)
+      const dataChats =  await responseChats.json();
+      const chatsPending = dataChats.filter(d=> d.status == 'in process')
+      const withoutGest = chatsPending.filter(d => d.userId == Id[0].id )
+      console.log(Id)
+      const data = await response.json();
+      setMensajes1(data);
+      setContactos1(withoutGest);
+    } catch (error) {
+      console.error('Error al obtener mensajes:', error);
+      // Puedes manejar el error según tus necesidades
+    }
+  };
 
-    obtenerMensajes();
-  }, []);
-    
   const [mensajes, setMensajes] = useState(
      [
       { numero: '', tipo: '', contenido: '', estado: '', date: ''},
@@ -67,37 +91,52 @@ const Chats = () => {
     
   const [mostrarPendientes, setMostrarPendientes] = useState(false);
   const [mostrarEngestion, setMostrarEngestion] = useState(false);
-  const handlePendientesClick = () => {
-    setMostrarPendientes(true);
-  };
-  const handleEngestionClick = () => {
-    setMostrarEngestion(true);
-  };
   const [numeroEspecifico, setNumeroEspecifico] = useState('');
+  const actualizarEstadoChat = async (estado) => {
+    try {
+      const idChat2 = numeroEspecifico; // Asegúrate de obtener el idChat2 según tu lógica
+      const nuevoEstado = 'in process'; // Asegúrate de obtener el nuevoEstado según tu lógica
+
+      const response = await fetch('http://localhost:3001/actualizar-estado-chat', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ idChat2, nuevoEstado }), // Ajusta la estructura del cuerpo según tus necesidades
+      });
+
+      if (response.ok) {
+        const resultado = await response.json();
+        console.log('Respuesta de la actualización:', resultado);
+        // Manejar la respuesta exitosa según tus necesidades
+      } else if (response.status === 404) {
+        console.error('Chat no encontrado');
+        // Manejar el caso de chat no encontrado según tus necesidades
+      } else {
+        console.error('Error interno del servidor');
+        // Manejar otros errores según tus necesidades
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
+      // Manejar errores generales según tus necesidades
+    }
+  };
    // Reemplaza esto con el número que necesites
   const [inputValue, setInputValue] = useState('')
   const [msg, setMsg] = useState([]);
-  const handleCambio = async(data) => {
-   
-    console.log('Información del webhook recibida:', data);
-    try {
-      const response = await fetch('http://localhost:3001/obtener-chats');
-      const responseUsers = await fetch('http://localhost:3001/obtener-usuarios');
-      if (!response.ok) {
-        throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
-      }
-      
-      const data = await response.json();
-      const users = await responseUsers.json()
-      const Id = users.filter(d => d.usuario == session.user.name)
-      const withoutGest = data.filter(d => d.userId == Id[0].id )
-      console.log(Id[0].id)
-      setContactos1(withoutGest);
-    } catch (error) {
-      console.error('Error al obtener chats:', error);
-      // Puedes manejar el error según tus necesidades
-    }
+  useEffect(() => {
+    socket.on('cambio', handleCambio);
+    return () => {
+      socket.off('cambio', handleCambio);
+      socket.disconnect();
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contactos]);
   
+  const handleCambio = async(data) => {
+    
+    console.log('Información del webhook recibida:', data);
+    
         try {
           const response = await fetch('http://localhost:3001/obtener-mensajes');
   
@@ -170,16 +209,7 @@ const Chats = () => {
     setWebhookData(webhookText);
     
   };
-
-  useEffect(() => {
-    
-    socket.on('cambio', handleCambio);
-    return () => {
-      socket.off('cambio', handleCambio);
-      socket.disconnect();
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contactos]);
+  
 
   const enviarMensaje = async () => {
   
@@ -251,10 +281,11 @@ const Chats = () => {
       },
       body: JSON.stringify({
         content: mensajeData.message,
-        type_comunication: 'whatsapp', // Puedes ajustar este valor según tus necesidades
+        type_comunication: 'message-event', // Puedes ajustar este valor según tus necesidades
         status: 'sent', // Puedes ajustar este valor según tus necesidades
         number: numeroEspecifico,
         type_message: 'text',
+        timestamp: new Date().toISOString().slice(0, 19).replace('T', ' '),
         idMessage: idMessage // Puedes ajustar este valor según tus necesidades
       }),
     });
@@ -300,12 +331,11 @@ const Chats = () => {
       });  
   }, []);
   const updateuser = async () => {
-  
     const usuario = session.user.name; // Reemplaza con el nombre de usuario que deseas actualizar
     const nuevoDato = 'Activo'; // Reemplaza con el nuevo valor que deseas asignar
   
     try {
-      const response = await fetch('https://3d29bmtd-8080.use2.devtunnels.ms/actualizar/usuario', {
+      const response = await fetch('http://localhost:3001/actualizar/usuario', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -322,6 +352,20 @@ const Chats = () => {
       } else {
         console.error('Error al actualizar el usuario:', response.statusText);
       }
+      try {
+        const response = await fetch('http://localhost:3001/obtener-mensajes');
+
+        if (!response.ok) {
+          throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+        }
+
+        const data1 = await response.json();
+        setMensajes1(data1);
+      } catch (error) {
+        console.error('Error al obtener mensajes:', error);
+        // Puedes manejar el error según tus necesidades
+      }
+    
     } catch (error) {
       console.error('Error de red:', error.message);
     }
@@ -330,7 +374,8 @@ const Chats = () => {
   <>
     
       <Layout>
-      <p>Bienvenido, {session.user.name}!</p>        <Box onLoad={updateuser()}>
+      <p>Bienvenido, {session.user.name}!</p>        
+      <Box onLoad={updateuser()}>
         <ButtonContainer>
           <CustomButton onClick={handleEngestionClick}>En gestion</CustomButton>
            {/* Mostrar Activos si 'mostrarActivos' es true */}
@@ -359,6 +404,7 @@ const Chats = () => {
   // Ordena los mensajes por fecha de forma ascendente (de la más antigua a la más reciente)
   return mensajesFiltrados.map((mensaje, index) => (
     <div key={index} className={`mensaje ${mensaje.type_message}`}>
+      
       <p>{mensaje.content && mensaje.content.trim()}</p>
       <span>{mensaje.timestamp}</span>
     </div>
@@ -371,6 +417,7 @@ const Chats = () => {
               type="text"
               placeholder="Escribe un mensaje..."
               value={inputValue}
+              onKeyDown={manejarPresionarEnter}
               onChange={(e) =>
                 setInputValue(e.target.value)
               }
@@ -383,7 +430,8 @@ const Chats = () => {
             disableAutoFocus
           />
         )}
-          <BotonEnviar onClick={enviarMensaje}>Enviar</BotonEnviar>
+          <BotonEnviar onClick={enviarMensaje} >Enviar</BotonEnviar>
+          <button onClick={actualizarEstadoChat} >Gestionar</button><button >Cerrar</button>
         </Box>
         <Box>
         {mostrarPendientes && <Pendientes mensajes={mensajes} acivarengestion={mostrarEngestion} />}
@@ -391,7 +439,8 @@ const Chats = () => {
             <ul>
               {contactos1.map((contacto, index) => (
                 <li key={index}>
-                  <strong onClick={() => setNumeroEspecifico(contacto.idChat2)}>Usuario:</strong> {contacto.idChat2},{' '}
+                  
+                  <CustomButton onClick={() => setNumeroEspecifico(contacto.idChat2)}>Usuario:{contacto.idChat2}</CustomButton>
                    
                 </li>
               ))}

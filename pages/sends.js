@@ -151,7 +151,7 @@ const Sends = (props) => {
           channel: 'whatsapp',
           disablePreview: true,
         };
-  
+        const responseGuardarMensajes = fetch()
         const headers = {
           'Cache-Control': 'no-cache',
           'Content-Type': 'application/x-www-form-urlencoded',
