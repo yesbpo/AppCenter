@@ -15,9 +15,17 @@ const Layout = ({children}) => {
   }
   return (
     <>
-      Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
-    </>
+    <div className="flex flex-col items-center justify-center h-screen">
+      <p className="mb-4">Not signed in</p>
+      <button
+        onClick={() => signIn()}
+        className="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded"
+      >
+        Sign in
+      </button>
+    </div>
+  </>
+  
     )
 
 };

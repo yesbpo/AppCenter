@@ -81,7 +81,7 @@ function LoginPage() {
           </span>
         )}
 
-        <button className="w-full bg-blue-500 text-white p-3 rounded-lg mt-2">
+        <button className="w-full bg-blue-500 text-black p-3 rounded-lg mt-2">
           Login
         </button>
       </form>
