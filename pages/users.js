@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import Layout from '../components/Layout';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { useSession, signIn } from 'next-auth/react';
 const CrearUsuario = () => {
+  const { data: sesion } = useSession();
   const [usuario, setUsuario] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
@@ -41,8 +42,9 @@ const CrearUsuario = () => {
       console.error('Error de red:', error.message);
     }
   };
-
+  if (sesion){
   return (
+    
     <Layout>
        <div className="container mt-10">
        <h1 className="text-dark">Crear Usuario</h1>
@@ -77,7 +79,21 @@ const CrearUsuario = () => {
         </form>
       </div>
     </Layout>
-      );
+      )}
+      return (
+        <>
+        <div className="flex flex-col items-center justify-center h-screen">
+          <p className="mb-4">Not signed in</p>
+          <button
+            onClick={() => signIn()}
+            className="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded"
+          >
+            Sign in
+          </button>
+        </div>
+      </>
+      
+        )
 };
 
 export default CrearUsuario;

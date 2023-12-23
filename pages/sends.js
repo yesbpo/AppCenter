@@ -4,8 +4,11 @@ import styled from "styled-components";
 import * as XLSX from 'xlsx';
 import { FaArrowRight } from 'react-icons/fa';
 import BaseComponent from 'bootstrap/js/dist/base-component';
+import session from 'redux-persist/lib/storage/session';
+import { useSession, signIn } from 'next-auth/react';
 
 const Sends = (props) => {
+  const { data: session } = useSession()
   const [templates, setTemplates] = useState([]);
   const [selectedTemplate, setSelectedTemplate] = useState("");
   const [selectedTemplateData, setSelectedTemplateData] = useState("");
@@ -197,7 +200,7 @@ const Sends = (props) => {
     }
   };
   
-
+if(session){
   return (
     <Layout>
       <Box>
@@ -350,7 +353,21 @@ const Sends = (props) => {
       </Box>
 
     </Layout>
-  );
+  );}
+  return (
+    <>
+    <div className="flex flex-col items-center justify-center h-screen">
+      <p className="mb-4">Not signed in</p>
+      <button
+        onClick={() => signIn()}
+        className="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded"
+      >
+        Sign in
+      </button>
+    </div>
+  </>
+  
+    )
 };
 
 //Estilos del app

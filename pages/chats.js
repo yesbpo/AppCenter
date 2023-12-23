@@ -2,7 +2,7 @@ import Layout from '../components/Layout';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import io from 'socket.io-client';
-import { useSession } from 'next-auth/react';
+import { useSession, signIn } from 'next-auth/react';
 import EmojiPicker from 'emoji-picker-react';
 import { Pendientes } from '../components/Pendientes';
 
@@ -453,6 +453,7 @@ const [mostrarPendientes, setMostrarPendientes] = useState(false);
       console.error('Error de red:', error.message);
     }
   };
+  if(session){
   return (
   <>
     
@@ -562,7 +563,21 @@ const [mostrarPendientes, setMostrarPendientes] = useState(false);
       </Container>
     </Layout>
       </>
-  )
+  )}
+  return (
+    <>
+    <div className="flex flex-col items-center justify-center h-screen">
+      <p className="mb-4">Not signed in</p>
+      <button
+        onClick={() => signIn()}
+        className="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded"
+      >
+        Sign in
+      </button>
+    </div>
+  </>
+  
+    )
   };
 
 const Box = styled.div`

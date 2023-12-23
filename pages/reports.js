@@ -3,8 +3,10 @@ import { saveAs } from 'file-saver';
 import axios from 'axios';
 import * as XLSX from 'xlsx';
 import Layout from '../components/Layout';
+import { useSession, signIn } from 'next-auth/react';
 
 function Reports() {
+  const { data: session } = useSession()
   const [fechaInicio, setFechaInicio] = useState('');
   const [fechaFin, setFechaFin] = useState('');
   const [nombreCampaña, setNombreCampaña] = useState('');
@@ -86,7 +88,8 @@ function Reports() {
       console.error('Error al generar el reporte:', error);
     }
   };
-
+if(session)
+  {
   return (
     <Layout>
     <div className="min-h-screen bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-black p-8 bg-opacity-80">
@@ -150,7 +153,22 @@ function Reports() {
         Exportar Datos
       </button>
     </div>
-  </Layout>  );
+  </Layout>  );}
+   return (
+    <>
+    <div className="flex flex-col items-center justify-center h-screen">
+      <p className="mb-4">Not signed in</p>
+      <button
+        onClick={() => signIn()}
+        className="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded"
+      >
+        Sign in
+      </button>
+    </div>
+  </>
+  
+    )
+  
 }
 
 export default Reports;
