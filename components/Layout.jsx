@@ -5,7 +5,7 @@ const Layout = ({children}) => {
   const { data: session } = useSession()
   if (session) {
     return (
-        <div className="h-screen flex flex-row justify-start">
+        <div className="h-full flex flex-row justify-start">
            <Sidebar/>
            <div className="flex-1">
              {children}

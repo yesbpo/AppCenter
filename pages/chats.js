@@ -88,8 +88,91 @@ const Chats = () => {
       { numero: '', tipo: '', contenido: '', estado: '', date: ''},
     ]   
 );
-    
-  const [mostrarPendientes, setMostrarPendientes] = useState(false);
+
+const [file, setFile] = useState(null);
+const [url, setUrl] = useState('');
+  
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+  const handleUpload = async () => {
+    if (!file) {
+      alert('Selecciona un archivo primero.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('archivo', file);
+
+    try {
+      const response = await fetch('https://3d29bmtd-8080.use2.devtunnels.ms/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+
+        // Actualizar el mensajeData para incluir información del archivo
+        const mensajeData = {
+          channel: 'whatsapp',
+          source: '5718848135',
+          'src.name': 'Pb1yes',
+          destination: numeroEspecifico,
+          message: JSON.stringify({
+            type: 'image', // Puedes ajustar esto según el tipo de archivo
+            originalUrl: data.url, // URL generada después de la carga del archivo
+            previewUrl: data.url, // Puedes ajustar esto según tus necesidades
+            caption: 'Envío de imagen',
+          }),
+          disablePreview: true,
+        };
+
+        const responseEnvio = await fetch('https://3d29bmtd-8080.use2.devtunnels.ms/api/envios', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams(mensajeData).toString(),
+        });
+
+        if (!responseEnvio.ok) {
+          throw new Error(`Error en la solicitud: ${responseEnvio.status} ${responseEnvio.statusText}`);
+        }
+
+        const responseData = await responseEnvio.json();
+        console.log('Respuesta del servidor:', responseData);
+
+        const idMessage = responseData.messageId;
+
+        const actualizarMensajeResponse = await fetch('http://localhost:3001/mensajeenviado', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            content: mensajeData.message,
+            idMessage,
+          }),
+        });
+
+        if (actualizarMensajeResponse.ok) {
+          const actualizarMensajeData = await actualizarMensajeResponse.json();
+          console.log('Respuesta de la actualización del mensaje:', actualizarMensajeData);
+        } else {
+          console.error('Error al actualizar el mensaje:', actualizarMensajeResponse.status);
+          // Resto del código para guardar el mensaje en el servidor...
+        }
+      } else {
+        alert(`Error al subir el archivo: ${response.status} ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
+    }
+  };
+
+const [mostrarPendientes, setMostrarPendientes] = useState(false);
   const [mostrarEngestion, setMostrarEngestion] = useState(false);
   const [numeroEspecifico, setNumeroEspecifico] = useState('');
   const actualizarEstadoChat = async (estado) => {
@@ -403,32 +486,36 @@ const Chats = () => {
 
   // Ordena los mensajes por fecha de forma ascendente (de la más antigua a la más reciente)
   return mensajesFiltrados.map((mensaje, index) => (
-    <div key={index} className={`mensaje ${mensaje.type_message}`}>
+    <div
+      key={index}
+      className={`mensaje ${mensaje.type_message} ${
+        mensaje.type_comunication === 'message-event' ? 'bg-white text-right' : 'bg-green-500 text-left'
+      } p-4 mb-4`}
+    >
       {mensaje.type_message === 'image' ? (
-        <img src={mensaje.content} alt="Imagen" />
+        <img src={mensaje.content} alt="Imagen" className="w-full" />
       ) : mensaje.type_message === 'audio' ? (
         <audio controls>
           <source src={mensaje.content} type="audio/mp3" />
           Tu navegador no soporta el elemento de audio.
         </audio>
       ) : mensaje.type_message === 'sticker' ? (
-        <img src={mensaje.content} alt="Sticker" style={{ width: '5vw' }} />
+        <img src={mensaje.content} alt="Sticker" className="w-20" />
       ) : mensaje.type_message === 'video' ? (
-        <video controls width="300">
+        <video controls className="w-full">
           <source src={mensaje.content} type="video/mp4" />
           Tu navegador no soporta el elemento de video.
         </video>
       ) : mensaje.type_message === 'file' ? (
-        <a href={mensaje.content} target="_blank" rel="noopener noreferrer">
+        <a href={mensaje.content} target="_blank" rel="noopener noreferrer" className="text-blue-500">
           Descargar documento
         </a>
       ) : (
         <>
-          <p>{mensaje.content && mensaje.content.trim()}</p>
-          <span>{mensaje.timestamp}</span>
+          <p className="mb-2">{mensaje.content && mensaje.content.trim()}</p>
+          <span className="text-gray-500">{mensaje.timestamp}</span>
         </>
-      )}
-    </div>
+      )}   </div>
   ));
 })()}
     </div> 
@@ -453,6 +540,10 @@ const Chats = () => {
         )}
           <BotonEnviar onClick={enviarMensaje} >Enviar</BotonEnviar>
           <button onClick={actualizarEstadoChat} >Gestionar</button><button >Cerrar</button>
+          <div>
+      <input type="file" onChange={handleFileChange} />
+      <button onClick={handleUpload}>Subir Archivo</button>
+    </div>
         </Box>
         <Box>
         {mostrarPendientes && <Pendientes mensajes={mensajes} acivarengestion={mostrarEngestion} />}

@@ -19,10 +19,8 @@ const menuItems = [
   {id: 2, label: "Monitoreo", icon: PresentationChartLineIcon, link: "/monitoring"},
   {id: 3, label: "Reportes", icon: DocumentReportIcon, link: "/reports"},
   {id: 4, label: "Plantillas", icon: TemplateIcon, link: "/templates"},
-  {id: 5, label: "em", icon: DatabaseIcon, link: "/em"},
   {id: 6, label: "Envíos", icon: PaperAirplaneIcon, link: "/sends"},
   {id: 7, label: "chats", icon: PaperAirplaneIcon, link: "/chats"},
-  {id: 8, label: "pruebas", icon: PaperAirplaneIcon, link: "/pruebas"}
 ]
 
 const Sidebar = (props) => {
@@ -39,7 +37,7 @@ const Sidebar = (props) => {
 
 
   const wrapperClasses = classNames(
-      "h-screen pt-70 pb-4 bg-primary flex justify-between flex-col",
+      "h-full pt-70 pb-4 bg-primary flex justify-between flex-col",
       {
         ['w-60']: !toggleCollapse,
         ['w-32']: toggleCollapse
