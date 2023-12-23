@@ -404,9 +404,30 @@ const Chats = () => {
   // Ordena los mensajes por fecha de forma ascendente (de la más antigua a la más reciente)
   return mensajesFiltrados.map((mensaje, index) => (
     <div key={index} className={`mensaje ${mensaje.type_message}`}>
-      
-      <p>{mensaje.content && mensaje.content.trim()}</p>
-      <span>{mensaje.timestamp}</span>
+      {mensaje.type_message === 'image' ? (
+        <img src={mensaje.content} alt="Imagen" />
+      ) : mensaje.type_message === 'audio' ? (
+        <audio controls>
+          <source src={mensaje.content} type="audio/mp3" />
+          Tu navegador no soporta el elemento de audio.
+        </audio>
+      ) : mensaje.type_message === 'sticker' ? (
+        <img src={mensaje.content} alt="Sticker" style={{ width: '5vw' }} />
+      ) : mensaje.type_message === 'video' ? (
+        <video controls width="300">
+          <source src={mensaje.content} type="video/mp4" />
+          Tu navegador no soporta el elemento de video.
+        </video>
+      ) : mensaje.type_message === 'file' ? (
+        <a href={mensaje.content} target="_blank" rel="noopener noreferrer">
+          Descargar documento
+        </a>
+      ) : (
+        <>
+          <p>{mensaje.content && mensaje.content.trim()}</p>
+          <span>{mensaje.timestamp}</span>
+        </>
+      )}
     </div>
   ));
 })()}

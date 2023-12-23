@@ -152,43 +152,52 @@ const Reports = (props) => {
   };
 
 //This function is to alert the user that the indicated fields are missing.  
-  const handleCreateTemplate = async () => {
-    if (!content || !exampleContent || !exampleMedia) {
-      showTemporaryMessage('Por favor, complete los campos de contenido, contenido de ejemplo y archivo multimedia.');
-      return;
-    }
-    
-//Fields to send the request to create templates 
-    const templateData = {
-      elementName,
-      languageCode,
-      category,
-      templateType: selectedTemplateType,
-      vertical: selectedTemplateType,
-      content,
-      example: exampleContent,
-      exampleMedia,
-      header,
-      exampleHeader,
-      footer,
-      allowTemplateCategoryChange: false,
-      enableSample: true,
-    };
+const handleCreateTemplate = async () => {
+  if (!content || !exampleContent) {
+    showTemporaryMessage('Por favor, complete los campos de contenido, contenido de ejemplo y archivo multimedia.');
+    return;
+  }
 
-    try {
-      const response = await axios.post('http://localhost:3001/createTemplates', templateData);
-
-      if (response.status >= 200 && response.status < 300) {
-        setResponseData(response.data);
-        showTemporaryMessage('Plantilla creada exitosamente.');
-      } else {
-        console.error('Error en la respuesta del servidor:', response.status, response.data);
-        showTemporaryMessage('Error al crear la plantilla. Por favor, inténtelo de nuevo.');
-      }
-    } catch (error) {
-      console.error('Error:', error.message || error);
-    }
+  const templateData = {
+    elementName,
+    languageCode,
+    category,
+    templateType: selectedTemplateType,
+    vertical: selectedTemplateType,
+    content,
+    example: exampleContent,
+    exampleMedia,
+    header,
+    exampleHeader,
+    footer,
+    allowTemplateCategoryChange: false,
+    enableSample: true,
   };
+
+  try {
+    const response = await fetch('https://3d29bmtd-8080.use2.devtunnels.ms/createTemplates', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        // Include any additional headers here
+      },
+      body: JSON.stringify(templateData),
+    });
+
+    const responseData = await response.json();
+
+    if (response.ok) {
+      setResponseData(responseData);
+      showTemporaryMessage('Plantilla creada exitosamente.');
+    } else {
+      console.error('Error en la respuesta del servidor:', response.status, responseData);
+      showTemporaryMessage('Error al crear la plantilla. Por favor, inténtelo de nuevo.');
+    }
+  } catch (error) {
+    console.error('Error:', error.message || error);
+  }
+};
+
 
 //Request to obtain the templates
   useEffect(() => {
@@ -219,7 +228,7 @@ const Reports = (props) => {
           setError(`Error: ${data.message}`);
         }
       } catch (error) {
-        setError(`Fetch error: ${error.message}`);
+        setError(Fetch `error: ${error.message}`);
       }
     };
 
@@ -247,7 +256,7 @@ const Reports = (props) => {
         return 'Aprobada';
       case 'PENDING':
         return 'Pendiente';
-      case 'REJECT':
+      case 'REJECTED':
         return 'Rechazada';
       default:
         return status;
@@ -272,7 +281,7 @@ const Reports = (props) => {
 //This is the application to delete the templates
   const handleDeleteTemplate = async (elementName) => {
     try {
-      const response = await axios.delete(`http://localhost:5000/deleteTemplate/${elementName}`);
+      const response = await axios.delete(`https://3d29bmtd-8080.use2.devtunnels.ms/deleteTemplate/${elementName}`);
 
       if (response.status === 200 && response.data.status === 'success') {
         const updatedTemplates = templates.filter((template) => template.elementName !== elementName);
@@ -380,7 +389,6 @@ const Reports = (props) => {
           onChange={(e) => setHeader(e.target.value)}
           maxLength={160}
         />
-        <button onClick={handleAddPlaceholder}>Agregar variable</button>
       </label>
 
       <Separador />
