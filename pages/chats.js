@@ -418,7 +418,7 @@ const [mostrarPendientes, setMostrarPendientes] = useState(false);
     const nuevoDato = 'Activo'; // Reemplaza con el nuevo valor que deseas asignar
   
     try {
-      const response = await fetch('https://146.190.143.165:3001/actualizar/usuario', {
+      const response = await fetch('http://146.190.143.165:3001/actualizar/usuario', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
