@@ -55,7 +55,6 @@ model Distribution {
   successfulDistributions Int
   failedDistributions     Int
   templateId             Int
-  template               Template  @relation(fields: [templateId], references: [id])
 }
 
 // mensajes.prisma
