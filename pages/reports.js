@@ -20,7 +20,7 @@ function Reports() {
         return;
       }
 
-      const response = await fetch(`http://localhost:3001/obtener-mensajes?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`);
+      const response = await fetch(`http://146.190.143.165:3001/obtener-mensajes?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`);
 
       if (!response.ok) {
         throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
