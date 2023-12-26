@@ -23,6 +23,7 @@ model User {
   usuario       String
   password      String
   complete_name String
+  chats         Chat[]
 }
 
 // chat.prisma
