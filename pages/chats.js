@@ -458,7 +458,7 @@ const [mostrarPendientes, setMostrarPendientes] = useState(false);
   <>
     
       <Layout>
-      <p>Bienvenido, {session.user.name}!</p>        
+      <p>Bienvenido, {session.user.type_user}!</p>        
       <Box onLoad={updateuser()}>
         <ButtonContainer>
           <CustomButton onClick={handleEngestionClick}>En gestion</CustomButton>
