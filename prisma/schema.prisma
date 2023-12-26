@@ -15,7 +15,6 @@ datasource db {
 model User {
   id            Int      @id @default(autoincrement())
   type_user     String
-  status        String
   createdAt     DateTime
   updatedAt     DateTime
   email         String
