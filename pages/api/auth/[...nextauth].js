@@ -16,7 +16,7 @@ export const authOptions = {
         },   async authorize(credentials, req) {
          console.log(credentials)
  
-         const userFound = await db.user.findUnique({
+         const userFound = await db.user.findFirst({
              where: {
                  usuario: credentials.usuario
              },
