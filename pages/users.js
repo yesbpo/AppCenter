@@ -14,7 +14,7 @@ const CrearUsuario = () => {
       const createdAt = new Date(); // Puedes ajustar cómo obtienes la fecha de creación
       const updatedAt = new Date(); // Puedes ajustar cómo obtienes la fecha de actualización
 
-      const response = await fetch('http://localhost:3001/crear-usuario', {
+      const response = await fetch('http://127.0.0.1:3001/crear-usuario', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
