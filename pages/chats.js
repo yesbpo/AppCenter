@@ -26,7 +26,7 @@ const Chats = () => {
   const toggleEmojiPicker = () => {
     setShowEmojiPicker((prevShow) => !prevShow);
   };
-  const socket = io('https://3d29bmtd-8080.use2.devtunnels.ms/');
+  const socket = io('http://45.55.129.170:8080/');
   const [contactos1, setContactos1] = useState([]);
   const [contactos, setContactos] = useState([
     { user: null, fecha: null, mensajes: [{ tipomensaje: '', datemessage: '', content: '' }] },
