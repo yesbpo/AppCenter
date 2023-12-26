@@ -20,13 +20,13 @@ const CrearUsuario = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          usuario: usuario,
-          password:password,
-          email:email,
+          type_user: typeUser,
           createdAt:createdAt,
           updatedAt:updatedAt,
+          email:email,
           session:session,
-          type_user: typeUser,
+          usuario: usuario,
+          password:password,                    
           complete_name: complete_name,
       
         }),
