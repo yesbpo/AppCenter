@@ -11,11 +11,59 @@ datasource db {
   relationMode = "prisma"
 }
 
+// users.prisma
 model User {
-  id Int @id @default(autoincrement())
-  usuario String @unique
-  password String @unique
-  email String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            Int      @id @default(autoincrement())
+  type_user     String
+  status        String
+  createdAt     DateTime
+  updatedAt     DateTime
+  email         String
+  session       String
+  usuario       String
+  password      String
+  complete_name String
+}
+
+// chat.prisma
+model Chat {
+  idChat2       String   @id
+  receivedDate  DateTime
+  assignedDate  DateTime
+  attendedDate  DateTime
+  closedDate    DateTime
+  resolved      Boolean
+  status        String
+  userId        Int
+  user          User     @relation(fields: [userId], references: [id])
+}
+
+// template.prisma
+model Template {
+  id            Int      @id @default(autoincrement())
+  status        String
+  attachments   Bytes
+  message       String
+}
+
+// distribution.prisma
+model Distribution {
+  id                     Int      @id @default(autoincrement())
+  sendDate               DateTime
+  massive                Boolean
+  successfulDistributions Int
+  failedDistributions     Int
+  templateId             Int
+  template               Template  @relation(fields: [templateId], references: [id])
+}
+
+// mensajes.prisma
+model Mensaje {
+  idMessage     String   @id
+  content       String
+  type_comunication String
+  number        String
+  timestamp     DateTime
+  status        String
+  type_message  String
 }
