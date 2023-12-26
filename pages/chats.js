@@ -36,9 +36,9 @@ const Chats = () => {
   
      const handlePendientesClick = async () => {
     try {
-      const response = await fetch('http://146.190.143.165:3001/obtener-mensajes');
-      const responseChats = await fetch('http://146.190.143.165:3001/obtener-chats');
-      const responseUsers = await fetch('http://146.190.143.165:3001/obtener-usuarios');
+      const response = await fetch('https://146.190.143.165:3001/obtener-mensajes');
+      const responseChats = await fetch('https://146.190.143.165:3001/obtener-chats');
+      const responseUsers = await fetch('https://146.190.143.165:3001/obtener-usuarios');
       // El usuario está autenticado, puedes acceder a la sesión
       
       if (!response.ok) {
@@ -60,9 +60,9 @@ const Chats = () => {
   };
   const handleEngestionClick = async () => {
     try {
-      const response = await fetch('http://146.190.143.165:3001/obtener-mensajes');
-      const responseChats = await fetch('http://146.190.143.165:3001/obtener-chats');
-      const responseUsers = await fetch('http://146.190.143.165:3001/obtener-usuarios');
+      const response = await fetch('https://146.190.143.165:3001/obtener-mensajes');
+      const responseChats = await fetch('https://146.190.143.165:3001/obtener-chats');
+      const responseUsers = await fetch('https://146.190.143.165:3001/obtener-usuarios');
       // El usuario está autenticado, puedes acceder a la sesión
       
       if (!response.ok) {
@@ -146,7 +146,7 @@ const [url, setUrl] = useState('');
 
         const idMessage = responseData.messageId;
 
-        const actualizarMensajeResponse = await fetch('http://146.190.143.165:3001/mensajeenviado', {
+        const actualizarMensajeResponse = await fetch('https://146.190.143.165:3001/mensajeenviado', {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -180,7 +180,7 @@ const [mostrarPendientes, setMostrarPendientes] = useState(false);
       const idChat2 = numeroEspecifico; // Asegúrate de obtener el idChat2 según tu lógica
       const nuevoEstado = 'in process'; // Asegúrate de obtener el nuevoEstado según tu lógica
 
-      const response = await fetch('http://146.190.143.165:3001/actualizar-estado-chat', {
+      const response = await fetch('https://146.190.143.165:3001/actualizar-estado-chat', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -221,7 +221,7 @@ const [mostrarPendientes, setMostrarPendientes] = useState(false);
     console.log('Información del webhook recibida:', data);
     
         try {
-          const response = await fetch('http://146.190.143.165:3001/obtener-mensajes');
+          const response = await fetch('https://146.190.143.165:3001/obtener-mensajes');
   
           if (!response.ok) {
             throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
@@ -340,7 +340,7 @@ const [mostrarPendientes, setMostrarPendientes] = useState(false);
       const idMessage = responseData.messageId;
 
       // Actualiza el mensaje en el servidor
-      const actualizarMensajeResponse = await fetch('http://146.190.143.165:3001/mensajeenviado', {
+      const actualizarMensajeResponse = await fetch('https://146.190.143.165:3001/mensajeenviado', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -357,7 +357,7 @@ const [mostrarPendientes, setMostrarPendientes] = useState(false);
       } else {
         console.error('Error al actualizar el mensaje:', actualizarMensajeResponse.status);
           // Guarda el mensaje en el servidor
-    const guardarMensajeResponse = await fetch('http://146.190.143.165:3001/guardar-mensajes', {
+    const guardarMensajeResponse = await fetch('https://146.190.143.165:3001/guardar-mensajes', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -418,7 +418,7 @@ const [mostrarPendientes, setMostrarPendientes] = useState(false);
     const nuevoDato = 'Activo'; // Reemplaza con el nuevo valor que deseas asignar
   
     try {
-      const response = await fetch('http://146.190.143.165:3001/actualizar/usuario', {
+      const response = await fetch('https://146.190.143.165:3001/actualizar/usuario', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -436,7 +436,7 @@ const [mostrarPendientes, setMostrarPendientes] = useState(false);
         console.error('Error al actualizar el usuario:', response.statusText);
       }
       try {
-        const response = await fetch('http://146.190.143.165:3001/obtener-mensajes');
+        const response = await fetch('https://146.190.143.165:3001/obtener-mensajes');
 
         if (!response.ok) {
           throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
@@ -470,13 +470,8 @@ const [mostrarPendientes, setMostrarPendientes] = useState(false);
       </Box>
       <Container>
         <Box>
-          
           <ContainerBox>
-            
             <div>
-            
-
-      
       <h2>Mensajes Ordenados para {numeroEspecifico}</h2>
       
       {(() => {
