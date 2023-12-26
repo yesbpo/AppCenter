@@ -21,8 +21,6 @@ const CrearUsuario = () => {
         },
         body: JSON.stringify({
           type_user: typeUser,
-          createdAt:createdAt,
-          updatedAt:updatedAt,
           email:email,
           session:session,
           usuario: usuario,
