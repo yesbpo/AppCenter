@@ -547,7 +547,7 @@ const [mostrarPendientes, setMostrarPendientes] = useState(false);
     </div>
         </Box>
         <Box>
-        {mostrarPendientes && <Pendientes mensajes={mensajes} acivarengestion={mostrarEngestion} />}
+        
           <div className="chat-container">
             <ul>
               {contactos1.map((contacto, index) => (

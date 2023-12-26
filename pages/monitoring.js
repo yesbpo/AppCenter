@@ -522,7 +522,7 @@ const { data: session } = useSession();
           <button onClick={actualizarEstadoChat} >Gestionar</button><button >Cerrar</button>
         </Box>
         <Box>
-        {mostrarPendientes && <Pendientes mensajes={mensajes} acivarengestion={mostrarEngestion} />}
+        
           <div className="chat-container">
             <ul>
               {contactos1.map((contacto, index) => (
