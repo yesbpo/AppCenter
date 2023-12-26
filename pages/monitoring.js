@@ -114,6 +114,7 @@ const { data: session } = useSession();
         throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
       }
       const users = await responseUsers.json()
+      console.log(users)
       const Id = users.filter(d => d.usuario == session.user.name)
       const dataChats =  await responseChats.json();
       const chatsPending = dataChats.filter(d=> d.status == 'pending')
