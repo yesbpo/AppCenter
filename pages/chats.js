@@ -172,8 +172,7 @@ const [url, setUrl] = useState('');
     }
   };
 
-const [mostrarPendientes, setMostrarPendientes] = useState(false);
-  const [mostrarEngestion, setMostrarEngestion] = useState(false);
+
   const [numeroEspecifico, setNumeroEspecifico] = useState('');
   const actualizarEstadoChat = async (estado) => {
     try {

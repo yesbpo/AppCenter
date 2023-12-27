@@ -95,7 +95,7 @@ const { data: session } = useSession();
   const toggleEmojiPicker = () => {
     setShowEmojiPicker((prevShow) => !prevShow);
   };
-  const socket = io('https://appcenteryes.appcenteryes.com/w');
+  const socket = io('https://appcenteryes.appcenteryes.com/w/');
   const [contactos1, setContactos1] = useState([]);
   const [contactos, setContactos] = useState([
     { user: null, fecha: null, mensajes: [{ tipomensaje: '', datemessage: '', content: '' }] },
@@ -105,27 +105,23 @@ const { data: session } = useSession();
   
      const handlePendientesClick = async () => {
     try {
-      const responseUsers = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-usuarios');
-      const users = await responseUsers.json()
-      console.log(users)
       const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
       const responseChats = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-chats');
-      
+      const responseUsers = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-usuarios');
       // El usuario está autenticado, puedes acceder a la sesión
       
       if (!response.ok) {
         throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
       }
-     
-      
+      const users = await responseUsers.json()
       const Id = users.filter(d => d.usuario == session.user.name)
       const dataChats =  await responseChats.json();
       const chatsPending = dataChats.filter(d=> d.status == 'pending')
-      const withoutGest = chatsPending.filter(d => d.userId)
+      const withoutGest = chatsPending.filter(d => d.userId == Id[0].id )
       console.log(Id)
       const data = await response.json();
       setMensajes1(data);
-      setContactos1(chatsPending);
+      setContactos1(withoutGest);
     } catch (error) {
       console.error('Error al obtener mensajes:', error);
       // Puedes manejar el error según tus necesidades
@@ -149,7 +145,7 @@ const { data: session } = useSession();
       console.log(Id)
       const data = await response.json();
       setMensajes1(data);
-      setContactos1(chatsPending);
+      setContactos1(withoutGest);
     } catch (error) {
       console.error('Error al obtener mensajes:', error);
       // Puedes manejar el error según tus necesidades
@@ -161,9 +157,91 @@ const { data: session } = useSession();
       { numero: '', tipo: '', contenido: '', estado: '', date: ''},
     ]   
 );
-    
-  const [mostrarPendientes, setMostrarPendientes] = useState(false);
-  const [mostrarEngestion, setMostrarEngestion] = useState(false);
+
+const [file, setFile] = useState(null);
+const [url, setUrl] = useState('');
+  
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+  const handleUpload = async () => {
+    if (!file) {
+      alert('Selecciona un archivo primero.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('archivo', file);
+
+    try {
+      const response = await fetch('https://3d29bmtd-8080.use2.devtunnels.ms/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+
+        // Actualizar el mensajeData para incluir información del archivo
+        const mensajeData = {
+          channel: 'whatsapp',
+          source: '5718848135',
+          'src.name': 'Pb1yes',
+          destination: numeroEspecifico,
+          message: JSON.stringify({
+            type: 'image', // Puedes ajustar esto según el tipo de archivo
+            originalUrl: data.url, // URL generada después de la carga del archivo
+            previewUrl: data.url, // Puedes ajustar esto según tus necesidades
+            caption: 'Envío de imagen',
+          }),
+          disablePreview: true,
+        };
+
+        const responseEnvio = await fetch('https://appcenteryes.appcenteryes.com/w/api/envios', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams(mensajeData).toString(),
+        });
+
+        if (!responseEnvio.ok) {
+          throw new Error(`Error en la solicitud: ${responseEnvio.status} ${responseEnvio.statusText}`);
+        }
+
+        const responseData = await responseEnvio.json();
+        console.log('Respuesta del servidor:', responseData);
+
+        const idMessage = responseData.messageId;
+
+        const actualizarMensajeResponse = await fetch('https://appcenteryes.appcenteryes.com/db/mensajeenviado', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            content: mensajeData.message,
+            idMessage,
+          }),
+        });
+
+        if (actualizarMensajeResponse.ok) {
+          const actualizarMensajeData = await actualizarMensajeResponse.json();
+          console.log('Respuesta de la actualización del mensaje:', actualizarMensajeData);
+        } else {
+          console.error('Error al actualizar el mensaje:', actualizarMensajeResponse.status);
+          // Resto del código para guardar el mensaje en el servidor...
+        }
+      } else {
+        alert(`Error al subir el archivo: ${response.status} ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
+    }
+  };
+
+
   const [numeroEspecifico, setNumeroEspecifico] = useState('');
   const actualizarEstadoChat = async (estado) => {
     try {
@@ -379,7 +457,7 @@ const { data: session } = useSession();
   };
 
   useEffect(() => {
-    const apiUrl2 = "https://appcenteryes.appcenteryes.com/w/api/users";
+    const apiUrl2 = "https://3d29bmtd-8080.use2.devtunnels.ms/api/users";
     fetch(apiUrl2, {
       method: 'GET',
     })
@@ -426,7 +504,7 @@ const { data: session } = useSession();
         console.error('Error al actualizar el usuario:', response.statusText);
       }
       try {
-        const response = await fetch('https://appcenteryes.appcenteryes.com/db//obtener-mensajes');
+        const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
 
         if (!response.ok) {
           throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
@@ -443,29 +521,12 @@ const { data: session } = useSession();
       console.error('Error de red:', error.message);
     }
   };
-  if(session)
-  {return (
+  if(session){
+  return (
   <>
     
       <Layout>
-      <StyledList>
-        {resultados.map(({ asesor, frecuencia }, index) => (
-          <StyledListItem key={index}>
-            <StyledStrong>Asesor:</StyledStrong> {asesor.complete_name}, {asesor.session} - <StyledStrong>chats pendientes:</StyledStrong> {frecuencia}
-          </StyledListItem>
-        ))}
-        {resultados1.map(({ asesor, frecuencia }, index) => (
-          <StyledListItem key={index}>
-            <StyledStrong>Asesor:</StyledStrong> {asesor.complete_name}, {asesor.session} - <StyledStrong>chats en gestion:</StyledStrong> {frecuencia}
-          </StyledListItem>
-        ))}
-        {resultados2.map(({ asesor, frecuencia }, index) => (
-          <StyledListItem key={index}>
-            <StyledStrong>Asesor:</StyledStrong> {asesor.complete_name}, {asesor.session} - <StyledStrong>chats cerrados:</StyledStrong> {frecuencia}
-          </StyledListItem>
-        ))}
-      </StyledList>
-      <p>Bienvenido, {session.user.name}!</p>        
+      <p>Bienvenido, {session.user.type_user}!</p>        
       <Box onLoad={updateuser()}>
         <ButtonContainer>
           <CustomButton onClick={handleEngestionClick}>En gestion</CustomButton>
@@ -477,13 +538,8 @@ const { data: session } = useSession();
       </Box>
       <Container>
         <Box>
-          
           <ContainerBox>
-            
             <div>
-            
-
-      
       <h2>Mensajes Ordenados para {numeroEspecifico}</h2>
       
       {(() => {
@@ -528,7 +584,6 @@ const { data: session } = useSession();
   ));
 })()}
     </div> 
-    
       </ContainerBox>
           <InputContainer>
             <InputMensaje
@@ -550,6 +605,10 @@ const { data: session } = useSession();
         )}
           <BotonEnviar onClick={enviarMensaje} >Enviar</BotonEnviar>
           <button onClick={actualizarEstadoChat} >Gestionar</button><button >Cerrar</button>
+          <div>
+      <input type="file" onChange={handleFileChange} />
+      <button onClick={handleUpload}>Subir Archivo</button>
+    </div>
         </Box>
         <Box>
         
@@ -582,9 +641,7 @@ const { data: session } = useSession();
     </div>
   </>
   
-    )
-
-  };
+    )  };
 
   const Box = styled.div`
   padding: 30px;
