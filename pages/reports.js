@@ -52,7 +52,7 @@ function Reports() {
   useEffect(() => {
     axios({
       method: 'get',
-      url: 'https://3d29bmtd-8080.use2.devtunnels.ms/api/templates',
+      url: 'https://appcenteryes.appcenteryes.com/w/api/templates',
     })
       .then(response => {
         const filteredData = response.data.map(template => ({
