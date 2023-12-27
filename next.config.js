@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-reactStrictMode:false
-}
-
-module.exports = nextConfig
+    basePath: '/next',  // Establece la ruta base
+    reactStrictMode: false,
+  }
+  
+  module.exports = nextConfig
