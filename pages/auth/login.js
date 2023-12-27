@@ -24,7 +24,7 @@ function LoginPage() {
 
     console.log(res)
     if (res.error) {
-      router.push('next/auth/login')
+      router.push('/auth/login')
     } else {
       router.push('/chats')
       
