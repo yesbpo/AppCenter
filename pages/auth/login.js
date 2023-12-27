@@ -20,13 +20,13 @@ function LoginPage() {
       usuario: data.usuario,
       password: data.password,
       redirect: false,
-      callbackUrl: "/next/api/auth", // Ajusta la ruta según tu configuración
+      callbackUrl: "/next", // Ajusta la ruta según tu configuración
     });
     console.log(res)
     if (res.error) {
-      router.push('/auth/login')
+      router.push('next/auth/login')
     } else {
-      router.push('/chats')
+      router.push('next/chats')
       
     }
   });
