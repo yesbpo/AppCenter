@@ -476,11 +476,11 @@ const [mostrarPendientes, setMostrarPendientes] = useState(false);
       
       {(() => {
   // Filtra los mensajes por el número específico y contenido no vacío
-  const mensajesFiltrados = mensajes1.filter(
-    (mensaje) => mensaje.number === numeroEspecifico && mensaje.content && mensaje.content.trim() !== ''
-  );
+  const mensajesFiltrados = mensajes1
+    .filter((mensaje) => mensaje.number === numeroEspecifico && mensaje.content && mensaje.content.trim() !== '')
+    .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)); // Ordena los mensajes por fecha
 
-  // Ordena los mensajes por fecha de forma ascendente (de la más antigua a la más reciente)
+  // Mapea y renderiza los mensajes ordenados
   return mensajesFiltrados.map((mensaje, index) => (
     <div
       key={index}
@@ -511,7 +511,8 @@ const [mostrarPendientes, setMostrarPendientes] = useState(false);
           <p className="mb-2">{mensaje.content && mensaje.content.trim()}</p>
           <span className="text-gray-500">{mensaje.timestamp}</span>
         </>
-      )}   </div>
+      )}
+    </div>
   ));
 })()}
     </div> 
