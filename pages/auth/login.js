@@ -20,7 +20,7 @@ function LoginPage() {
       usuario: data.usuario,
       password: data.password,
       redirect: false,
-      callbackUrl: "/next", // Ajusta la ruta según tu configuración
+      callbackUrl: "/next/api/auth", // Ajusta la ruta según tu configuración
     });
     console.log(res)
     if (res.error) {
