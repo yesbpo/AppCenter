@@ -330,7 +330,7 @@ const { data: session } = useSession();
       const idMessage = responseData.messageId;
 
       // Actualiza el mensaje en el servidor
-      const actualizarMensajeResponse = await fetch('http://146.190.143.165:3001/mensajeenviado', {
+      const actualizarMensajeResponse = await fetch('https://appcenteryes.appcenteryes.com/db/mensajeenviado', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -347,7 +347,7 @@ const { data: session } = useSession();
       } else {
         console.error('Error al actualizar el mensaje:', actualizarMensajeResponse.status);
           // Guarda el mensaje en el servidor
-    const guardarMensajeResponse = await fetch('http://146.190.143.165:3001/guardar-mensajes', {
+    const guardarMensajeResponse = await fetch('https://appcenteryes.appcenteryes.com/db/guardar-mensajes', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -426,7 +426,7 @@ const { data: session } = useSession();
         console.error('Error al actualizar el usuario:', response.statusText);
       }
       try {
-        const response = await fetch('http://146.190.143.165:3001/obtener-mensajes');
+        const response = await fetch('https://appcenteryes.appcenteryes.com/db//obtener-mensajes');
 
         if (!response.ok) {
           throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
@@ -488,16 +488,42 @@ const { data: session } = useSession();
       
       {(() => {
   // Filtra los mensajes por el número específico y contenido no vacío
-  const mensajesFiltrados = mensajes1.filter(
-    (mensaje) => mensaje.number === numeroEspecifico && mensaje.content && mensaje.content.trim() !== ''
-  );
+  const mensajesFiltrados = mensajes1
+    .filter((mensaje) => mensaje.number === numeroEspecifico && mensaje.content && mensaje.content.trim() !== '')
+    .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)); // Ordena los mensajes por fecha
 
-  // Ordena los mensajes por fecha de forma ascendente (de la más antigua a la más reciente)
+  // Mapea y renderiza los mensajes ordenados
   return mensajesFiltrados.map((mensaje, index) => (
-    <div key={index} className={`mensaje ${mensaje.type_message}`}>
-      
-      <p>{mensaje.content && mensaje.content.trim()}</p>
-      <span>{mensaje.timestamp}</span>
+    <div
+      key={index}
+      className={`mensaje ${mensaje.type_message} ${
+        mensaje.type_comunication === 'message-event' ? 'bg-white text-right' : 'bg-green-500 text-left'
+      } p-4 mb-4`}
+    >
+      {mensaje.type_message === 'image' ? (
+        <img src={mensaje.content} alt="Imagen" className="w-full" />
+      ) : mensaje.type_message === 'audio' ? (
+        <audio controls>
+          <source src={mensaje.content} type="audio/mp3" />
+          Tu navegador no soporta el elemento de audio.
+        </audio>
+      ) : mensaje.type_message === 'sticker' ? (
+        <img src={mensaje.content} alt="Sticker" className="w-20" />
+      ) : mensaje.type_message === 'video' ? (
+        <video controls className="w-full">
+          <source src={mensaje.content} type="video/mp4" />
+          Tu navegador no soporta el elemento de video.
+        </video>
+      ) : mensaje.type_message === 'file' ? (
+        <a href={mensaje.content} target="_blank" rel="noopener noreferrer" className="text-blue-500">
+          Descargar documento
+        </a>
+      ) : (
+        <>
+          <p className="mb-2">{mensaje.content && mensaje.content.trim()}</p>
+          <span className="text-gray-500">{mensaje.timestamp}</span>
+        </>
+      )}
     </div>
   ));
 })()}
