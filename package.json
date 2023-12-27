@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "next dev",
+    "start:https": "HTTPS=true next start",
     "build": "next build",
     "dev": "npm run start"
   },
