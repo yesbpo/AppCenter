@@ -323,7 +323,7 @@ const [mostrarPendientes, setMostrarPendientes] = useState(false);
           },
         ]
       ));
-      const response = await fetch('https://appcenteryes.appcenteryes/w/api/envios', {
+      const response = await fetch('https://appcenteryes.appcenteryes.com/w/api/envios', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
