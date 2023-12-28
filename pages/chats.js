@@ -206,8 +206,8 @@ const nuevoUserId = 0;
       },
       body: JSON.stringify({
         idChat2: idChat2,
-        nuevoUserId: nuevoUserId,
-        nuevoEstado: nuevoEstado, // Puedes omitir esto si no deseas actualizar userId
+        nuevoEstado: nuevoEstado,
+        nuevoUserId: nuevoUserId, // Puedes omitir esto si no deseas actualizar userId
       }),
     });
 
