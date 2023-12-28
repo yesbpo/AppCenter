@@ -1,21 +1,25 @@
 import Layout from '../components/Layout';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Component } from 'react';
 import styled from 'styled-components';
 import io from 'socket.io-client';
 import { useSession, signIn } from 'next-auth/react';
 import EmojiPicker from 'emoji-picker-react';
 
-
-
-
 const Chats = () => {
+  useEffect(() => {
+    // Lógica que se ejecutará después del montaje del componente
+    updateuser();
+  }, []); // El array vacío asegura que el efecto se ejecute solo una vez al montar el componente
+
   const { data: session } = useSession();
   const manejarPresionarEnter = (event) => {
     if (event.key === 'Enter') {
+
       enviarMensaje();
+      conection();
     }
   };
-
+  
   const [emojis, setEmojis] = useState([]);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const handleAddEmoji = (emoji) => {
@@ -26,7 +30,7 @@ const Chats = () => {
   const toggleEmojiPicker = () => {
     setShowEmojiPicker((prevShow) => !prevShow);
   };
-  const socket = io('https://appcenteryes.appcenteryes.com/w');
+  
   const [contactos1, setContactos1] = useState([]);
   const [contactos, setContactos] = useState([
     { user: null, fecha: null, mensajes: [{ tipomensaje: '', datemessage: '', content: '' }] },
@@ -35,6 +39,7 @@ const Chats = () => {
   const [mensajes1, setMensajes1] = useState([]);
   
      const handlePendientesClick = async () => {
+      conection();
     try {
       const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
       const responseChats = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-chats');
@@ -58,6 +63,7 @@ const Chats = () => {
     }
   };
   const handleEngestionClick = async () => {
+    conection();
     try {
       const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
       const responseChats = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-chats');
@@ -174,6 +180,7 @@ const [url, setUrl] = useState('');
 
   const [numeroEspecifico, setNumeroEspecifico] = useState('');
   const actualizarEstadoChat = async (estado) => {
+    conection();
     try {
       const idChat2 = numeroEspecifico; // Asegúrate de obtener el idChat2 según tu lógica
       const nuevoEstado = 'in process'; // Asegúrate de obtener el nuevoEstado según tu lógica
@@ -205,17 +212,12 @@ const [url, setUrl] = useState('');
    // Reemplaza esto con el número que necesites
   const [inputValue, setInputValue] = useState('')
   const [msg, setMsg] = useState([]);
-  useEffect(() => {
-    socket.on('cambio', handleCambio);
-    return () => {
-      socket.off('cambio', handleCambio);
-      socket.disconnect();
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contactos]);
   
-  const handleCambio = async(data) => {
-    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
+  
+  const conection =()=> socket.on( async(data) => {
+    const socket = io('https://appcenteryes.appcenteryes.com/w');
     
     
         try {
@@ -289,8 +291,8 @@ const [url, setUrl] = useState('');
     const webhookText = data ? data.payload.payload.text : null;
     setWebhookData(webhookText);
     
-  };
-  
+  }
+  )
 
   const enviarMensaje = async () => {
   
@@ -368,7 +370,7 @@ const [url, setUrl] = useState('');
         idMessage: idMessage // Puedes ajustar este valor según tus necesidades
       }),
     });
-
+    conection();
     if (guardarMensajeResponse.ok) {
       const guardarMensajeData = await guardarMensajeResponse.json();
           } else {
@@ -411,7 +413,7 @@ const [url, setUrl] = useState('');
   const updateuser = async () => {
     const usuario = session.user.name; // Reemplaza con el nombre de usuario que deseas actualizar
     const nuevoDato = 'Activo'; // Reemplaza con el nuevo valor que deseas asignar
-  
+  conection();
     try {
       const response = await fetch('https://appcenteryes.appcenteryes.com/db/actualizar/usuario', {
         method: 'PUT',
@@ -454,7 +456,7 @@ const [url, setUrl] = useState('');
     
       <Layout>
       <p>Bienvenido, {session.user.type_user}!</p>        
-      <Box onLoad={updateuser()}>
+      <Box>
         <ButtonContainer>
           <CustomButton onClick={handleEngestionClick}>En gestion</CustomButton>
            {/* Mostrar Activos si 'mostrarActivos' es true */}
