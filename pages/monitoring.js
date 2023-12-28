@@ -12,7 +12,7 @@ const [asesores, setAsesores] = useState([]);
 const [resultados, setResultados] = useState([]);
 const [resultados1, setResultados1] = useState([]);
 const [resultados2, setResultados2] = useState([]);
-const socket = io('https://appcenteryes.appcenteryes.com/w'); 
+
 useEffect(() => {
   const obtenerMensajes = async () => {
     try {
@@ -104,6 +104,7 @@ const { data: session } = useSession();
   const [mensajes1, setMensajes1] = useState([]);
   
      const handlePendientesClick = async () => {
+      conection();
     try {
       const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
       const responseChats = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-chats');
@@ -128,6 +129,7 @@ const { data: session } = useSession();
     }
   };
   const handleEngestionClick = async () => {
+    conection();
     try {
       const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
       const responseChats = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-chats');
@@ -275,7 +277,9 @@ const [url, setUrl] = useState('');
    // Reemplaza esto con el número que necesites
   const [inputValue, setInputValue] = useState('')
   const [msg, setMsg] = useState([]);
- const conection = () =>{socket.on( async (data) => { 
+ const conection = () =>{
+  const socket = io('https://appcenteryes.appcenteryes.com/w'); 
+  socket.on( async (data) => { 
     
     
     
@@ -482,7 +486,7 @@ setWebhookData(webhookText);
   const updateuser = async () => {
     const usuario = session.user.name; // Reemplaza con el nombre de usuario que deseas actualizar
     const nuevoDato = 'Activo'; // Reemplaza con el nuevo valor que deseas asignar
-    conection()
+    
     try {
       const response = await fetch('https://appcenteryes.appcenteryes.com/db/actualizar/usuario', {
         method: 'PUT',
