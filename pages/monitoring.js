@@ -275,51 +275,39 @@ const [url, setUrl] = useState('');
    // Reemplaza esto con el número que necesites
   const [inputValue, setInputValue] = useState('')
   const [msg, setMsg] = useState([]);
- 
-  socket.on( async (data) => { 
+ const conection = () =>{socket.on( async (data) => { 
     
     
     
-      // Manejar la conexión del socket al montar el componente
-      // Reemplaza con la URL de tu servidor Socket.IO
-    
-      // Manejar la desconexión del socket al desmontar el componente
-      
-     // Asegúrate de tener un array vacío como dependencia para que solo se ejecute al montar y desmontar el componente
-    
-        try {
-          const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
-  
-          if (!response.ok) {
-            throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
-          }
-  
-          const data1 = await response.json();
-          setMensajes1(data1);
-        } catch (error) {
-          console.error('Error al obtener mensajes:', error);
-          // Puedes manejar el error según tus necesidades
-        }
-      
+  // Manejar la conexión del socket al montar el componente
+  // Reemplaza con la URL de tu servidor Socket.IO
 
+  // Manejar la desconexión del socket al desmontar el componente
   
-         
-    const nuevosContactos = [
-      ...contactos,
-      {
-        user: data.payload.source,
-        fecha: new Date(data.timestamp).toLocaleString('es-ES', {
-          year: 'numeric',
-          month: 'numeric',
-          day: 'numeric',
-          hour: 'numeric',
-          minute: 'numeric',
-          second: 'numeric',
-          timeZoneName: 'short',
-        }),
-      },
-    ];
-    let fecha = new Date(data.timestamp).toLocaleString('es-ES', {
+ // Asegúrate de tener un array vacío como dependencia para que solo se ejecute al montar y desmontar el componente
+
+    try {
+      const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
+
+      if (!response.ok) {
+        throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+      }
+
+      const data1 = await response.json();
+      setMensajes1(data1);
+    } catch (error) {
+      console.error('Error al obtener mensajes:', error);
+      // Puedes manejar el error según tus necesidades
+    }
+  
+
+
+     
+const nuevosContactos = [
+  ...contactos,
+  {
+    user: data.payload.source,
+    fecha: new Date(data.timestamp).toLocaleString('es-ES', {
       year: 'numeric',
       month: 'numeric',
       day: 'numeric',
@@ -327,41 +315,53 @@ const [url, setUrl] = useState('');
       minute: 'numeric',
       second: 'numeric',
       timeZoneName: 'short',
-    })
-    const nuevoMensaje = {
-      numero: data.payload.destination,
-      tipo: 'message-event',
-      contenido: inputValue,
-      estado: data.payload.type,
-      date: fecha
+    }),
+  },
+];
+let fecha = new Date(data.timestamp).toLocaleString('es-ES', {
+  year: 'numeric',
+  month: 'numeric',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: 'numeric',
+  second: 'numeric',
+  timeZoneName: 'short',
+})
+const nuevoMensaje = {
+  numero: data.payload.destination,
+  tipo: 'message-event',
+  contenido: inputValue,
+  estado: data.payload.type,
+  date: fecha
 
-    };
-    setMsg((prevMsg) => [...prevMsg, mensajes.inputValue]);
-    const nuevoMensajeEntrante = {
-      numero: data.payload.source,
-      tipo: data.type,
-      contenido: data.payload.payload.text,
-      date: fecha,
-    };
-    if(data.payload.payload == undefined){
-      setMensajes((prevMensajes) => [...prevMensajes, nuevoMensaje]);
-    }
-    else{
-      setMensajes((prevMensajes)=>[...prevMensajes, nuevoMensajeEntrante]);
-    }
-    
-    if (contactos.fecha !== nuevosContactos.fecha) {
-      setContactos(nuevosContactos);
-    }
-    const cont = parseInt(msg.length);
-    console.log(cont);
-    const webhookText = data ? data.payload.payload.text : null;
-    setWebhookData(webhookText);
-    
-  })
+};
+setMsg((prevMsg) => [...prevMsg, mensajes.inputValue]);
+const nuevoMensajeEntrante = {
+  numero: data.payload.source,
+  tipo: data.type,
+  contenido: data.payload.payload.text,
+  date: fecha,
+};
+if(data.payload.payload == undefined){
+  setMensajes((prevMensajes) => [...prevMensajes, nuevoMensaje]);
+}
+else{
+  setMensajes((prevMensajes)=>[...prevMensajes, nuevoMensajeEntrante]);
+}
 
-  const enviarMensaje = async () => {
+if (contactos.fecha !== nuevosContactos.fecha) {
+  setContactos(nuevosContactos);
+}
+const cont = parseInt(msg.length);
+console.log(cont);
+const webhookText = data ? data.payload.payload.text : null;
+setWebhookData(webhookText);
+
+})
+}
   
+  const enviarMensaje = async () => {
+    
     if (!inputValue.trim()){
       console.log('Mensaje vacío, no se enviará.');
       return;
@@ -444,7 +444,7 @@ const [url, setUrl] = useState('');
       console.log('Respuesta de guardar mensaje en la base de datos:', guardarMensajeData);
     } else {
       console.error('Error al guardar el mensaje:', guardarMensajeResponse.status);
-    }
+    }conection()
       }
     
       setInputValue('')
@@ -482,7 +482,7 @@ const [url, setUrl] = useState('');
   const updateuser = async () => {
     const usuario = session.user.name; // Reemplaza con el nombre de usuario que deseas actualizar
     const nuevoDato = 'Activo'; // Reemplaza con el nuevo valor que deseas asignar
-  
+    conection()
     try {
       const response = await fetch('https://appcenteryes.appcenteryes.com/db/actualizar/usuario', {
         method: 'PUT',
