@@ -6,6 +6,20 @@ import { useSession, signIn } from 'next-auth/react';
 import EmojiPicker from 'emoji-picker-react';
 
 const Chats = () => {
+
+  const containerRef = useRef(null);
+
+  // Función para mantener el scroll en la parte inferior
+  const scrollToBottom = () => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
+  };
+
+  // Efecto para ajustar el scroll cada vez que cambia el contenido de los mensajes
+  useEffect(() => {
+    scrollToBottom();
+  }, [mensajes]);
   useEffect(() => {
     // Lógica que se ejecutará después del montaje del componente
     updateuser();
@@ -469,7 +483,7 @@ const [url, setUrl] = useState('');
       </Box>
       <Container>
         <Box>
-          <ContainerBox>
+          <ContainerBox ref={containerRef}>
             <div>
       <h2>Mensajes Ordenados para {numeroEspecifico}</h2>
       
