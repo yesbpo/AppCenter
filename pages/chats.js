@@ -614,6 +614,7 @@ const ContainerBox = styled.div`
   border-radius: 10px;
   overflow-y: scroll;
   max-height: 400px;
+  scroll-behavior: smooth;
 `;
 
 const p = styled.div`

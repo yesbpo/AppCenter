@@ -505,7 +505,7 @@ setWebhookData(webhookText);
   
       if (response.ok) {
         const data = await response.json();
-        console.log(data); // Aquí puedes manejar la respuesta del servidor
+         // Aquí puedes manejar la respuesta del servidor
       } else {
         console.error('Error al actualizar el usuario:', response.statusText);
       }
