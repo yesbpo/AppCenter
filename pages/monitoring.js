@@ -585,25 +585,10 @@ const [url, setUrl] = useState('');
 })()}
     </div> 
       </ContainerBox>
-          <InputContainer>
-            <InputMensaje
-              type="text"
-              placeholder="Escribe un mensaje..."
-              value={inputValue}
-              onKeyDown={manejarPresionarEnter}
-              onChange={(e) =>
-                setInputValue(e.target.value)
-              }
-            />
-             <button onClick={toggleEmojiPicker}>😊</button>
-          </InputContainer>
-          {showEmojiPicker && (
-          <EmojiPicker
-            onEmojiClick={(emoji) => handleAddEmoji(emoji.emoji)}
-            disableAutoFocus
-          />
-        )}
-          <BotonEnviar onClick={enviarMensaje} >Enviar</BotonEnviar>
+          
+    
+        
+          
           <button onClick={actualizarEstadoChat} >Gestionar</button><button >Cerrar</button>
           <div>
       <input type="file" onChange={handleFileChange} />
