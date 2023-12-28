@@ -372,12 +372,12 @@ const [url, setUrl] = useState('');
         idMessage: idMessage // Puedes ajustar este valor según tus necesidades
       }),
     });
-    conection();
+    
     if (guardarMensajeResponse.ok) {
       const guardarMensajeData = await guardarMensajeResponse.json();
           } else {
       
-    }
+    }conection()
       }
     
       setInputValue('')
@@ -415,7 +415,7 @@ const [url, setUrl] = useState('');
   const updateuser = async () => {
     const usuario = session.user.name; // Reemplaza con el nombre de usuario que deseas actualizar
     const nuevoDato = 'Activo'; // Reemplaza con el nuevo valor que deseas asignar
-  conection();
+  
     try {
       const response = await fetch('https://appcenteryes.appcenteryes.com/db/actualizar/usuario', {
         method: 'PUT',
