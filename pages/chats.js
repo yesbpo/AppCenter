@@ -17,11 +17,9 @@ const Chats = () => {
   };
 
   // Efecto para ajustar el scroll cada vez que cambia el contenido de los mensajes
+  
   useEffect(() => {
     scrollToBottom();
-  }, [mensajes]);
-  useEffect(() => {
-    // Lógica que se ejecutará después del montaje del componente
     updateuser();
   }, []); // El array vacío asegura que el efecto se ejecute solo una vez al montar el componente
 
@@ -483,9 +481,10 @@ const [url, setUrl] = useState('');
       </Box>
       <Container>
         <Box>
+        <h2>Chat {numeroEspecifico}</h2>
           <ContainerBox ref={containerRef}>
             <div>
-      <h2>Mensajes Ordenados para {numeroEspecifico}</h2>
+      
       
       {(() => {
   // Filtra los mensajes por el número específico y contenido no vacío

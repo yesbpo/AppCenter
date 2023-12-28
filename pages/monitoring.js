@@ -570,9 +570,11 @@ setWebhookData(webhookText);
       </Box>
       <Container>
         <Box>
+        <h2>Chat {numeroEspecifico}</h2>
           <ContainerBox>
+          <h2>Mensajes Ordenados para {numeroEspecifico}</h2>
             <div>
-      <h2>Mensajes Ordenados para {numeroEspecifico}</h2>
+      
       
       {(() => {
   // Filtra los mensajes por el número específico y contenido no vacío
