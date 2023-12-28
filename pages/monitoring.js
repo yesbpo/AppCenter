@@ -276,14 +276,13 @@ const [url, setUrl] = useState('');
   const [inputValue, setInputValue] = useState('')
   const [msg, setMsg] = useState([]);
   useEffect(() => {
-    socket.on('cambio', handleCambio);
+    socket.onAny(handleCambio); // onAny escucha cualquier evento
     return () => {
-      socket.off('cambio', handleCambio);
+      socket.offAny(handleCambio); // offAny deja de escuchar cualquier evento
       socket.disconnect();
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  });
-  
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const handleCambio = async(data) => {
     
     
