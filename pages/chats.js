@@ -217,7 +217,7 @@ const [url, setUrl] = useState('');
   
   const handleCambio = async(data) => {
     
-    console.log('Información del webhook recibida:', data);
+    
     
         try {
           const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
@@ -286,7 +286,7 @@ const [url, setUrl] = useState('');
       setContactos(nuevosContactos);
     }
     const cont = parseInt(msg.length);
-    console.log(cont);
+    
     const webhookText = data ? data.payload.payload.text : null;
     setWebhookData(webhookText);
     
@@ -296,7 +296,7 @@ const [url, setUrl] = useState('');
   const enviarMensaje = async () => {
   
     if (!inputValue.trim()){
-      console.log('Mensaje vacío, no se enviará.');
+      
       return;
     }
     try {
@@ -334,7 +334,7 @@ const [url, setUrl] = useState('');
         throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
       }
       const responseData = await response.json();
-      console.log('Respuesta del servidor:', responseData);
+      
        // Escucha el evento 'cambio' para obtener el idMessage
       const idMessage = responseData.messageId;
 
@@ -352,8 +352,7 @@ const [url, setUrl] = useState('');
 
       if (actualizarMensajeResponse.ok) {
         const actualizarMensajeData = actualizarMensajeResponse.json();
-        console.log('Respuesta de la actualización del mensaje:', actualizarMensajeData);
-      } else {
+            } else {
         console.error('Error al actualizar el mensaje:', actualizarMensajeResponse.status);
           // Guarda el mensaje en el servidor
     const guardarMensajeResponse = await fetch('https://appcenteryes.appcenteryes.com/db/guardar-mensajes', {
@@ -374,8 +373,7 @@ const [url, setUrl] = useState('');
 
     if (guardarMensajeResponse.ok) {
       const guardarMensajeData = await guardarMensajeResponse.json();
-      console.log('Respuesta de guardar mensaje en la base de datos:', guardarMensajeData);
-    } else {
+          } else {
       console.error('Error al guardar el mensaje:', guardarMensajeResponse.status);
     }
       }
@@ -430,7 +428,7 @@ const [url, setUrl] = useState('');
   
       if (response.ok) {
         const data = await response.json();
-        console.log(data); // Aquí puedes manejar la respuesta del servidor
+       // Aquí puedes manejar la respuesta del servidor
       } else {
         console.error('Error al actualizar el usuario:', response.statusText);
       }
