@@ -26,7 +26,7 @@ const Chats = () => {
   const toggleEmojiPicker = () => {
     setShowEmojiPicker((prevShow) => !prevShow);
   };
-  const socket = io('https://appcenteryes.appcenteryes.com/w/api/index');
+  const socket = io('https://appcenteryes.appcenteryes.com/w');
   const [contactos1, setContactos1] = useState([]);
   const [contactos, setContactos] = useState([
     { user: null, fecha: null, mensajes: [{ tipomensaje: '', datemessage: '', content: '' }] },
