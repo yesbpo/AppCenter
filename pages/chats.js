@@ -216,8 +216,10 @@ const [url, setUrl] = useState('');
   // eslint-disable-next-line react-hooks/exhaustive-deps
   
   
-  const conection =()=> socket.on( async(data) => {
+  const conection =()=> {
     const socket = io('https://appcenteryes.appcenteryes.com/w');
+    socket.on( async(data) => {
+    
     
     
         try {
@@ -293,7 +295,7 @@ const [url, setUrl] = useState('');
     
   }
   )
-
+  }
   const enviarMensaje = async () => {
   
     if (!inputValue.trim()){

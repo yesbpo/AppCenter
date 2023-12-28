@@ -7,7 +7,11 @@ import { useSession, signIn } from 'next-auth/react';
 
 
 const MonitoringPage = () => {
-  
+  useEffect(() => {
+    // Lógica que se ejecutará después del montaje del componente
+    updateuser();
+  }, []); // El array vacío asegura que el efecto se ejecute solo una vez al montar el componente
+
 const [asesores, setAsesores] = useState([]);
 const [resultados, setResultados] = useState([]);
 const [resultados1, setResultados1] = useState([]);
@@ -555,7 +559,7 @@ setWebhookData(webhookText);
         ))}
       </ul>
       <p>Bienvenido, {session.user.type_user}!</p>        
-      <Box onLoad={updateuser()}>
+      <Box >
         <ButtonContainer>
           <CustomButton onClick={handleEngestionClick}>En gestion</CustomButton>
            {/* Mostrar Activos si 'mostrarActivos' es true */}
