@@ -191,6 +191,39 @@ const [url, setUrl] = useState('');
 
 
   const [numeroEspecifico, setNumeroEspecifico] = useState('');
+  // Ejemplo de consumo de la ruta con JavaScript y fetch
+const actualizarEstadoChatCerrados = async () => {
+  conection();
+const idChat2 = numeroEspecifico;
+const nuevoEstado = 'closed';
+const nuevoUserId = '0';
+
+  try {
+    const response = await fetch('/db/actualizar-estado-chat', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        idChat2: idChat2,
+        nuevoEstado: nuevoEstado,
+        nuevoUserId: nuevoUserId, // Puedes omitir esto si no deseas actualizar userId
+      }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Respuesta del servidor:', data);
+    } else {
+      console.error('Error en la solicitud:', response.statusText);
+    }
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
+};
+
+
+
   const actualizarEstadoChat = async (estado) => {
     conection();
     try {
@@ -548,7 +581,7 @@ const [url, setUrl] = useState('');
           />
         )}
           <BotonEnviar onClick={enviarMensaje} >Enviar</BotonEnviar>
-          <button onClick={actualizarEstadoChat} >Gestionar</button><button >Cerrar</button>
+          <button onClick={actualizarEstadoChat} >Gestionar</button><button  onClick={actualizarEstadoChatCerrados}>Cerrar</button>
           <div>
       <input type="file" onChange={handleFileChange} />
       <button onClick={handleUpload}>Subir Archivo</button>
