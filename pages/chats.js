@@ -14,9 +14,9 @@ const Chats = () => {
   const { data: session } = useSession();
   const manejarPresionarEnter = (event) => {
     if (event.key === 'Enter') {
-
+      
       enviarMensaje();
-      conection();
+      
     }
   };
   

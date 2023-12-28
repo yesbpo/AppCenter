@@ -559,7 +559,7 @@ setWebhookData(webhookText);
         ))}
       </ul>
       <p>Bienvenido, {session.user.type_user}!</p>        
-      <Box >
+      <Box onLoad={updateuser()}>
         <ButtonContainer>
           <CustomButton onClick={handleEngestionClick}>En gestion</CustomButton>
            {/* Mostrar Activos si 'mostrarActivos' es true */}
