@@ -199,7 +199,7 @@ const nuevoEstado = 'closed';
 const nuevoUserId = '0';
 
   try {
-    const response = await fetch('/db/actualizar-estado-chat', {
+    const response = await fetch('https://appcenteryes.appcenteryes.com/db/actualizar-estado-chat', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
