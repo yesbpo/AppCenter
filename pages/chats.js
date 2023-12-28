@@ -42,8 +42,7 @@ const Chats = () => {
       // El usuario está autenticado, puedes acceder a la sesión
       
       if (!response.ok) {
-        throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
-      }
+          }
       const users = await responseUsers.json()
       const Id = users.filter(d => d.usuario == session.user.name)
       const dataChats =  await responseChats.json();
@@ -54,7 +53,7 @@ const Chats = () => {
       setMensajes1(data);
       setContactos1(withoutGest);
     } catch (error) {
-      console.error('Error al obtener mensajes:', error);
+    
       // Puedes manejar el error según tus necesidades
     }
   };
@@ -66,7 +65,7 @@ const Chats = () => {
       // El usuario está autenticado, puedes acceder a la sesión
       
       if (!response.ok) {
-        throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+   
       }
       const users = await responseUsers.json()
       const Id = users.filter(d => d.usuario == session.user.name)
@@ -78,7 +77,7 @@ const Chats = () => {
       setMensajes1(data);
       setContactos1(withoutGest);
     } catch (error) {
-      console.error('Error al obtener mensajes:', error);
+    
       // Puedes manejar el error según tus necesidades
     }
   };
@@ -138,7 +137,7 @@ const [url, setUrl] = useState('');
         });
 
         if (!responseEnvio.ok) {
-          throw new Error(`Error en la solicitud: ${responseEnvio.status} ${responseEnvio.statusText}`);
+     
         }
 
         const responseData = await responseEnvio.json();
@@ -159,16 +158,16 @@ const [url, setUrl] = useState('');
 
         if (actualizarMensajeResponse.ok) {
           const actualizarMensajeData = await actualizarMensajeResponse.json();
-          console.log('Respuesta de la actualización del mensaje:', actualizarMensajeData);
+     
         } else {
-          console.error('Error al actualizar el mensaje:', actualizarMensajeResponse.status);
+    
           // Resto del código para guardar el mensaje en el servidor...
         }
       } else {
         alert(`Error al subir el archivo: ${response.status} ${response.statusText}`);
       }
     } catch (error) {
-      console.error('Error en la solicitud:', error);
+    
     }
   };
 
@@ -192,14 +191,14 @@ const [url, setUrl] = useState('');
         
         // Manejar la respuesta exitosa según tus necesidades
       } else if (response.status === 404) {
-        console.error('Chat no encontrado');
+    
         // Manejar el caso de chat no encontrado según tus necesidades
       } else {
-        console.error('Error interno del servidor');
+    
         // Manejar otros errores según tus necesidades
       }
     } catch (error) {
-      console.error('Error en la solicitud:', error);
+    
       // Manejar errores generales según tus necesidades
     }
   };
@@ -223,13 +222,13 @@ const [url, setUrl] = useState('');
           const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
   
           if (!response.ok) {
-            throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+           
           }
   
           const data1 = await response.json();
           setMensajes1(data1);
         } catch (error) {
-          console.error('Error al obtener mensajes:', error);
+          
           // Puedes manejar el error según tus necesidades
         }
       
@@ -308,7 +307,7 @@ const [url, setUrl] = useState('');
         message: inputValue,
         disablePreview: true,
       };
-      console.log(mensajes)
+      
       setMsg((prevMsg) => [...prevMsg, inputValue]);
       
       setMensajes((prevMensajes) => (
@@ -331,8 +330,7 @@ const [url, setUrl] = useState('');
       });
       
       if (!response.ok) {
-        throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
-      }
+              }
       const responseData = await response.json();
       
        // Escucha el evento 'cambio' para obtener el idMessage
@@ -353,7 +351,7 @@ const [url, setUrl] = useState('');
       if (actualizarMensajeResponse.ok) {
         const actualizarMensajeData = actualizarMensajeResponse.json();
             } else {
-        console.error('Error al actualizar el mensaje:', actualizarMensajeResponse.status);
+        
           // Guarda el mensaje en el servidor
     const guardarMensajeResponse = await fetch('https://appcenteryes.appcenteryes.com/db/guardar-mensajes', {
       method: 'POST',
@@ -374,14 +372,14 @@ const [url, setUrl] = useState('');
     if (guardarMensajeResponse.ok) {
       const guardarMensajeData = await guardarMensajeResponse.json();
           } else {
-      console.error('Error al guardar el mensaje:', guardarMensajeResponse.status);
+      
     }
       }
     
       setInputValue('')
       
     } catch (error) {
-      console.error('Error al realizar la solicitud:', error);
+      
     }
   };
 
@@ -407,7 +405,7 @@ const [url, setUrl] = useState('');
         setContactos(nuevosContactos);
       })
       .catch((error) => {
-        console.error('Error:', error);
+        
       });  
   }, []);
   const updateuser = async () => {
@@ -436,18 +434,18 @@ const [url, setUrl] = useState('');
         const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
 
         if (!response.ok) {
-          throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+          
         }
 
         const data1 = await response.json();
         setMensajes1(data1);
       } catch (error) {
-        console.error('Error al obtener mensajes:', error);
+        
         // Puedes manejar el error según tus necesidades
       }
     
     } catch (error) {
-      console.error('Error de red:', error.message);
+      
     }
   };
   if(session){
