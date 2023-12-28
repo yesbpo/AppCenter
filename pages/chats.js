@@ -196,7 +196,7 @@ const actualizarEstadoChatCerrados = async () => {
   conection();
 const idChat2 = numeroEspecifico;
 const nuevoEstado = 'closed';
-const nuevoUserId = '0';
+const nuevoUserId = 0;
 
   try {
     const response = await fetch('https://appcenteryes.appcenteryes.com/db/actualizar-estado-chat', {
@@ -206,8 +206,8 @@ const nuevoUserId = '0';
       },
       body: JSON.stringify({
         idChat2: idChat2,
-        nuevoEstado: nuevoEstado,
-        nuevoUserId: nuevoUserId, // Puedes omitir esto si no deseas actualizar userId
+        nuevoUserId: nuevoUserId,
+        nuevoEstado: nuevoEstado, // Puedes omitir esto si no deseas actualizar userId
       }),
     });
 
