@@ -189,7 +189,7 @@ const [url, setUrl] = useState('');
 
       if (response.ok) {
         const resultado = await response.json();
-        console.log('Respuesta de la actualización:', resultado);
+        
         // Manejar la respuesta exitosa según tus necesidades
       } else if (response.status === 404) {
         console.error('Chat no encontrado');
