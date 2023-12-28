@@ -286,7 +286,7 @@ const [url, setUrl] = useState('');
   
   const handleCambio = async(data) => {
     
-    console.log('Información del webhook recibida:', data);
+    
     
         try {
           const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
