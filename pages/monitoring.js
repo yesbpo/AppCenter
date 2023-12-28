@@ -282,7 +282,7 @@ const [url, setUrl] = useState('');
       socket.disconnect();
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contactos]);
+  });
   
   const handleCambio = async(data) => {
     
@@ -530,7 +530,7 @@ const [url, setUrl] = useState('');
       <ul>
         {resultados.map((resultado, index) => (
           <li key={index}>
-            Asesor: {resultado.asesor.name}, Frecuencia: {resultado.frecuencia}
+            Asesor: {resultado.asesor.name}, Pendientes: {resultado.frecuencia}
           </li>
         ))}
       </ul>
@@ -539,7 +539,7 @@ const [url, setUrl] = useState('');
       <ul>
         {resultados1.map((resultado, index) => (
           <li key={index}>
-            Asesor: {resultado.asesor.name}, Frecuencia: {resultado.frecuencia}
+            Asesor: {resultado.asesor.name}, En gestion: {resultado.frecuencia}
           </li>
         ))}
       </ul>
@@ -548,7 +548,7 @@ const [url, setUrl] = useState('');
       <ul>
         {resultados2.map((resultado, index) => (
           <li key={index}>
-            Asesor: {resultado.asesor.name}, Frecuencia: {resultado.frecuencia}
+            Asesor: {resultado.asesor.name}, Cerrados: {resultado.frecuencia}
           </li>
         ))}
       </ul>
