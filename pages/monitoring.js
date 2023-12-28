@@ -12,7 +12,7 @@ const [asesores, setAsesores] = useState([]);
 const [resultados, setResultados] = useState([]);
 const [resultados1, setResultados1] = useState([]);
 const [resultados2, setResultados2] = useState([]);
-
+const socket = io('https://appcenteryes.appcenteryes.com/w'); 
 useEffect(() => {
   const obtenerMensajes = async () => {
     try {
@@ -95,7 +95,7 @@ const { data: session } = useSession();
   const toggleEmojiPicker = () => {
     setShowEmojiPicker((prevShow) => !prevShow);
   };
-  const socket = io('https://appcenteryes.appcenteryes.com/w');
+  
   const [contactos1, setContactos1] = useState([]);
   const [contactos, setContactos] = useState([
     { user: null, fecha: null, mensajes: [{ tipomensaje: '', datemessage: '', content: '' }] },
@@ -275,17 +275,17 @@ const [url, setUrl] = useState('');
    // Reemplaza esto con el número que necesites
   const [inputValue, setInputValue] = useState('')
   const [msg, setMsg] = useState([]);
-  useEffect(() => {
-    socket.onAny(handleCambio); // onAny escucha cualquier evento
-    return () => {
-      socket.offAny(handleCambio); // offAny deja de escuchar cualquier evento
-      socket.disconnect();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  const handleCambio = async(data) => {
+ 
+  socket.on( async (data) => { 
     
     
+    
+      // Manejar la conexión del socket al montar el componente
+      // Reemplaza con la URL de tu servidor Socket.IO
+    
+      // Manejar la desconexión del socket al desmontar el componente
+      
+     // Asegúrate de tener un array vacío como dependencia para que solo se ejecute al montar y desmontar el componente
     
         try {
           const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
@@ -358,8 +358,7 @@ const [url, setUrl] = useState('');
     const webhookText = data ? data.payload.payload.text : null;
     setWebhookData(webhookText);
     
-  };
-  
+  })
 
   const enviarMensaje = async () => {
   
