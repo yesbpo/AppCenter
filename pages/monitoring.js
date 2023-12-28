@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import io from 'socket.io-client';
 import { useSession, signIn } from 'next-auth/react';
-import EmojiPicker from 'emoji-picker-react';
+
 
 
 const MonitoringPage = () => {
@@ -95,7 +95,7 @@ const { data: session } = useSession();
   const toggleEmojiPicker = () => {
     setShowEmojiPicker((prevShow) => !prevShow);
   };
-  const socket = io('https://appcenteryes.appcenteryes.com/w/');
+  const socket = io('https://appcenteryes.appcenteryes.com/w');
   const [contactos1, setContactos1] = useState([]);
   const [contactos, setContactos] = useState([
     { user: null, fecha: null, mensajes: [{ tipomensaje: '', datemessage: '', content: '' }] },
@@ -457,7 +457,7 @@ const [url, setUrl] = useState('');
   };
 
   useEffect(() => {
-    const apiUrl2 = "https://3d29bmtd-8080.use2.devtunnels.ms/api/users";
+    const apiUrl2 = "https://appcenteryes.appcenteryes.com/w/api/users";
     fetch(apiUrl2, {
       method: 'GET',
     })
@@ -526,6 +526,32 @@ const [url, setUrl] = useState('');
   <>
     
       <Layout>
+      <h2>Resultados Pendientes</h2>
+      <ul>
+        {resultados.map((resultado, index) => (
+          <li key={index}>
+            Asesor: {resultado.asesor.name}, Frecuencia: {resultado.frecuencia}
+          </li>
+        ))}
+      </ul>
+
+      <h2>Resultados en Gestion</h2>
+      <ul>
+        {resultados1.map((resultado, index) => (
+          <li key={index}>
+            Asesor: {resultado.asesor.name}, Frecuencia: {resultado.frecuencia}
+          </li>
+        ))}
+      </ul>
+
+      <h2>Resultados Cerrados</h2>
+      <ul>
+        {resultados2.map((resultado, index) => (
+          <li key={index}>
+            Asesor: {resultado.asesor.name}, Frecuencia: {resultado.frecuencia}
+          </li>
+        ))}
+      </ul>
       <p>Bienvenido, {session.user.type_user}!</p>        
       <Box onLoad={updateuser()}>
         <ButtonContainer>
