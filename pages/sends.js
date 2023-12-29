@@ -186,7 +186,31 @@ const Sends = (props) => {
     const enviar = async () => {
       if (sheetname.length > 0) {
         const socket = io('https://appcenteryes.appcenteryes.com/w');
-    
+        socket.on(async data => {
+          const datosAInsertar = {
+            status: data.payload.type,
+            attachments: data.payload.destination,
+            message: messageWithVariables,
+            timestamp: new Date().toISOString().slice(0, 19).replace('T', ' ')
+          };
+          await fetch("https://appcenteryes.appcenteryes.com/db/insertar-datos-template", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+              // Puedes agregar más encabezados según sea necesario
+            },
+            body: JSON.stringify(datosAInsertar)
+          })
+          .then(response => response.json())
+          .then(data => {
+            console.log('Respuesta del servidor:', data);
+            // Puedes manejar la respuesta del servidor aquí
+          })
+          .catch(error => {
+            console.error('Error al enviar la solicitud:', error);
+            // Puedes manejar errores aquí
+          });
+        });
         for (let rowIndex = 0; rowIndex < sheetname.length; rowIndex++) {
           const dest = sheetname[rowIndex];
           const destinationNumber = String(dest[selectvar]);
@@ -280,31 +304,7 @@ const Sends = (props) => {
             console.log('Respuesta del servidor:', response.data);
     
             // Activar el socket después de enviar la solicitud
-            socket.on(async data => {
-              const datosAInsertar = {
-                status: data.payload.type,
-                attachments: data.payload.destination,
-                message: messageWithVariables,
-                timestamp: new Date().toISOString().slice(0, 19).replace('T', ' ')
-              };
-              await fetch("https://appcenteryes.appcenteryes.com/db/insertar-datos-template", {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                  // Puedes agregar más encabezados según sea necesario
-                },
-                body: JSON.stringify(datosAInsertar)
-              })
-              .then(response => response.json())
-              .then(data => {
-                console.log('Respuesta del servidor:', data);
-                // Puedes manejar la respuesta del servidor aquí
-              })
-              .catch(error => {
-                console.error('Error al enviar la solicitud:', error);
-                // Puedes manejar errores aquí
-              });
-            });
+            
           } catch (error) {
             console.error('Error al realizar la solicitud:', error);
           }
