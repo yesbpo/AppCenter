@@ -590,7 +590,7 @@ setWebhookData(webhookText);
         <ButtonContainer>
           <CustomButton onClick={handleEngestionClick}>En gestion</CustomButton>
            {/* Mostrar Activos si 'mostrarActivos' es true */}
-          <CustomButton onClick={handlePendientesClick}>Pendientes</CustomButton>
+          <CustomButton>Pendientes</CustomButton>
           <CustomButton onClick={handleClosedClick}>Cerrados</CustomButton>
           <CustomButton onClick={() => console.log('Agregar Número')}>Agregar Número</CustomButton>
         </ButtonContainer>
