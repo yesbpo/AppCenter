@@ -107,7 +107,7 @@ const { data: session } = useSession();
   const [webhookData, setWebhookData] = useState(null);
   const [mensajes1, setMensajes1] = useState([]);
   
-     const handlePendientesClick = async () => {
+     const handlePendientesClick = async (iduser) => {
       conection();
     try {
       const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
@@ -119,10 +119,10 @@ const { data: session } = useSession();
         throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
       }
       const users = await responseUsers.json()
-      const Id = users.filter(d => d.usuario == session.user.name)
+      const Id = iduser
       const dataChats =  await responseChats.json();
       const chatsPending = dataChats.filter(d=> d.status == 'pending')
-      const withoutGest = chatsPending.filter(d => d.userId == Id[0].id )
+      const withoutGest = chatsPending.filter(d => d.userId == Id )
       console.log(Id)
       const data = await response.json();
       setMensajes1(data);
@@ -562,7 +562,7 @@ setWebhookData(webhookText);
       <h2>Resultados Pendientes</h2>
       <ul>
         {resultados.map((resultado, index) => (
-          <li key={index}>
+          <li onClick={handleEngestionClick(resultado.asesor.id)} key={index}>
             Asesor: {resultado.asesor.usuario}, Pendientes: {resultado.frecuencia}
           </li>
         ))}
@@ -571,8 +571,8 @@ setWebhookData(webhookText);
       <h2>Resultados en Gestion</h2>
       <ul>
         {resultados1.map((resultado, index) => (
-          <li key={index}>
-            Asesor: {resultado.asesor.usuario}, En gestion: {resultado.frecuencia}
+          <li    key={index}>
+            Asesor: {resultado.asesor.usuario }, En gestion: {resultado.frecuencia}
           </li>
         ))}
       </ul>
