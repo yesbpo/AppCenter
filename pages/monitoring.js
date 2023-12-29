@@ -559,32 +559,40 @@ setWebhookData(webhookText);
   <>
     
       <Layout>
-      <h2>Resultados Pendientes</h2>
-      <ul>
-        {resultados.map((resultado, index) => (
-          <li onClick={handlePendientesClick(resultado.asesor.id)} key={index}>
-            Asesor: {resultado.asesor.usuario}, Pendientes: {resultado.frecuencia}
-          </li>
-        ))}
-      </ul>
+      <select>
+        <optgroup label="Resultados Pendientes">
+          {resultados.map((resultado, index) => (
+            <option
+              onClick={() => handlePendientesClick(resultado.asesor.id)}
+              key={index}
+            >
+              Asesor: {resultado.asesor.usuario}, Pendientes: {resultado.frecuencia}
+            </option>
+          ))}
+        </optgroup>
+      </select>
 
-      <h2>Resultados en Gestion</h2>
-      <ul>
-        {resultados1.map((resultado, index) => (
-          <li    key={index}>
-            Asesor: {resultado.asesor.usuario }, En gestion: {resultado.frecuencia}
-          </li>
-        ))}
-      </ul>
+      <select>
+        <optgroup label="Resultados en Gestion">
+          {resultados1.map((resultado, index) => (
+            <option key={index}>
+              Asesor: {resultado.asesor.usuario}, En gestión: {resultado.frecuencia}
+            </option>
+          ))}
+        </optgroup>
+      </select>
 
-      <h2>Resultados Cerrados</h2>
-      <ul>
-        {resultados2.map((resultado, index) => (
-          <li key={index}>
-            Asesor: {resultado.asesor.usuario}, Cerrados: {resultado.frecuencia}
-          </li>
-        ))}
-      </ul>
+      <select>
+        <optgroup label="Resultados Cerrados">
+          {resultados2.map((resultado, index) => (
+            <option key={index}>
+              Asesor: {resultado.asesor.usuario}, Cerrados: {resultado.frecuencia}
+            </option>
+          ))}
+        </optgroup>
+      </select>
+
+      
       <p>Bienvenido, {session.user.type_user}!</p>        
       <Box onLoad={updateuser()}>
         <ButtonContainer>
