@@ -166,7 +166,7 @@ const Sends = (props) => {
         idMessage: datos.payload.id
       };
       
-      fetch('https://appcenteryes.appcenteryes.com/db/guardar-mensajes', {
+      await fetch('https://appcenteryes.appcenteryes.com/db/guardar-mensajes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
