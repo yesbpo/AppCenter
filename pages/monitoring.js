@@ -165,11 +165,11 @@ const { data: session } = useSession();
         throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
       }
       const users = await responseUsers.json()
-      const Id = iduser
+      
       const dataChats =  await responseChats.json();
       const chatsPending = dataChats.filter(d=> d.status == 'closed')
       
-      console.log(Id)
+      
       const data = await response.json();
       setMensajes1(data);
       setContactos1(chatsPending);
