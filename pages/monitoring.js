@@ -581,10 +581,10 @@ setWebhookData(webhookText);
         <option
               className="cursor-pointer"> En gestion</option>
           {resultados1.map((resultado, index) => (
-            <option className="cursor-pointer" key={index}
+            <CustomButton className="cursor-pointer" key={index}
             onClick={()=>{handleEngestionClick(resultado.asesor.id)}}>
               Asesor: {resultado.asesor.usuario}, En gestión: {resultado.frecuencia}
-            </option>
+            </CustomButton>
           ))}
         </optgroup>
       </select>
