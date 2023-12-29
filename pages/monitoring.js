@@ -562,6 +562,8 @@ setWebhookData(webhookText);
       <div className="flex space-x-4">
       <select className="p-2 border border-gray-300 rounded">
         <optgroup label="Resultados Pendientes">
+        <option
+              className="cursor-pointer"> Pendientes</option>
           {resultados.map((resultado, index) => (
             <option
               className="cursor-pointer"
@@ -576,6 +578,8 @@ setWebhookData(webhookText);
 
       <select className="p-2 border border-gray-300 rounded">
         <optgroup label="Resultados en Gestion">
+        <option
+              className="cursor-pointer"> En gestion</option>
           {resultados1.map((resultado, index) => (
             <option className="cursor-pointer" key={index}
             onChange={handleEngestionClick(resultado.asesor.id)}>
@@ -587,6 +591,8 @@ setWebhookData(webhookText);
 
       <select className="p-2 border border-gray-300 rounded">
         <optgroup label="Resultados Cerrados">
+        <option
+              className="cursor-pointer"> Cerrados</option>
           {resultados2.map((resultado, index) => (
             <option className="cursor-pointer" key={index}
             onChange={handleClosedClick(resultado.asesor.id)}>
