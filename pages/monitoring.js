@@ -562,7 +562,7 @@ setWebhookData(webhookText);
       <h2>Resultados Pendientes</h2>
       <ul>
         {resultados.map((resultado, index) => (
-          <li onClick={handleEngestionClick(resultado.asesor.id)} key={index}>
+          <li onClick={handlePendientesClick(resultado.asesor.id)} key={index}>
             Asesor: {resultado.asesor.usuario}, Pendientes: {resultado.frecuencia}
           </li>
         ))}
