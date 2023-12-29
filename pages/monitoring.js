@@ -11,7 +11,7 @@ const MonitoringPage = () => {
     // Lógica que se ejecutará después del montaje del componente
     updateuser();
   }, []); // El array vacío asegura que el efecto se ejecute solo una vez al montar el componente
-
+const [statuschats, setStatuschats] = useState('Pendi')
 const [asesores, setAsesores] = useState([]);
 const [resultados, setResultados] = useState([]);
 const [resultados1, setResultados1] = useState([]);
@@ -586,12 +586,12 @@ setWebhookData(webhookText);
     <div className="p-2 border border-gray-300 rounded">
       
       
-        {resultados2.map((resultado, index) => (
-          <CustomButton className="cursor-pointer" key={index}
-          onClick={()=>{handleClosedClick(resultado.asesor.id)}}>
-            Asesor: {resultado.asesor.usuario}, Cerrados: {resultado.frecuencia}
+        
+          <CustomButton className="cursor-pointer" 
+          onClick={()=>{handleClosedClick()}}>
+            Asesor: {}, Cerrados: {resultados2}
           </CustomButton>
-        ))}
+
       
     </div>
 
@@ -602,7 +602,7 @@ setWebhookData(webhookText);
         <Box>
         <h2>Chat {numeroEspecifico}</h2>
           <ContainerBox>
-          <h2>Mensajes Ordenados para {numeroEspecifico}</h2>
+          <h2>Mensajes de {numeroEspecifico}</h2>
             <div>
       
       
@@ -662,6 +662,7 @@ setWebhookData(webhookText);
         <Box>
         
           <div className="chat-container">
+            <h1>{statuschats}</h1>
             <ul>
               {contactos1.map((contacto, index) => (
                 <li key={index}>
