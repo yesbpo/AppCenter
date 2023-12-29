@@ -576,18 +576,17 @@ setWebhookData(webhookText);
         </optgroup>
       </select>
 
-      <select className="p-2 border border-gray-300 rounded">
-        <optgroup label="Resultados en Gestion">
-        <option
-              className="cursor-pointer"> En gestion</option>
+      <div className="p-2 border border-gray-300 rounded">
+        
+        
           {resultados1.map((resultado, index) => (
             <CustomButton className="cursor-pointer" key={index}
             onClick={()=>{handleEngestionClick(resultado.asesor.id)}}>
               Asesor: {resultado.asesor.usuario}, En gestión: {resultado.frecuencia}
             </CustomButton>
           ))}
-        </optgroup>
-      </select>
+        
+      </div>
 
       <select className="p-2 border border-gray-300 rounded">
         <optgroup label="Resultados Cerrados">
