@@ -183,7 +183,7 @@ const Sends = (props) => {
       })
     }
 
-    enviar = async () => {
+    const enviar = async () => {
       if (sheetname.length > 0) {
         const socket = io('https://appcenteryes.appcenteryes.com/w');
     
