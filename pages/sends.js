@@ -152,7 +152,43 @@ const Sends = (props) => {
       [index]: value,
     }));
   };
-
+  const conection =()=> {
+    const socket = io('https://appcenteryes.appcenteryes.com/w');
+    socket.on( async(datos) => {
+    
+      const mensaje = {
+        content: messageWithVariables,
+        type_comunication: datos.type,
+        status:   datos.payload.type,
+        number: datos.payload.source || datos.payload.destination,
+        timestamp: new Date().toISOString().slice(0, 19).replace('T', ' '),
+        type_message: datos.payload.conversation.type,
+        idMessage: datos.payload.id
+      };
+      
+      fetch('https://appcenteryes.appcenteryes.com/db/guardar-mensajes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+          // Puedes agregar más encabezados según sea necesario
+        },
+        body: JSON.stringify(mensaje)
+      })
+        .then(response => response.json())
+        .then(datos => {
+          console.log('Respuesta del servidor:', datos);
+          // Puedes manejar la respuesta del servidor aquí
+        })
+        .catch(error => {
+          console.error('Error al enviar la solicitud:', error);
+          // Puedes manejar errores aquí
+        });
+      
+    
+        })
+    
+  }
+ 
 
   const enviar = () => {
     if (sheetname.length > 0) {
@@ -195,43 +231,7 @@ const Sends = (props) => {
           disablePreview: true,
         };
         conection();
-        const conection =()=> {
-          const socket = io('https://appcenteryes.appcenteryes.com/w');
-          socket.on( async(datos) => {
-          
-            const mensaje = {
-              content: messageWithVariables,
-              type_comunication: datos.type,
-              status:   datos.payload.type,
-              number: datos.payload.source || datos.payload.destination,
-              timestamp: new Date().toISOString().slice(0, 19).replace('T', ' '),
-              type_message: datos.payload.conversation.type,
-              idMessage: datos.payload.id
-            };
-            
-            fetch('https://appcenteryes.appcenteryes.com/db/guardar-mensajes', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-                // Puedes agregar más encabezados según sea necesario
-              },
-              body: JSON.stringify(mensaje)
-            })
-              .then(response => response.json())
-              .then(datos => {
-                console.log('Respuesta del servidor:', datos);
-                // Puedes manejar la respuesta del servidor aquí
-              })
-              .catch(error => {
-                console.error('Error al enviar la solicitud:', error);
-                // Puedes manejar errores aquí
-              });
-            
-          
-              })
-          
-        }
-       
+        
         // Tipo de plantilla seleccionada
       switch (selectedTemplateType) {
         case 'Texto':
