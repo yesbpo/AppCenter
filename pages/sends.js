@@ -183,112 +183,143 @@ const Sends = (props) => {
       })
     }
 
-  const enviar = () => {
-    conection()
-    if (sheetname.length > 0) {
-      sheetname.forEach((dest, rowIndex) => {
-        const destinationNumber = String(dest[selectvar]);
-        const formattedDestination = destinationNumber.startsWith("57") ? destinationNumber : `57${destinationNumber}`;
-
-        // Personalizar customParams con datos de la columna seleccionada
-      const updatedCustomParams = {};
-      Object.keys(variableColumnMapping).forEach((variable) => {
-        const columnIndex = variableColumnMapping[variable];
-        const columnValue = dest[columnIndex];
-        updatedCustomParams[variable] = columnValue;
-      });
-
-      setCustomParams(updatedCustomParams);
-
-        const url = 'https://api.gupshup.io/wa/api/v1/template/msg';
-        const apiKey = '6ovjpik6ouhlyoalchzu4r2csmeqwlbg';
-        const messageWithVariables = replaceVariables(selectedTemplateData, variableValues);
-
-        // Reemplazar las variables con los valores de la columna seleccionada
-        Object.keys(variableColumnMapping).forEach((variable) => {
-          const columnIndex = variableColumnMapping[variable];
-          const columnValue = dest[columnIndex];
-          const variableValue = customParams[variable] !== undefined ? customParams[variable] : columnValue;
-          messageWithVariables = messageWithVariables.replace(`{{${variable}}}`, variableValue);
-        });
-
-        const data = {
-          channel: 'whatsapp',
-          source: '5718848135',
-          'src.name': 'Pb1yes',
-          destination: formattedDestination,
-          template: JSON.stringify({
-            id: selectedTemplateId ? selectedTemplateId : '',
-            params: Object.values(updatedCustomParams),
-          }),
-          channel: 'whatsapp',
-          disablePreview: true,
-        };
-        
+    enviar = async () => {
+      if (sheetname.length > 0) {
+        const socket = io('https://appcenteryes.appcenteryes.com/w');
     
-        
-        
-        // Tipo de plantilla seleccionada
-      switch (selectedTemplateType) {
-        case 'Texto':
-          data.message = messageWithVariables;
-          break;
-        case 'Imagen':
-          data.message = JSON.stringify({
-            type: 'image',
-            image: {
-              link: selectedImageUrl,
-            },
+        for (let rowIndex = 0; rowIndex < sheetname.length; rowIndex++) {
+          const dest = sheetname[rowIndex];
+          const destinationNumber = String(dest[selectvar]);
+          const formattedDestination = destinationNumber.startsWith("57") ? destinationNumber : `57${destinationNumber}`;
+    
+          // Personalizar customParams con datos de la columna seleccionada
+          const updatedCustomParams = {};
+          Object.keys(variableColumnMapping).forEach((variable) => {
+            const columnIndex = variableColumnMapping[variable];
+            const columnValue = dest[columnIndex];
+            updatedCustomParams[variable] = columnValue;
           });
-          break;
-        case 'Video':
-          data.message = JSON.stringify({
-            type: 'video',
-            video: {
-              link: selectedVideoUrl,
-            },
+    
+          setCustomParams(updatedCustomParams);
+    
+          const url = 'https://api.gupshup.io/wa/api/v1/template/msg';
+          const apiKey = '6ovjpik6ouhlyoalchzu4r2csmeqwlbg';
+          const messageWithVariables = replaceVariables(selectedTemplateData, variableValues);
+    
+          // Reemplazar las variables con los valores de la columna seleccionada
+          Object.keys(variableColumnMapping).forEach((variable) => {
+            const columnIndex = variableColumnMapping[variable];
+            const columnValue = dest[columnIndex];
+            const variableValue = customParams[variable] !== undefined ? customParams[variable] : columnValue;
+            messageWithVariables = messageWithVariables.replace(`{{${variable}}}`, variableValue);
           });
-          break;
-        case 'Documento':
-          data.message = JSON.stringify({
-            type: 'document',
-            document: {
-              link: 'https://mail.google.com/mail/u/0?ui=2&ik=97abb4c14a&attid=0.1&permmsgid=msg-f:1786087961629059212&th=18c97589ba80688c&view=att&disp=safe',
-            },
+    
+          const data = {
+            channel: 'whatsapp',
+            source: '5718848135',
+            'src.name': 'Pb1yes',
+            destination: formattedDestination,
+            template: JSON.stringify({
+              id: selectedTemplateId ? selectedTemplateId : '',
+              params: Object.values(updatedCustomParams),
+            }),
+            channel: 'whatsapp',
+            disablePreview: true,
+            message: '',  // Esta propiedad se asignará según el tipo de plantilla más adelante
+          };
+    
+          // Tipo de plantilla seleccionada
+          switch (selectedTemplateType) {
+            case 'Texto':
+              data.message = messageWithVariables;
+              break;
+            case 'Imagen':
+              data.message = JSON.stringify({
+                type: 'image',
+                image: {
+                  link: selectedImageUrl,
+                },
+              });
+              break;
+            case 'Video':
+              data.message = JSON.stringify({
+                type: 'video',
+                video: {
+                  link: selectedVideoUrl,
+                },
+              });
+              break;
+            case 'Documento':
+              data.message = JSON.stringify({
+                type: 'document',
+                document: {
+                  link: 'https://mail.google.com/mail/u/0?ui=2&ik=97abb4c14a&attid=0.1&permmsgid=msg-f:1786087961629059212&th=18c97589ba80688c&view=att&disp=safe',
+                },
+              });
+              break;
+            default:
+              console.warn('Tipo de plantilla no reconocido:', selectedTemplateType);
+              return;
+          }
+    
+          const headers = {
+            'Cache-Control': 'no-cache',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'apikey': apiKey,
+          };
+    
+          const formData = new URLSearchParams();
+          Object.entries(data).forEach(([key, value]) => {
+            formData.append(key, value);
           });
-          break;
-        default:
-          console.warn('Tipo de plantilla no reconocido:', selectedTemplateType);
-          return;
-      }
-
-        const headers = {
-          'Cache-Control': 'no-cache',
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'apikey': apiKey,
-        };
-
-        const formData = new URLSearchParams();
-        Object.entries(data).forEach(([key, value]) => {
-          formData.append(key, value);
-        });
-        
-        axios.post(url, formData, { headers })
-        
-          .then((response) => {
-            
+    
+          try {
+            // Enviar solicitud a la API
+            const response = await axios.post(url, formData, { headers });
+    
             console.log('Respuesta del servidor:', response.data);
-            
-          })
-          conection()
-          .catch((error) => {
+    
+            // Activar el socket después de enviar la solicitud
+            socket.on(async data => {
+              const datosAInsertar = {
+                status: data.payload.type,
+                attachments: data.payload.destination,
+                message: messageWithVariables,
+                timestamp: new Date().toISOString().slice(0, 19).replace('T', ' ')
+              };
+              await fetch("https://appcenteryes.appcenteryes.com/db/insertar-datos-template", {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                  // Puedes agregar más encabezados según sea necesario
+                },
+                body: JSON.stringify(datosAInsertar)
+              })
+              .then(response => response.json())
+              .then(data => {
+                console.log('Respuesta del servidor:', data);
+                // Puedes manejar la respuesta del servidor aquí
+              })
+              .catch(error => {
+                console.error('Error al enviar la solicitud:', error);
+                // Puedes manejar errores aquí
+              });
+            });
+          } catch (error) {
             console.error('Error al realizar la solicitud:', error);
-          });
-        });
-    } else {
-      console.log('No hay datos masivos.');
-    }
-  };
+          }
+        }
+    
+        // Cerrar el socket al finalizar todas las iteraciones
+        socket.close();
+      } else {
+        console.log('No hay datos masivos.');
+      }
+    };
+    
+    // Llamada a la función para enviar datos
+    
+    
 
   const handleShowContent = () => {
     if (sheetname.length === 0) {
