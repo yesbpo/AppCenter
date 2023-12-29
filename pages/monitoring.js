@@ -559,56 +559,48 @@ setWebhookData(webhookText);
   <>
     
       <Layout>
-      <div className="flex space-x-4">
-      <select className="p-2 border border-gray-300 rounded">
-        <optgroup label="Resultados Pendientes">
-        <option
-              className="cursor-pointer"> Pendientes</option>
-          {resultados.map((resultado, index) => (
-            <option
-              className="cursor-pointer"
-              onClick={()=>{handlePendientesClick(resultado.asesor.id)}}
-              key={index}
-            >
-              Asesor: {resultado.asesor.usuario}, Pendientes: {resultado.frecuencia}
-            </option>
-          ))}
-        </optgroup>
-      </select>
-
-      <div className="p-2 border border-gray-300 rounded">
-        
-        
-          {resultados1.map((resultado, index) => (
-            <CustomButton className="cursor-pointer" key={index}
-            onClick={()=>{handleEngestionClick(resultado.asesor.id)}}>
-              Asesor: {resultado.asesor.usuario}, En gestión: {resultado.frecuencia}
-            </CustomButton>
-          ))}
-        
-      </div>
-
-      <select className="p-2 border border-gray-300 rounded">
-        <optgroup label="Resultados Cerrados">
-        <option
-              className="cursor-pointer"> Cerrados</option>
-          {resultados2.map((resultado, index) => (
-            <option className="cursor-pointer" key={index}
-            onClick={()=>{handleClosedClick(resultado.asesor.id)}}>
-              Asesor: {resultado.asesor.usuario}, Cerrados: {resultado.frecuencia}
-            </option>
-          ))}
-        </optgroup>
-      </select>
-    </div>
+      
+          
       
       <p>Bienvenido, {session.user.type_user}!</p>        
       <Box onLoad={updateuser()}>
         <ButtonContainer>
-          <CustomButton onClick={handleEngestionClick}>En gestion</CustomButton>
-           {/* Mostrar Activos si 'mostrarActivos' es true */}
-          <CustomButton>Pendientes</CustomButton>
-          <CustomButton onClick={handleClosedClick}>Cerrados</CustomButton>
+        <div className="p-2 border border-gray-300 rounded">
+        
+        
+        {resultados.map((resultado, index) => (
+          <CustomButton className="cursor-pointer" key={index}
+            onClick={()=>{handlePendientesClick(resultado.asesor.id)}}>
+            Asesor: {resultado.asesor.usuario}, Pendientes: {resultado.frecuencia}
+          </CustomButton>
+        ))}
+      
+    </div>
+
+    <div className="p-2 border border-gray-300 rounded">
+      
+      
+        {resultados1.map((resultado, index) => (
+          <CustomButton className="cursor-pointer" key={index}
+          onClick={()=>{handleEngestionClick(resultado.asesor.id)}}>
+            Asesor: {resultado.asesor.usuario}, En gestión: {resultado.frecuencia}
+          </CustomButton>
+        ))}
+      
+    </div>
+
+    <div className="p-2 border border-gray-300 rounded">
+      
+      
+        {resultados2.map((resultado, index) => (
+          <CustomButton className="cursor-pointer" key={index}
+          onClick={()=>{handleClosedClick(resultado.asesor.id)}}>
+            Asesor: {resultado.asesor.usuario}, Cerrados: {resultado.frecuencia}
+          </CustomButton>
+        ))}
+      
+    </div>
+
           <CustomButton onClick={() => console.log('Agregar Número')}>Agregar Número</CustomButton>
         </ButtonContainer>
       </Box>
