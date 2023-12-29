@@ -154,15 +154,15 @@ const Sends = (props) => {
   };
   const conection =()=> {
     const socket = io('https://appcenteryes.appcenteryes.com/w');
-    socket.on( data => {
+    socket.on( async(data) => {
       const datosAInsertar = {
         status: data.payload.type,
         attachments: data.payload.destination,
         message: messageWithVariables,
         timestamp: new Date().toISOString().slice(0, 19).replace('T', ' ')
       };
-    
-      fetch("https://appcenteryes.appcenteryes.com/db/insertar-datos-template", {
+   try{
+     const respnseweb = await fetch("https://appcenteryes.appcenteryes.com/db/insertar-datos-template", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -170,23 +170,18 @@ const Sends = (props) => {
         },
         body: JSON.stringify(datosAInsertar)
       })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Respuesta del servidor:', data);
-        // Puedes manejar la respuesta del servidor aquí
-      })
-      .catch(error => {
+          }
+      catch(error){
         console.error('Error al enviar la solicitud:', error);
         // Puedes manejar errores aquí
-      })
-      .finally(() => {
+      }
+       
         // Cierra el socket aquí
         socket.close();
-      });
-    });
     
-  }
- 
+    
+      })
+    }
 
   const enviar = () => {
     if (sheetname.length > 0) {
@@ -276,13 +271,15 @@ const Sends = (props) => {
         Object.entries(data).forEach(([key, value]) => {
           formData.append(key, value);
         });
-
+        
         axios.post(url, formData, { headers })
+        
           .then((response) => {
-            conection()
+            
             console.log('Respuesta del servidor:', response.data);
             
           })
+          conection()
           .catch((error) => {
             console.error('Error al realizar la solicitud:', error);
           });
