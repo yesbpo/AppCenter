@@ -158,6 +158,33 @@ const { data: session } = useSession();
     }
   };
 
+  // closed chats
+  const handleClosedClick = async () => {
+    conection();
+    try {
+      const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
+      const responseChats = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-chats');
+      const responseUsers = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-usuarios');
+      // El usuario está autenticado, puedes acceder a la sesión
+      
+      if (!response.ok) {
+        throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+      }
+      const users = await responseUsers.json()
+      const Id = users.filter(d => d.usuario == session.user.name)
+      const dataChats =  await responseChats.json();
+      const chatsPending = dataChats.filter(d=> d.status == 'closed')
+      const withoutGest = chatsPending.filter(d => d.userId == Id[0].id )
+      console.log(Id)
+      const data = await response.json();
+      setMensajes1(data);
+      setContactos1(withoutGest);
+    } catch (error) {
+      console.error('Error al obtener mensajes:', error);
+      // Puedes manejar el error según tus necesidades
+    }
+  };
+
   const [mensajes, setMensajes] = useState(
      [
       { numero: '', tipo: '', contenido: '', estado: '', date: ''},
@@ -536,7 +563,7 @@ setWebhookData(webhookText);
       <ul>
         {resultados.map((resultado, index) => (
           <li key={index}>
-            Asesor: {resultado.asesor.name}, Pendientes: {resultado.frecuencia}
+            Asesor: {resultado.asesor.usuario}, Pendientes: {resultado.frecuencia}
           </li>
         ))}
       </ul>
@@ -545,7 +572,7 @@ setWebhookData(webhookText);
       <ul>
         {resultados1.map((resultado, index) => (
           <li key={index}>
-            Asesor: {resultado.asesor.name}, En gestion: {resultado.frecuencia}
+            Asesor: {resultado.asesor.usuario}, En gestion: {resultado.frecuencia}
           </li>
         ))}
       </ul>
@@ -554,7 +581,7 @@ setWebhookData(webhookText);
       <ul>
         {resultados2.map((resultado, index) => (
           <li key={index}>
-            Asesor: {resultado.asesor.name}, Cerrados: {resultado.frecuencia}
+            Asesor: {resultado.asesor.usuario}, Cerrados: {resultado.frecuencia}
           </li>
         ))}
       </ul>
@@ -564,7 +591,7 @@ setWebhookData(webhookText);
           <CustomButton onClick={handleEngestionClick}>En gestion</CustomButton>
            {/* Mostrar Activos si 'mostrarActivos' es true */}
           <CustomButton onClick={handlePendientesClick}>Pendientes</CustomButton>
-          <CustomButton onClick={() => console.log('Cerrados')}>Cerrados</CustomButton>
+          <CustomButton onClick={handleClosedClick}>Cerrados</CustomButton>
           <CustomButton onClick={() => console.log('Agregar Número')}>Agregar Número</CustomButton>
         </ButtonContainer>
       </Box>
