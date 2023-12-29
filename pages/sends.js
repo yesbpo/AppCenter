@@ -154,38 +154,36 @@ const Sends = (props) => {
   };
   const conection =()=> {
     const socket = io('https://appcenteryes.appcenteryes.com/w');
-    socket.on( async(datos) => {
-    
-      const mensaje = {
-        content: messageWithVariables,
-        type_comunication: datos.type,
-        status:   datos.payload.type,
-        number: datos.payload.source || datos.payload.destination,
-        timestamp: new Date().toISOString().slice(0, 19).replace('T', ' '),
-        type_message: datos.payload.conversation.type,
-        idMessage: datos.payload.id
+    socket.on( data => {
+      const datosAInsertar = {
+        status: data.payload.type,
+        attachments: data.payload.destination,
+        message: messageWithVariables,
+        timestamp: new Date().toISOString().slice(0, 19).replace('T', ' ')
       };
-      
-      await fetch('https://appcenteryes.appcenteryes.com/db/guardar-mensajes', {
+    
+      fetch("https://appcenteryes.appcenteryes.com/db/insertar-datos-template", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
           // Puedes agregar más encabezados según sea necesario
         },
-        body: JSON.stringify(mensaje)
+        body: JSON.stringify(datosAInsertar)
       })
-        .then(response => response.json())
-        .then(datos => {
-          console.log('Respuesta del servidor:', datos);
-          // Puedes manejar la respuesta del servidor aquí
-        })
-        .catch(error => {
-          console.error('Error al enviar la solicitud:', error);
-          // Puedes manejar errores aquí
-        });
-      
-    
-        })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Respuesta del servidor:', data);
+        // Puedes manejar la respuesta del servidor aquí
+      })
+      .catch(error => {
+        console.error('Error al enviar la solicitud:', error);
+        // Puedes manejar errores aquí
+      })
+      .finally(() => {
+        // Cierra el socket aquí
+        socket.close();
+      });
+    });
     
   }
  
@@ -230,7 +228,7 @@ const Sends = (props) => {
           channel: 'whatsapp',
           disablePreview: true,
         };
-        const socket = io('https://appcenteryes.appcenteryes.com/w');
+        
     
         
         
@@ -281,43 +279,13 @@ const Sends = (props) => {
 
         axios.post(url, formData, { headers })
           .then((response) => {
+            conection()
             console.log('Respuesta del servidor:', response.data);
-            socket.on(data => {
-              const datosAInsertar = {
-                status: data.payload.type,
-                attachments: data.payload.destination,
-                message: messageWithVariables,
-                timestamp: new Date().toISOString().slice(0, 19).replace('T', ' ')
-              };
             
-              fetch("https://appcenteryes.appcenteryes.com/db/insertar-datos-template", {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                  // Puedes agregar más encabezados según sea necesario
-                },
-                body: JSON.stringify(datosAInsertar)
-              })
-              .then(response => response.json())
-              .then(data => {
-                console.log('Respuesta del servidor:', data);
-                // Puedes manejar la respuesta del servidor aquí
-              })
-              .catch(error => {
-                console.error('Error al enviar la solicitud:', error);
-                // Puedes manejar errores aquí
-              })
-              .finally(() => {
-                // Cierra el socket aquí
-                socket.close();
-              });
-            });
           })
           .catch((error) => {
             console.error('Error al realizar la solicitud:', error);
           });
-        
-          
         });
     } else {
       console.log('No hay datos masivos.');
