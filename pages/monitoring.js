@@ -559,10 +559,12 @@ setWebhookData(webhookText);
   <>
     
       <Layout>
-      <select>
+      <div className="flex space-x-4">
+      <select className="p-2 border border-gray-300 rounded">
         <optgroup label="Resultados Pendientes">
           {resultados.map((resultado, index) => (
             <option
+              className="cursor-pointer"
               onClick={() => handlePendientesClick(resultado.asesor.id)}
               key={index}
             >
@@ -572,26 +574,26 @@ setWebhookData(webhookText);
         </optgroup>
       </select>
 
-      <select>
+      <select className="p-2 border border-gray-300 rounded">
         <optgroup label="Resultados en Gestion">
           {resultados1.map((resultado, index) => (
-            <option key={index}>
+            <option className="cursor-pointer" key={index}>
               Asesor: {resultado.asesor.usuario}, En gestión: {resultado.frecuencia}
             </option>
           ))}
         </optgroup>
       </select>
 
-      <select>
+      <select className="p-2 border border-gray-300 rounded">
         <optgroup label="Resultados Cerrados">
           {resultados2.map((resultado, index) => (
-            <option key={index}>
+            <option className="cursor-pointer" key={index}>
               Asesor: {resultado.asesor.usuario}, Cerrados: {resultado.frecuencia}
             </option>
           ))}
         </optgroup>
       </select>
-
+    </div>
       
       <p>Bienvenido, {session.user.type_user}!</p>        
       <Box onLoad={updateuser()}>
