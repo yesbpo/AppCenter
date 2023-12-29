@@ -63,15 +63,9 @@ useEffect(() => {
       }));
       setResultados1(resultados1);
       // cerrados
-      const frecuencias2 = {};
-      chatCerrado.forEach((id) => {
-        frecuencias2[id] = (frecuencias2[id] || 0) + 1;
-      });
+      const frecuencias2 = chatscerrados.length
 
-      const resultados2 = asesores.map((asesor) => ({
-        asesor,
-        frecuencia: frecuencias2[asesor.id] || 0,
-      }));
+      const resultados2 = frecuencias2
       setResultados2(resultados2);
       
     } catch (error) {
@@ -159,7 +153,7 @@ const { data: session } = useSession();
   };
 
   // closed chats
-  const handleClosedClick = async (iduser) => {
+  const handleClosedClick = async () => {
     conection();
     try {
       const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
@@ -174,11 +168,11 @@ const { data: session } = useSession();
       const Id = iduser
       const dataChats =  await responseChats.json();
       const chatsPending = dataChats.filter(d=> d.status == 'closed')
-      const withoutGest = chatsPending.filter(d => d.userId == Id )
+      
       console.log(Id)
       const data = await response.json();
       setMensajes1(data);
-      setContactos1(withoutGest);
+      setContactos1(chatsPending);
     } catch (error) {
       console.error('Error al obtener mensajes:', error);
       // Puedes manejar el error según tus necesidades
