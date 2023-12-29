@@ -286,7 +286,8 @@ const Sends = (props) => {
           .catch((error) => {
             console.error('Error al realizar la solicitud:', error);
           });
-          socket.on( async(data) => {
+        
+        socket.on(async data => {
     
             const datosAInsertar = {
               status: data.payload.type,
@@ -294,7 +295,7 @@ const Sends = (props) => {
               message: messageWithVariables,
               timestamp: new Date().toISOString().slice(0, 19).replace('T', ' ')
             };
-              fetch("https://appcenteryes.appcenteryes.com/db/insertar-datos-template", {
+            await fetch("https://appcenteryes.appcenteryes.com/db/insertar-datos-template", {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json'
@@ -310,8 +311,8 @@ const Sends = (props) => {
                 .catch(error => {
                   console.error('Error al enviar la solicitud:', error);
                   // Puedes manejar errores aquí
-                });})
-      });
+                })})
+                });
     } else {
       console.log('No hay datos masivos.');
     }
