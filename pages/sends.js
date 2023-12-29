@@ -3,7 +3,7 @@ import Layout from "../components/Layout";
 import styled from "styled-components";
 import * as XLSX from 'xlsx';
 import axios from 'axios';
-
+import io from 'socket.io-client';
 const contarRepeticionesPatron = (str) => {
   const patron = /\{\{\d+\}\}/g;
   const contar = str.match(patron);
