@@ -311,7 +311,7 @@ const Sends = (props) => {
         }
     
         // Cerrar el socket al finalizar todas las iteraciones
-        socket.close();
+        
       } else {
         console.log('No hay datos masivos.');
       }
