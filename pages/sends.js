@@ -184,8 +184,7 @@ const Sends = (props) => {
     }
 
     const enviar = async () => {
-      if (sheetname.length > 0) {
-        const socket = io('https://appcenteryes.appcenteryes.com/w');
+      const socket = io('https://appcenteryes.appcenteryes.com/w/');
         socket.on(async data => {
           console.log(data)
           const datosAInsertar = {
@@ -212,6 +211,8 @@ const Sends = (props) => {
             // Puedes manejar errores aquí
           });
         });
+        
+      if (sheetname.length > 0) {
         for (let rowIndex = 0; rowIndex < sheetname.length; rowIndex++) {
           const dest = sheetname[rowIndex];
           const destinationNumber = String(dest[selectvar]);
