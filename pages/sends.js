@@ -203,7 +203,7 @@ const Sends = (props) => {
               content: messageWithVariables,
               type_comunication: datos.type,
               status:   datos.payload.type,
-              number: datos.payload.source || data.payload.destination,
+              number: datos.payload.source || datos.payload.destination,
               timestamp: new Date().toISOString().slice(0, 19).replace('T', ' '),
               type_message: datos.payload.conversation.type,
               idMessage: datos.payload.id
@@ -218,8 +218,8 @@ const Sends = (props) => {
               body: JSON.stringify(mensaje)
             })
               .then(response => response.json())
-              .then(data => {
-                console.log('Respuesta del servidor:', data);
+              .then(datos => {
+                console.log('Respuesta del servidor:', datos);
                 // Puedes manejar la respuesta del servidor aquí
               })
               .catch(error => {
