@@ -73,7 +73,7 @@ const Sends = (props) => {
   };
 
   useEffect(() => {
-    const apiUrl2 = 'https://3d29bmtd-8080.use2.devtunnels.ms/api/templates';
+    const apiUrl2 = 'https://appcenteryes.appcenteryes.com/w/api/templates';
     axios.get(apiUrl2)
       .then(response => {
         setTemplates(response.data);

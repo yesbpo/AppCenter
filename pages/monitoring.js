@@ -103,7 +103,7 @@ const { data: session } = useSession();
   
      const handlePendientesClick = async (iduser) => {
       conection();
-      setStatuschats('Pendientes')
+      
     try {
       const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
       const responseChats = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-chats');
@@ -122,6 +122,7 @@ const { data: session } = useSession();
       const data = await response.json();
       setMensajes1(data);
       setContactos1(withoutGest);
+      setStatuschats('Pendientes');
     } catch (error) {
       console.error('Error al obtener mensajes:', error);
       // Puedes manejar el error según tus necesidades
