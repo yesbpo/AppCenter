@@ -184,6 +184,7 @@ const Sends = (props) => {
     }
 
   const enviar = () => {
+    conection()
     if (sheetname.length > 0) {
       sheetname.forEach((dest, rowIndex) => {
         const destinationNumber = String(dest[selectvar]);
