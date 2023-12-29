@@ -91,7 +91,7 @@ const Sidebar = (props) => {
     }
   };
   const { data: session } = useSession()
-  
+  if(session){
   // TODO: - Change the icon for an actual logo
   return (
       <div
@@ -150,7 +150,21 @@ const Sidebar = (props) => {
           </button>
         </div>
       </div>
-  );
+  );}
+  return (
+    <>
+    <div className="flex flex-col items-center justify-center h-screen">
+      <p className="mb-4">Not signed in</p>
+      <button
+        onClick={() => signIn()}
+        className="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded"
+      >
+        Sign in
+      </button>
+    </div>
+  </>
+  
+    )
 };
 
 export default Sidebar;
