@@ -132,7 +132,7 @@ const { data: session } = useSession();
       // Puedes manejar el error según tus necesidades
     }
   };
-  const handleEngestionClick = async () => {
+  const handleEngestionClick = async (iduser) => {
     conection();
     try {
       const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
@@ -144,10 +144,10 @@ const { data: session } = useSession();
         throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
       }
       const users = await responseUsers.json()
-      const Id = users.filter(d => d.usuario == session.user.name)
+      const Id = iduser
       const dataChats =  await responseChats.json();
       const chatsPending = dataChats.filter(d=> d.status == 'in process')
-      const withoutGest = chatsPending.filter(d => d.userId == Id[0].id )
+      const withoutGest = chatsPending.filter(d => d.userId == Id )
       console.log(Id)
       const data = await response.json();
       setMensajes1(data);
@@ -159,7 +159,7 @@ const { data: session } = useSession();
   };
 
   // closed chats
-  const handleClosedClick = async () => {
+  const handleClosedClick = async (iduser) => {
     conection();
     try {
       const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
@@ -171,10 +171,10 @@ const { data: session } = useSession();
         throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
       }
       const users = await responseUsers.json()
-      const Id = users.filter(d => d.usuario == session.user.name)
+      const Id = iduser
       const dataChats =  await responseChats.json();
       const chatsPending = dataChats.filter(d=> d.status == 'closed')
-      const withoutGest = chatsPending.filter(d => d.userId == Id[0].id )
+      const withoutGest = chatsPending.filter(d => d.userId == Id )
       console.log(Id)
       const data = await response.json();
       setMensajes1(data);
@@ -577,7 +577,8 @@ setWebhookData(webhookText);
       <select className="p-2 border border-gray-300 rounded">
         <optgroup label="Resultados en Gestion">
           {resultados1.map((resultado, index) => (
-            <option className="cursor-pointer" key={index}>
+            <option className="cursor-pointer" key={index}
+            onChange={handleEngestionClick(resultado.asesor.id)}>
               Asesor: {resultado.asesor.usuario}, En gestión: {resultado.frecuencia}
             </option>
           ))}
@@ -587,7 +588,8 @@ setWebhookData(webhookText);
       <select className="p-2 border border-gray-300 rounded">
         <optgroup label="Resultados Cerrados">
           {resultados2.map((resultado, index) => (
-            <option className="cursor-pointer" key={index}>
+            <option className="cursor-pointer" key={index}
+            onChange={handleClosedClick(resultado.asesor.id)}>
               Asesor: {resultado.asesor.usuario}, Cerrados: {resultado.frecuencia}
             </option>
           ))}
