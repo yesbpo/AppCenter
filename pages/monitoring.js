@@ -11,7 +11,7 @@ const MonitoringPage = () => {
     // Lógica que se ejecutará después del montaje del componente
     updateuser();
   }, []); // El array vacío asegura que el efecto se ejecute solo una vez al montar el componente
-const [statuschats, setStatuschats] = useState('Pendi')
+const [statuschats, setStatuschats] = useState('')
 const [asesores, setAsesores] = useState([]);
 const [resultados, setResultados] = useState([]);
 const [resultados1, setResultados1] = useState([]);
@@ -103,6 +103,7 @@ const { data: session } = useSession();
   
      const handlePendientesClick = async (iduser) => {
       conection();
+      setStatuschats('Pendientes')
     try {
       const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
       const responseChats = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-chats');
@@ -128,6 +129,7 @@ const { data: session } = useSession();
   };
   const handleEngestionClick = async (iduser) => {
     conection();
+    setStatuschats('En gestion')
     try {
       const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
       const responseChats = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-chats');
@@ -155,6 +157,7 @@ const { data: session } = useSession();
   // closed chats
   const handleClosedClick = async () => {
     conection();
+    setStatuschats('Cerrados')
     try {
       const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
       const responseChats = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-chats');

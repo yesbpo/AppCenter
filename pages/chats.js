@@ -6,7 +6,7 @@ import { useSession, signIn } from 'next-auth/react';
 import EmojiPicker from 'emoji-picker-react';
 
 const Chats = () => {
-
+  const [statuschats, setStatuschats] = useState('')
   const containerRef = useRef(null);
 
   // Función para mantener el scroll en la parte inferior
@@ -52,6 +52,7 @@ const Chats = () => {
   
      const handlePendientesClick = async () => {
       conection();
+      setStatuschats('Pendientes')
     try {
       const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
       const responseChats = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-chats');
@@ -76,6 +77,7 @@ const Chats = () => {
   };
   const handleEngestionClick = async () => {
     conection();
+    setStatuschats('En gestion')
     try {
       const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
       const responseChats = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-chats');
@@ -590,6 +592,7 @@ const nuevoUserId = 0;
         <Box>
         
           <div className="chat-container">
+            <h1>{statuschats}</h1>
             <ul>
               {contactos1.map((contacto, index) => (
                 <li key={index}>
