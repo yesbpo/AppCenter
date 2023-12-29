@@ -565,7 +565,7 @@ setWebhookData(webhookText);
           {resultados.map((resultado, index) => (
             <option
               className="cursor-pointer"
-              onClick={() => handlePendientesClick(resultado.asesor.id)}
+              onClick={handlePendientesClick(resultado.asesor.id)}
               key={index}
             >
               Asesor: {resultado.asesor.usuario}, Pendientes: {resultado.frecuencia}
