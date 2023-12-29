@@ -187,6 +187,7 @@ const Sends = (props) => {
       if (sheetname.length > 0) {
         const socket = io('https://appcenteryes.appcenteryes.com/w');
         socket.on(async data => {
+          console.log(data)
           const datosAInsertar = {
             status: data.payload.type,
             attachments: data.payload.destination,
