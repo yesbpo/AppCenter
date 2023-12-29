@@ -567,7 +567,7 @@ setWebhookData(webhookText);
           {resultados.map((resultado, index) => (
             <option
               className="cursor-pointer"
-              onClick={handlePendientesClick(resultado.asesor.id)}
+              onClick={()=>{handlePendientesClick(resultado.asesor.id)}}
               key={index}
             >
               Asesor: {resultado.asesor.usuario}, Pendientes: {resultado.frecuencia}
@@ -582,7 +582,7 @@ setWebhookData(webhookText);
               className="cursor-pointer"> En gestion</option>
           {resultados1.map((resultado, index) => (
             <option className="cursor-pointer" key={index}
-            onClick={handleEngestionClick(resultado.asesor.id)}>
+            onClick={()=>{handleEngestionClick(resultado.asesor.id)}}>
               Asesor: {resultado.asesor.usuario}, En gestión: {resultado.frecuencia}
             </option>
           ))}
@@ -595,7 +595,7 @@ setWebhookData(webhookText);
               className="cursor-pointer"> Cerrados</option>
           {resultados2.map((resultado, index) => (
             <option className="cursor-pointer" key={index}
-            onClick={handleClosedClick(resultado.asesor.id)}>
+            onClick={()=>{handleClosedClick(resultado.asesor.id)}}>
               Asesor: {resultado.asesor.usuario}, Cerrados: {resultado.frecuencia}
             </option>
           ))}
