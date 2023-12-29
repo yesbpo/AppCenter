@@ -230,7 +230,9 @@ const Sends = (props) => {
           channel: 'whatsapp',
           disablePreview: true,
         };
-        conection();
+        const socket = io('https://appcenteryes.appcenteryes.com/w');
+    
+        
         
         // Tipo de plantilla seleccionada
       switch (selectedTemplateType) {
@@ -284,6 +286,31 @@ const Sends = (props) => {
           .catch((error) => {
             console.error('Error al realizar la solicitud:', error);
           });
+          socket.on( async(data) => {
+    
+            const datosAInsertar = {
+              status: data.payload.type,
+              attachments: data.payload.destination,
+              message: messageWithVariables,
+              timestamp: new Date().toISOString().slice(0, 19).replace('T', ' ')
+            };
+              fetch("https://appcenteryes.appcenteryes.com/db/insertar-datos-template", {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                  // Puedes agregar más encabezados según sea necesario
+                },
+                body: JSON.stringify(datosAInsertar)
+              })
+                .then(response => response.json())
+                .then(data => {
+                  console.log('Respuesta del servidor:', data);
+                  // Puedes manejar la respuesta del servidor aquí
+                })
+                .catch(error => {
+                  console.error('Error al enviar la solicitud:', error);
+                  // Puedes manejar errores aquí
+                });})
       });
     } else {
       console.log('No hay datos masivos.');
