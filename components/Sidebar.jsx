@@ -117,6 +117,7 @@ const Sidebar = (props) => {
             {isCollapsible && (
               <button className={collapseIconClasses} onClick={handleSidebarToggle}>
                 <ChevronDoubleLeftIcon className="h-8 w-8 text-light-lighter" />
+                <h1>{usuario}</h1>
               </button>
             )}
           </div>
