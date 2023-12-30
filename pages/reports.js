@@ -6,26 +6,40 @@ import Layout from '../components/Layout';
 import { useSession, signIn } from 'next-auth/react';
 
 function Reports() {
-  const { data: session } = useSession()
+  const { data: session } = useSession();
   const [fechaInicio, setFechaInicio] = useState('');
   const [fechaFin, setFechaFin] = useState('');
   const [nombreCampaña, setNombreCampaña] = useState('');
-  const [tipoMensajes, setTipoMensajes] = useState('ambos'); // Puede ser 'entrantes', 'salientes', o 'ambos'.
+  const [tipoMensajes, setTipoMensajes] = useState('ambos');
   const [datos, setDatos] = useState([]);
+
+  const fetchData = async (url, setStateCallback) => {
+    try {
+      const response = await axios.get(url);
+      setStateCallback(response.data);
+    } catch (error) {
+      console.error('Error:', error.response ? error.response.data : error.message);
+    }
+  };
+
+  const fetchTemplateData = () => {
+    fetchData('https://appcenteryes.appcenteryes.com/w/api/templates', setDatos);
+  };
+
   const generarReporte = async () => {
     try {
       if (!fechaInicio || !fechaFin) {
         console.error('Por favor, selecciona fechas de inicio y fin.');
         return;
       }
-  
+
       const response = await axios.post('https://appcenteryes.appcenteryes.com/db/obtener-mensajes-por-fecha', {
         fechaInicio,
         fechaFin,
       });
-  
+
       const mensajes = response.data.mensajes;
-  
+
       if (mensajes.length > 0) {
         const datosFiltrados = mensajes.map((mensaje) => ({
           fecha: mensaje.timestamp,
@@ -34,14 +48,12 @@ function Reports() {
           tipo: mensaje.type_message,
           estado: mensaje.status,
           idMensaje: mensaje.idMessage,
-          // Agrega más campos según sea necesario
         }));
-  
+
         const csvData = "Fecha,Mensaje,Destinatario,Tipo,Estado,ID Mensaje\n" +
           datosFiltrados.map((d) => `${d.fecha},${d.mensaje},${d.destinatario},${d.tipo},${d.estado},${d.idMensaje}`).join("\n");
-  
+
         const blob = new Blob([csvData], { type: 'text/csv' });
-  
         saveAs(blob, 'reporte_whatsapp.csv');
       } else {
         console.log('No se encontraron mensajes en el rango de fechas especificado.');
@@ -50,31 +62,6 @@ function Reports() {
       console.error('Error al generar el reporte:', error);
     }
   };
-
-  useEffect(() => {
-    axios({
-      method: 'get',
-      url: 'https://appcenteryes.appcenteryes.com/w/api/templates',
-    })
-      .then(response => {
-        const filteredData = response.data.map(template => ({
-          Categoria: template.category,
-          Fecha_de_creacion: template.createdOn,
-          Contenido: template.data,
-          Nombre: template.elementName,
-          ID_Plantilla: template.id,
-          Idioma: template.languageCode,
-          Ultima_modificacion: template.modifiedOn,
-          Estado: template.status,
-          Tipo_Plantilla: template.templateType,
-        }));
-
-        setDatos(filteredData);
-      })
-      .catch(error => {
-        console.error('Error:', error.response ? error.response.data : error.message);
-      });
-  }, []);
 
   const generarReportePlan = () => {
     try {
@@ -90,87 +77,89 @@ function Reports() {
       console.error('Error al generar el reporte:', error);
     }
   };
-if(session)
-  {
-  return (
-    <Layout>
-    <div className="min-h-screen bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-black p-8 bg-opacity-80">
-      <h1 className="text-4xl font-bold mb-4">
-        Generador de Reportes WhatsApp
-      </h1>
-      <label className="block mb-4">
-        Fecha de Inicio:
-        <input
-          type="date"
-          value={fechaInicio}
-          onChange={(e) => setFechaInicio(e.target.value)}
-          className="border rounded p-2 ml-2"
-        />
-      </label>
-      <label className="block mb-4">
-        Fecha de Fin:
-        <input
-          type="date"
-          value={fechaFin}
-          onChange={(e) => setFechaFin(e.target.value)}
-          className="border rounded p-2 ml-2"
-        />
-      </label>
-      <label className="block mb-4">
-        Nombre de Campaña:
-        <input
-          type="text"
-          value={nombreCampaña}
-          onChange={(e) => setNombreCampaña(e.target.value)}
-          className="border rounded p-2 ml-2"
-        />
-      </label>
-      <label className="block mb-4">
-        Tipo de Mensajes:
-        <select
-          value={tipoMensajes}
-          onChange={(e) => setTipoMensajes(e.target.value)}
-          className="border rounded p-2 ml-2"
-        >
-          <option value="ambos">Ambos</option>
-          <option value="entrantes">Entrantes</option>
-          <option value="salientes">Salientes</option>
-        </select>
-      </label>
-      <button
-        onClick={generarReporte}
-        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Generar Reporte
-      </button>
 
-      <h1 className="text-4xl font-bold mb-4 mt-8">
-        Exporte de plantillas
-      </h1>
-      {/* Botón para exportar los datos */}
-      <button
-        onClick={generarReportePlan}
-        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Exportar Datos
-      </button>
-    </div>
-  </Layout>  );}
-   return (
+  useEffect(() => {
+    fetchTemplateData();
+  }, []);
+
+  return (
     <>
-    <div className="flex flex-col items-center justify-center h-screen">
-      <p className="mb-4">Not signed in</p>
-      <button
-        onClick={() => signIn()}
-        className="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded"
-      >
-        Sign in
-      </button>
-    </div>
-  </>
-  
-    )
-  
+      {session ? (
+        <Layout>
+          <div className="min-h-screen bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-black p-8 bg-opacity-80">
+            <h1 className="text-4xl font-bold mb-4">
+              Generador de Reportes WhatsApp
+            </h1>
+            <label className="block mb-4">
+              Fecha de Inicio:
+              <input
+                type="date"
+                value={fechaInicio}
+                onChange={(e) => setFechaInicio(e.target.value)}
+                className="border rounded p-2 ml-2"
+              />
+            </label>
+            <label className="block mb-4">
+              Fecha de Fin:
+              <input
+                type="date"
+                value={fechaFin}
+                onChange={(e) => setFechaFin(e.target.value)}
+                className="border rounded p-2 ml-2"
+              />
+            </label>
+            <label className="block mb-4">
+              Nombre de Campaña:
+              <input
+                type="text"
+                value={nombreCampaña}
+                onChange={(e) => setNombreCampaña(e.target.value)}
+                className="border rounded p-2 ml-2"
+              />
+            </label>
+            <label className="block mb-4">
+              Tipo de Mensajes:
+              <select
+                value={tipoMensajes}
+                onChange={(e) => setTipoMensajes(e.target.value)}
+                className="border rounded p-2 ml-2"
+              >
+                <option value="ambos">Ambos</option>
+                <option value="entrantes">Entrantes</option>
+                <option value="salientes">Salientes</option>
+              </select>
+            </label>
+            <button
+              onClick={generarReporte}
+              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Generar Reporte
+            </button>
+
+            <h1 className="text-4xl font-bold mb-4 mt-8">
+              Exporte de plantillas
+            </h1>
+            <button
+              onClick={generarReportePlan}
+              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Exportar Datos
+            </button>
+          </div>
+        </Layout>
+      ) : (
+        <div className="flex flex-col items-center justify-center h-screen">
+          <p className="mb-4">Not signed in</p>
+          <button
+            onClick={() => signIn()}
+            className="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded"
+          >
+            Sign in
+          </button>
+        </div>
+      )}
+    </>
+  );
 }
 
 export default Reports;
