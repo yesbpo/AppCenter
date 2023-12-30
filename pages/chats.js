@@ -599,6 +599,7 @@ const nuevoUserId = 0;
   </div>
 
   {/* Contenedor de contactos */}
+  <ContainerBox >
   <Box>
     <div className="contact-list-container">
       <h1>{statuschats}</h1>
@@ -613,6 +614,7 @@ const nuevoUserId = 0;
       </ul>
     </div>
   </Box>
+  </ContainerBox>
 </Box>
   
         </Container>
