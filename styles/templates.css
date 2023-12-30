@@ -1,0 +1,156 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    
+}
+
+.templateStyle{
+    margin: 60px;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px;
+}
+
+.sidebar {
+    width: 300px;
+    background-color: #128c7e;
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+  
+  .chat-list {
+    list-style: none;
+    margin-top: 20px;
+}  
+
+.chat-item {
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background-color: #075e54;
+  }
+  
+  .chat-area {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+  }
+  
+  .message {
+    background-color: #fff;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  .input-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #fff;
+    border-top: 1px solid #ddd;
+  }
+  
+  .message-input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .send-button {
+    background-color: #128c7e;
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .user-name {
+    font-weight: bold;
+    font-size: 18px;
+  }
+  
+  .container > div {
+    flex: 1;
+    margin-left: 20px;
+  }
+  
+  .error-message {
+    color: #ff0000;
+    margin-top: 10px;
+  }
+
+/*Estilo general para el contenedor de plantillas*/
+.CreatedTemplates{
+    margin: 40px;
+    background-color: #f5f5f5;
+    border-radius: 25px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+/* Estilo de cada elemento de plantilla */
+.CreatedTemplates li {
+    border-bottom: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.CreatedTemplates strong {
+    color: #128c7e;
+}
+
+.CreatedTemplates button {
+    background-color: #dc3545;
+    color: #fff;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.CreatedTemplates button:hover {
+    background-color: darkred;
+}
+
+.CreatedTemplates hr {
+    margin-top: 15px;
+}
+
+/* Estilo de los controles de paginación */
+.CreatedTemplates .Pagination {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.CreatedTemplates .Pagination button {
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
