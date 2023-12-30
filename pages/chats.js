@@ -505,7 +505,7 @@ const nuevoUserId = 0;
     <>
       
         <Layout className='big-box'>
-        <p>Bienvenido, {session.user.type_user}!</p>        
+                
         <Box className='estados' onLoad={updateuser()}>
           <ButtonContainer>
             <CustomButton onClick={handleEngestionClick}>En gestion</CustomButton>
