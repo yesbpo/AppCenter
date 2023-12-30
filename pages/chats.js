@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import io from 'socket.io-client';
 import { useSession, signIn } from 'next-auth/react';
 import EmojiPicker from 'emoji-picker-react';
-
+import { PaperAirplaneIcon } from '@heroicons/react/solid';
 const Chats = () => {
   const [statuschats, setStatuschats] = useState('')
   const containerRef = useRef(null);
@@ -586,7 +586,7 @@ const nuevoUserId = 0;
           )}
           </div >
           <div className='action-buttons'>
-            <button src='./enviar.jpeg' onClick={enviarMensaje} ></button>
+            <BotonEnviar  onClick={enviarMensaje} ><PaperAirplaneIcon className="h-5 w-5" /></BotonEnviar>
             <BotonEnviar onClick={actualizarEstadoChat} >Gestionar</BotonEnviar><BotonEnviar  onClick={actualizarEstadoChatCerrados}>Cerrar</BotonEnviar>
             <div>
         <input type="file" onChange={handleFileChange} />
