@@ -20,7 +20,7 @@ function Reports() {
         return;
       }
 
-      const response = await fetch(`https:/appcenteryes.appcenteryes.com/db/obtener-mensajes-fecha?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`);
+      const response = await fetch(`https:/appcenteryes.appcenteryes.com/db/obtener-mensajes?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`);
 
       if (!response.ok) {
         throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
