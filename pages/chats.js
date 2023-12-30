@@ -587,7 +587,7 @@ const nuevoUserId = 0;
           )}
           </div >
           <div className='action-buttons'>
-            <BotonEnviar onClick={enviarMensaje} >Enviar</BotonEnviar>
+            <BotonEnviar onClick={enviarMensaje} ><img src='./enviar.jpeg'></img></BotonEnviar>
             <BotonEnviar onClick={actualizarEstadoChat} >Gestionar</BotonEnviar><BotonEnviar  onClick={actualizarEstadoChatCerrados}>Cerrar</BotonEnviar>
             <div>
         <input type="file" onChange={handleFileChange} />
