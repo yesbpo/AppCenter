@@ -44,10 +44,9 @@ const CrearUsuario = () => {
   return (
     
     <Layout>
-  <div className="flex items-center justify-center h-screen">
-    <div className="container">
-      <h1 className="text-dark text-center mb-6">Crear Usuario</h1>
-      <form>
+    <div className="flex items-center justify-center h-screen">
+    <div className="w-full max-w-md">
+      <h1 className="text-dark text-center mb-6">Crear Usuario</h1>    <form>
         <div className="mb-5">
           <label htmlFor="usuario" className="form-label">Usuario:</label>
           <input type="text" className="form-control" id="usuario" value={usuario} onChange={(e) => setUsuario(e.target.value)} />
