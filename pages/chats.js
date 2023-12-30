@@ -592,9 +592,7 @@ const nuevoUserId = 0;
         <input type="file" onChange={handleFileChange} />
         <button onClick={handleUpload}>Subir Archivo</button>
       </div>
-      </div>   
-          </Box>
-          <Box>
+      </div>  <Box>
             <div className="chat-container">
               <h1>{statuschats}</h1>
               <ul>
@@ -605,7 +603,9 @@ const nuevoUserId = 0;
                 ))}
               </ul>
             </div>
+          </Box> 
           </Box>
+          
         </Container>
       </Layout>
         </>
