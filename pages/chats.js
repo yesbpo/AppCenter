@@ -587,7 +587,7 @@ const nuevoUserId = 0;
           )}
           </div >
           <div className='action-buttons'>
-            <BotonEnviar onClick={enviarMensaje} ><img src='./enviar.jpeg'></img></BotonEnviar>
+            <BotonEnviar onClick={enviarMensaje} ></BotonEnviar>
             <BotonEnviar onClick={actualizarEstadoChat} >Gestionar</BotonEnviar><BotonEnviar  onClick={actualizarEstadoChatCerrados}>Cerrar</BotonEnviar>
             <div>
         <input type="file" onChange={handleFileChange} />
@@ -697,7 +697,7 @@ margin-right: 10px;
 `;
 
 const BotonEnviar = styled.button`
-background-color: #4caf50;
+background-image: url("./enviar.jpeg");
 color: white;
 padding: 10px 20px;
 font-size: 16px;
