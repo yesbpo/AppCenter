@@ -6,7 +6,7 @@ import { SessionProvider } from "next-auth/react"
 import '../styles/templates.css'
 import '../styles/sidebar.css'
 import '../styles/envios.css'
-import '../styles/chats.css'
+
 function MyApp({Component, pageProps}) {
 
   return ( 
