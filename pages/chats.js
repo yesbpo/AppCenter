@@ -606,6 +606,88 @@ const nuevoUserId = 0;
     );
   };
   
-  // ... (Resto del código sigue igual)
+  const Box = styled.div`
+  padding: 30px;
+  margin: 30px;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+`;
+
+const CustomButton = styled.button`
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%;
+
+  &:hover {
+    background-color: #45a049;
+  }
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  gap: 10px;
+`;
+
+const Container = styled.div`
+  display: flex;
+  gap: 20px;
+`;
+
+const ContainerBox = styled.div`
+  background-color: #f7f7f7;
+  padding: 15px;
+  border-radius: 10px;
+  overflow-y: scroll;
+  max-height: 400px;
+  scroll-behavior: smooth;
+`;
+
+const p = styled.div`
+  background-color: ${(props) => (props.tipo === 'message-event' ? '#6e6e6' : '#4caf50')};
+  color: ${(props) => (props.tipo === 'message-event' ? 'black' : 'white')};
+  padding: 10px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+`;
+
+
+
+const InputContainer = styled.div`
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+`;
+
+const InputMensaje = styled.input`
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-right: 10px;
+`;
+
+const BotonEnviar = styled.button`
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #45a049;
+  }
+`;
+
+
+
   
   export default Chats;
