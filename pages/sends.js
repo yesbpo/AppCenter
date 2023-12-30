@@ -4,6 +4,7 @@ import styled from "styled-components";
 import * as XLSX from 'xlsx';
 import axios from 'axios';
 import io from 'socket.io-client';
+
 const contarRepeticionesPatron = (str) => {
   const patron = /\{\{\d+\}\}/g;
   const contar = str.match(patron);
@@ -24,15 +25,12 @@ const Sends = (props) => {
   const [variableColumnMapping, setVariableColumnMapping] = useState({});
   const [selectedTemplateId, setSelectedTemplateId] = useState(null);
   const [customParams, setCustomParams] = useState({});
-  const [selectedImageUrl, setSelectedImageUrl] = useState(""); // Agrega esta línea
+  const [selectedImageUrl, setSelectedImageUrl] = useState("");
   const [selectedVideoUrl, setSelectedVideoUrl] = useState("");
-
 
   const handleVideoFileChange = async (e) => {
     const file = e.target.files[0];
     setFilename(file.name);
-  
-    // Cargar el video y obtener la URL
     const videoUrl = URL.createObjectURL(file);
     setSelectedVideoUrl(videoUrl);
   };
@@ -41,7 +39,6 @@ const Sends = (props) => {
     const file = e.target.files[0];
     setFilename(file.name);
 
-    // Cargar la imagen a Imgbb y obtener la URL
     const imgbbApiKey = 'e31e20927215f7f1aa0598b395ff6261';
     const imgbbUploadUrl = 'https://api.imgbb.com/1/upload';
 
@@ -109,11 +106,8 @@ const Sends = (props) => {
       const count = contarRepeticionesPatron(selectedTemplateObject.data);
       setVariableCount(count);
       setVariableValues({});
-      // Set the selected template type
       const type = getTemplateType(selectedTemplateObject.templateType);
       setSelectedTemplateType(type);
-
-      // Set the selected template ID
       setSelectedTemplateId(selectedTemplateObject.id);
       console.log('Selected Template Type:', getTemplateType(selectedTemplateObject.templateType));
     }
@@ -146,12 +140,12 @@ const Sends = (props) => {
       [index]: value,
     }));
   
-    // Actualizar variableValues con el nuevo valor
     setVariableValues((prevValues) => ({
       ...prevValues,
       [index]: value,
     }));
   };
+
   const conection =()=> {
     const socket = io('https://appcenteryes.appcenteryes.com/w');
     socket.on( async(data) => {
@@ -161,372 +155,263 @@ const Sends = (props) => {
         message: messageWithVariables,
         timestamp: new Date().toISOString().slice(0, 19).replace('T', ' ')
       };
-   try{
-     const respnseweb = await fetch("https://appcenteryes.appcenteryes.com/db/insertar-datos-template", {
+      try {
+        const respnseweb = await fetch("https://appcenteryes.appcenteryes.com/db/insertar-datos-template", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(datosAInsertar)
+        })
+      } catch(error) {
+        console.error('Error al enviar la solicitud:', error);
+      }
+      
+      socket.close();
+    });
+  }
+
+  const enviar = async () => {
+    const socket = io('https://appcenteryes.appcenteryes.com/w/');
+    socket.on(async data => {
+      console.log(data)
+      const datosAInsertar = {
+        status: data.payload.type,
+        attachments: data.payload.destination,
+        message: messageWithVariables,
+        timestamp: new Date().toISOString().slice(0, 19).replace('T', ' ')
+      };
+      await fetch("https://appcenteryes.appcenteryes.com/db/insertar-datos-template", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
-          // Puedes agregar más encabezados según sea necesario
         },
         body: JSON.stringify(datosAInsertar)
       })
-          }
-      catch(error){
-        console.error('Error al enviar la solicitud:', error);
-        // Puedes manejar errores aquí
-      }
-       
-        // Cierra el socket aquí
-        socket.close();
-    
-    
+      .then(response => response.json())
+      .then(data => {
+        console.log('Respuesta del servidor:', data);
       })
-    }
+      .catch(error => {
+        console.error('Error al enviar la solicitud:', error);
+      });
+    });
+    
+    if (sheetname.length > 0) {
+      for (let rowIndex = 0; rowIndex < sheetname.length; rowIndex++) {
+        const dest = sheetname[rowIndex];
+        const destinationNumber = String(dest[selectvar]);
+        const formattedDestination = destinationNumber.startsWith("57") ? destinationNumber : `57${destinationNumber}`;
 
-    const enviar = async () => {
-      const socket = io('https://appcenteryes.appcenteryes.com/w/');
-        socket.on(async data => {
-          console.log(data)
-          const datosAInsertar = {
-            status: data.payload.type,
-            attachments: data.payload.destination,
-            message: messageWithVariables,
-            timestamp: new Date().toISOString().slice(0, 19).replace('T', ' ')
-          };
-          await fetch("https://appcenteryes.appcenteryes.com/db/insertar-datos-template", {
+        const updatedCustomParams = {};
+        Object.keys(variableColumnMapping).forEach((variable) => {
+          const columnIndex = variableColumnMapping[variable];
+          if (columnIndex !== undefined && sheetname[rowIndex][columnIndex] !== undefined) {
+            updatedCustomParams[variable] = sheetname[rowIndex][columnIndex];
+          }
+        });
+
+        setCustomParams(updatedCustomParams);
+
+        let messageWithVariables = selectedTemplateData;
+        Object.keys(variableValues).forEach((variable) => {
+          const regex = new RegExp(`\\{\\{${variable}\\}\\}`, 'g');
+          messageWithVariables = messageWithVariables.replace(regex, variableValues[variable]);
+        });
+
+        Object.keys(updatedCustomParams).forEach((variable) => {
+          const regex = new RegExp(`\\{\\{${variable}\\}\\}`, 'g');
+          messageWithVariables = messageWithVariables.replace(regex, updatedCustomParams[variable]);
+        });
+
+        const datosAInsertar = {
+          status: 'queued',
+          attachments: dest[selectvar],
+          message: messageWithVariables,
+          timestamp: new Date().toISOString().slice(0, 19).replace('T', ' ')
+        };
+
+        try {
+          const respnseweb = await fetch("https://appcenteryes.appcenteryes.com/db/insertar-datos-template", {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
-              // Puedes agregar más encabezados según sea necesario
             },
             body: JSON.stringify(datosAInsertar)
-          })
-          .then(response => response.json())
-          .then(data => {
-            console.log('Respuesta del servidor:', data);
-            // Puedes manejar la respuesta del servidor aquí
-          })
-          .catch(error => {
-            console.error('Error al enviar la solicitud:', error);
-            // Puedes manejar errores aquí
           });
-        });
-        
-      if (sheetname.length > 0) {
-        for (let rowIndex = 0; rowIndex < sheetname.length; rowIndex++) {
-          const dest = sheetname[rowIndex];
-          const destinationNumber = String(dest[selectvar]);
-          const formattedDestination = destinationNumber.startsWith("57") ? destinationNumber : `57${destinationNumber}`;
-    
-          // Personalizar customParams con datos de la columna seleccionada
-          const updatedCustomParams = {};
-          Object.keys(variableColumnMapping).forEach((variable) => {
-            const columnIndex = variableColumnMapping[variable];
-            const columnValue = dest[columnIndex];
-            updatedCustomParams[variable] = columnValue;
-          });
-    
-          setCustomParams(updatedCustomParams);
-    
-          const url = 'https://api.gupshup.io/wa/api/v1/template/msg';
-          const apiKey = '6ovjpik6ouhlyoalchzu4r2csmeqwlbg';
-          const messageWithVariables = replaceVariables(selectedTemplateData, variableValues);
-    
-          // Reemplazar las variables con los valores de la columna seleccionada
-          Object.keys(variableColumnMapping).forEach((variable) => {
-            const columnIndex = variableColumnMapping[variable];
-            const columnValue = dest[columnIndex];
-            const variableValue = customParams[variable] !== undefined ? customParams[variable] : columnValue;
-            messageWithVariables = messageWithVariables.replace(`{{${variable}}}`, variableValue);
-          });
-    
-          const data = {
-            channel: 'whatsapp',
-            source: '5718848135',
-            'src.name': 'Pb1yes',
-            destination: formattedDestination,
-            template: JSON.stringify({
-              id: selectedTemplateId ? selectedTemplateId : '',
-              params: Object.values(updatedCustomParams),
-            }),
-            channel: 'whatsapp',
-            disablePreview: true,
-            message: '',  // Esta propiedad se asignará según el tipo de plantilla más adelante
-          };
-    
-          // Tipo de plantilla seleccionada
-          switch (selectedTemplateType) {
-            case 'Texto':
-              data.message = messageWithVariables;
-              break;
-            case 'Imagen':
-              data.message = JSON.stringify({
-                type: 'image',
-                image: {
-                  link: selectedImageUrl,
-                },
-              });
-              break;
-            case 'Video':
-              data.message = JSON.stringify({
-                type: 'video',
-                video: {
-                  link: selectedVideoUrl,
-                },
-              });
-              break;
-            case 'Documento':
-              data.message = JSON.stringify({
-                type: 'document',
-                document: {
-                  link: 'https://mail.google.com/mail/u/0?ui=2&ik=97abb4c14a&attid=0.1&permmsgid=msg-f:1786087961629059212&th=18c97589ba80688c&view=att&disp=safe',
-                },
-              });
-              break;
-            default:
-              console.warn('Tipo de plantilla no reconocido:', selectedTemplateType);
-              return;
-          }
-    
-          const headers = {
-            'Cache-Control': 'no-cache',
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'apikey': apiKey,
-          };
-    
-          const formData = new URLSearchParams();
-          Object.entries(data).forEach(([key, value]) => {
-            formData.append(key, value);
-          });
-    
-          try {
-            // Enviar solicitud a la API
-            const response = await axios.post(url, formData, { headers });
-    
-            console.log('Respuesta del servidor:', response.data);
-    
-            // Activar el socket después de enviar la solicitud
-            
-          } catch (error) {
-            console.error('Error al realizar la solicitud:', error);
-          }
-        }
-    
-        // Cerrar el socket al finalizar todas las iteraciones
-        
-      } else {
-        console.log('No hay datos masivos.');
-      }
-    };
-    
-    // Llamada a la función para enviar datos
-    
-    
 
-  const handleShowContent = () => {
-    if (sheetname.length === 0) {
-      alert('No hay ningún archivo cargado.');
-    } else {
-      setShowFileContent(true);
+          console.log('Respuesta del servidor:', respnseweb);
+        } catch (error) {
+          console.error('Error al enviar la solicitud:', error);
+        }
+      }
     }
+    socket.close();
   };
 
-  // Función para reemplazar las variables en la plantilla con los valores proporcionados
-  const replaceVariables = (template, values) => {
-    let replacedTemplate = template;
-
-    // Reemplazar las variables en orden
-    Object.keys(values).forEach(variable => {
-      const variablePattern = new RegExp(`\\{\\{${variable}\\}\\}, 'g'`);
-      replacedTemplate = replacedTemplate.replace(variablePattern, values[variable]);
-    });
-
-    return replacedTemplate;
+  const resetFileState = () => {
+    setFilename("");
+    setShowFileContent(false);
+    setSheetname([]);
   };
 
   return (
     <Layout>
-      <Box>
-        <div style={styleName}>
-          <h1>
-            Envio de plantillas
-          </h1>
-        </div>
-      </Box>
-
-      <Box>
-        <div>
-          <p>Selecciona un Archivo</p>
-
-          <input
-            type="file"
-            onChange={handleFile}
-            placeholder="Selecciona tu Archivo"
-          />
-
-          {sheetname.length > 0 && (
-            <div>
-              <h1>Elige la columna que contiene el numero destino</h1>
-              <select className="var-select" value={selectvar} onChange={asignarDestino}>
-                {Object.keys(sheetname[0]).map((columnName, index) => (
-                  <option key={index} value={columnName}>
-                    {columnName}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-
-          <button onClick={handleShowContent}>Mostrar Contenido del Archivo</button>
-
-          {showFileContent && (
-            <div>
-              <h2>Contenido del archivo por columnas y filas:</h2>
-              <div className="scrollable-table-container">
-                <table>
-                  <thead>
-                    <tr>
-                      {Object.keys(sheetname[0]).map((columnName, index) => (
-                        <th key={index}>{columnName}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {sheetname.map((rowData, rowIndex) => (
-                      <tr key={rowIndex}>
-                        {Object.values(rowData).map((cellData, cellIndex) => (
-                          <td key={cellIndex}>{cellData}</td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-        </div>
-      </Box>
-
-      <Box>
-        <div>
-          <p>Selecciona la plantilla:</p>
-          <select onChange={handleTemplateChange} value={selectedTemplate}>
+      <div>
+        <h1>Envío de mensajes</h1>
+        <FormContainer>
+          <FormLabel>Seleccione una plantilla:</FormLabel>
+          <FormSelect onChange={handleTemplateChange}>
+            <option value="" selected>
+              Seleccione una plantilla
+            </option>
             {templates.map((template, index) => (
               <option key={index} value={template.elementName}>
                 {template.elementName}
               </option>
             ))}
-          </select>
-        </div>
-      </Box>
+          </FormSelect>
 
-      <Box>
-        {selectedTemplateData && (
-          <div>
-            <p>Contenido de la plantilla:</p>
-            <pre>{JSON.stringify(selectedTemplateData, null, 2)}</pre>
-          </div>
-        )}
-        {selectedTemplateType && (
-          <div>
-            <p>Tipo de la plantilla seleccionada: {selectedTemplateType}</p>
-          </div>
-        )}
-      </Box>
-
-      {selectedTemplateType === 'Video' && (
-      <Box>
-      <div>
-  <p>Selecciona un Video</p>
-  <input
-    type="file"
-    onChange={handleVideoFileChange}
-    accept="video/*" // Limitar a archivos de video
-    placeholder="Selecciona tu Video"
-  />
-  {selectedVideoUrl && (
-    <div>
-      <h2>Video seleccionado:</h2>
-      <video width="400" controls>
-        <source src={selectedVideoUrl} type="video/mp4" />
-        Tu navegador no soporta el tag de video.
-      </video>
-    </div>
-  )}
-</div>
-</Box>
-)}
-
-
-{selectedTemplateType === 'Imagen' && (
-        <Box>
-          <div>
-            <p>Selecciona una Imagen</p>
-
-            <input
-              type="file"
-              onChange={handleImageFileChange}
-              accept="image/*" // Limitar a archivos de imagen
-              placeholder="Selecciona tu Imagen"
-            />
-
-            {selectedImageUrl && (
-              <div>
-                <h2>Imagen seleccionada:</h2>
-                <img src={selectedImageUrl} alt="Selected" style={{ maxWidth: '100%' }} />
-              </div>
-            )}
-          </div>
-        </Box>
-      )}
-
-      <Box>
-        {variableCount > 0 && (
-          <div>
-            <p>Selecciona la columna para cada variable:</p>
-            {Array.from({ length: variableCount }).map((_, index) => (
-              <div key={index}>
-                <label>{`Variable ${index + 1}:`}</label>
-          
-                <select
-                  value={variableColumnMapping[index + 1] || ''}
-                  onChange={(e) => handleVariableColumnChange(index + 1, e.target.value)}
-                >
-                  <option value="">Selecciona una columna</option>
-                  {sheetname.length > 0 &&
-                    Object.keys(sheetname[0]).map((columnName, columnIndex) => (
-                      <option key={columnIndex} value={columnName}>
-                        {columnName}
+          {selectedTemplateId && (
+            <>
+              <FormLabel>Seleccione un archivo:</FormLabel>
+              <FormFileInput
+                type="file"
+                accept=".xlsx, .xls"
+                onChange={(e) => {
+                  resetFileState();
+                  handleFile(e);
+                }}
+              />
+              {showFileContent && (
+                <>
+                  <FormLabel>Seleccione una variable para asignar el destino:</FormLabel>
+                  <FormSelect onChange={asignarDestino}>
+                    {Object.keys(sheetname[0]).map((column, index) => (
+                      <option key={index} value={column}>
+                        {column}
                       </option>
                     ))}
-                </select>
-              </div>
-            ))}
-          </div>
-        )}
-      </Box>
+                  </FormSelect>
+                </>
+              )}
 
-      <Box>
-        <button onClick={enviar}>Enviar</button>
-      </Box>
+              {showFileContent && (
+                <>
+                  <FormLabel>Asignar variables:</FormLabel>
+                  {Array.from({ length: variableCount }).map((_, index) => (
+                    <VariableInput
+                      key={index}
+                      placeholder={`Variable ${index + 1}`}
+                      onChange={(e) => handleVariableChange(index, e.target.value)}
+                    />
+                  ))}
+                </>
+              )}
+
+              {selectedTemplateType === 'Documento' && (
+                <>
+                  <FormLabel>Cargar archivo de imagen:</FormLabel>
+                  <FormFileInput type="file" accept="image/*" onChange={handleImageFileChange} />
+                  {selectedImageUrl && <PreviewImage src={selectedImageUrl} alt="Preview" />}
+                </>
+              )}
+
+              {selectedTemplateType === 'Video' && (
+                <>
+                  <FormLabel>Cargar archivo de video:</FormLabel>
+                  <FormFileInput type="file" accept="video/*" onChange={handleVideoFileChange} />
+                  {selectedVideoUrl && (
+                    <VideoContainer>
+                      <PreviewVideo controls>
+                        <source src={selectedVideoUrl} type="video/mp4" />
+                        Tu navegador no admite el elemento de video.
+                      </PreviewVideo>
+                    </VideoContainer>
+                  )}
+                </>
+              )}
+
+              {showFileContent && (
+                <>
+                  <FormLabel>Asignar columnas personalizadas:</FormLabel>
+                  {Array.from({ length: variableCount }).map((_, index) => (
+                    <CustomParamInput
+                      key={index}
+                      placeholder={`Variable ${index + 1}`}
+                      onChange={(e) => handleCustomParamChange(index, e.target.value)}
+                    />
+                  ))}
+                </>
+              )}
+
+              <Button onClick={enviar}>Enviar mensajes</Button>
+            </>
+          )}
+        </FormContainer>
+      </div>
     </Layout>
   );
 };
 
-const Box = styled.div`
-  padding: 30px;
-  margin: 30px;
-  border-radius: 10px;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+const FormContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 600px;
+  margin: auto;
 `;
 
-const styleName = {
-  textAlign: 'left',
-  fontFamily: 'Arial Black',
-  fontWeight: 'bold',
-  fontSize: '30px',
-  color: '#fff',
-  textShadow: '-1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000',
-};
+const FormLabel = styled.label`
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 8px;
+`;
+
+const FormSelect = styled.select`
+  padding: 8px;
+  font-size: 14px;
+`;
+
+const FormFileInput = styled.input`
+  padding: 8px;
+  font-size: 14px;
+`;
+
+const VariableInput = styled.input`
+  padding: 8px;
+  font-size: 14px;
+`;
+
+const CustomParamInput = styled.input`
+  padding: 8px;
+  font-size: 14px;
+`;
+
+const Button = styled.button`
+  padding: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+const PreviewImage = styled.img`
+  max-width: 100%;
+  margin-top: 16px;
+`;
+
+const VideoContainer = styled.div`
+  margin-top: 16px;
+`;
+
+const PreviewVideo = styled.video`
+  max-width: 100%;
+`;
 
 export default Sends;
