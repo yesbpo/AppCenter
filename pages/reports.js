@@ -13,19 +13,6 @@ function Reports() {
   const [tipoMensajes, setTipoMensajes] = useState('ambos');
   const [datos, setDatos] = useState([]);
 
-  const fetchData = async (url, setStateCallback) => {
-    try {
-      const response = await axios.get(url);
-      setStateCallback(response.data);
-    } catch (error) {
-      console.error('Error:', error.response ? error.response.data : error.message);
-    }
-  };
-
-  const fetchTemplateData = () => {
-    fetchData('https://appcenteryes.appcenteryes.com/w/api/templates', setDatos);
-  };
-
   const generarReporte = async () => {
     try {
       if (!fechaInicio || !fechaFin) {
@@ -33,15 +20,16 @@ function Reports() {
         return;
       }
 
-      const response = await axios.post('https://appcenteryes.appcenteryes.com/db/obtener-mensajes-por-fecha', {
-        fechaInicio,
-        fechaFin,
-      });
+      const response = await fetch(`https://appcenteryes.appcenteryes.com/db/obtener-mensajes-por-fecha?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`);
 
-      const mensajes = response.data.mensajes;
+      if (!response.ok) {
+        throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+      }
 
-      if (mensajes.length > 0) {
-        const datosFiltrados = mensajes.map((mensaje) => ({
+      const mensajes = await response.json();
+
+      if (mensajes.mensajes.length > 0) {
+        const datosFiltrados = mensajes.mensajes.map((mensaje) => ({
           fecha: mensaje.timestamp,
           mensaje: mensaje.content,
           destinatario: mensaje.number,
@@ -54,6 +42,7 @@ function Reports() {
           datosFiltrados.map((d) => `${d.fecha},${d.mensaje},${d.destinatario},${d.tipo},${d.estado},${d.idMensaje}`).join("\n");
 
         const blob = new Blob([csvData], { type: 'text/csv' });
+
         saveAs(blob, 'reporte_whatsapp.csv');
       } else {
         console.log('No se encontraron mensajes en el rango de fechas especificado.');
@@ -62,6 +51,29 @@ function Reports() {
       console.error('Error al generar el reporte:', error);
     }
   };
+
+  useEffect(() => {
+    fetch('https://appcenteryes.appcenteryes.com/w/api/templates')
+      .then(response => response.json())
+      .then(data => {
+        const filteredData = data.map(template => ({
+          Categoria: template.category,
+          Fecha_de_creacion: template.createdOn,
+          Contenido: template.data,
+          Nombre: template.elementName,
+          ID_Plantilla: template.id,
+          Idioma: template.languageCode,
+          Ultima_modificacion: template.modifiedOn,
+          Estado: template.status,
+          Tipo_Plantilla: template.templateType,
+        }));
+
+        setDatos(filteredData);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }, []);
 
   const generarReportePlan = () => {
     try {
@@ -77,10 +89,6 @@ function Reports() {
       console.error('Error al generar el reporte:', error);
     }
   };
-
-  useEffect(() => {
-    fetchTemplateData();
-  }, []);
 
   return (
     <>
