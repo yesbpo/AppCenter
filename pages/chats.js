@@ -499,233 +499,211 @@ const nuevoUserId = 0;
       
     }
   };
-  return (
+  if(session){
+    return (
     <>
-      {session ? (
-        <Layout className='big-box'>
-          <Box className='estados' onLoad={updateuser()}>
-            <ButtonContainer>
-              <CustomButton onClick={handleEngestionClick}>En gestion</CustomButton>
-              <CustomButton onClick={handlePendientesClick}>Pendientes</CustomButton>
-              <CustomButton onClick={() => console.log('Cerrados')}>Cerrados</CustomButton>
-              <CustomButton onClick={() => console.log('Agregar Número')}>Agregar Número</CustomButton>
-            </ButtonContainer>
+      
+        <Layout>
+        <p>Bienvenido, {session.user.type_user}!</p>        
+        <Box  onLoad={updateuser()}>
+          <ButtonContainer>
+            <CustomButton onClick={handleEngestionClick}>En gestion</CustomButton>
+             {/* Mostrar Activos si 'mostrarActivos' es true */}
+            <CustomButton onClick={handlePendientesClick}>Pendientes</CustomButton>
+            <CustomButton onClick={() => console.log('Cerrados')}>Cerrados</CustomButton>
+            <CustomButton onClick={() => console.log('Agregar Número')}>Agregar Número</CustomButton>
+          </ButtonContainer>
+        </Box>
+        <Container>
+          <Box>
+          <h2>Chat {numeroEspecifico}</h2>
+            <ContainerBox ref={containerRef}>
+              <div>
+        
+        
+        {(() => {
+    // Filtra los mensajes por el número específico y contenido no vacío
+    const mensajesFiltrados = mensajes1
+      .filter((mensaje) => mensaje.number === numeroEspecifico && mensaje.content && mensaje.content.trim() !== '')
+      .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)); // Ordena los mensajes por fecha
+  
+    // Mapea y renderiza los mensajes ordenados
+    return mensajesFiltrados.map((mensaje, index) => (
+      <div
+        key={index}
+        className={`mensaje ${mensaje.type_message} ${
+          mensaje.type_comunication === 'message-event' ? 'bg-white text-right' : 'bg-green-500 text-left'
+        } p-4 mb-4`}
+      >
+        {mensaje.type_message === 'image' ? (
+          <img src={mensaje.content} alt="Imagen" className="w-full" />
+        ) : mensaje.type_message === 'audio' ? (
+          <audio controls>
+            <source src={mensaje.content} type="audio/mp3" />
+            Tu navegador no soporta el elemento de audio.
+          </audio>
+        ) : mensaje.type_message === 'sticker' ? (
+          <img src={mensaje.content} alt="Sticker" className="w-20" />
+        ) : mensaje.type_message === 'video' ? (
+          <video controls className="w-full">
+            <source src={mensaje.content} type="video/mp4" />
+            Tu navegador no soporta el elemento de video.
+          </video>
+        ) : mensaje.type_message === 'file' ? (
+          <a href={mensaje.content} target="_blank" rel="noopener noreferrer" className="text-blue-500">
+            Descargar documento
+          </a>
+        ) : (
+          <>
+            <p className="mb-2">{mensaje.content && mensaje.content.trim()}</p>
+            <span className="text-gray-500">{mensaje.timestamp}</span>
+          </>
+        )}
+      </div>
+    ));
+  })()}
+      </div> 
+        </ContainerBox>
+            <InputContainer>
+              <InputMensaje
+                type="text"
+                placeholder="Escribe un mensaje..."
+                value={inputValue}
+                onKeyDown={manejarPresionarEnter}
+                onChange={(e) =>
+                  setInputValue(e.target.value)
+                }
+              />
+               <button onClick={toggleEmojiPicker}>😊</button>
+            </InputContainer>
+            {showEmojiPicker && (
+            <EmojiPicker
+              onEmojiClick={(emoji) => handleAddEmoji(emoji.emoji)}
+              disableAutoFocus
+            />
+          )}
+            <BotonEnviar onClick={enviarMensaje} >Enviar</BotonEnviar>
+            <button onClick={actualizarEstadoChat} >Gestionar</button><button  onClick={actualizarEstadoChatCerrados}>Cerrar</button>
+            <div>
+        <input type="file" onChange={handleFileChange} />
+        <button onClick={handleUpload}>Subir Archivo</button>
+      </div>
           </Box>
-          <Container>
-            <Box className='container-messages'>
-              <ContainerBox>
-                <div className='message-list'>
-                  <h2>Chat {numeroEspecifico}</h2>
-                  {(() => {
-                    const mensajesFiltrados = mensajes1.filter(
-                      (mensaje) => mensaje.number === numeroEspecifico && mensaje.content && mensaje.content.trim() !== ''
-                    );
-                    return mensajesFiltrados.map((mensaje, index) => (
-                      <div
-                        key={index}
-                        className={`mensaje ${mensaje.type_message} ${
-                          mensaje.type_comunication === 'message-event' ? 'bg-white text-right' : 'bg-green-500 text-left'
-                        } p-4 mb-4`}
-                      >
-                        {mensaje.type_message === 'image' ? (
-                          <img src={mensaje.content} alt="Imagen" className="w-full" />
-                        ) : mensaje.type_message === 'audio' ? (
-                          <audio controls>
-                            <source src={mensaje.content} type="audio/mp3" />
-                            Tu navegador no soporta el elemento de audio.
-                          </audio>
-                        ) : mensaje.type_message === 'sticker' ? (
-                          <img src={mensaje.content} alt="Sticker" className="w-20" />
-                        ) : mensaje.type_message === 'video' ? (
-                          <video controls className="w-full">
-                            <source src={mensaje.content} type="video/mp4" />
-                            Tu navegador no soporta el elemento de video.
-                          </video>
-                        ) : mensaje.type_message === 'file' ? (
-                          <a href={mensaje.content} target="_blank" rel="noopener noreferrer" className="text-blue-500">
-                            Descargar documento
-                          </a>
-                        ) : (
-                          <>
-                            <p className="mb-2">{mensaje.content && mensaje.content.trim()}</p>
-                            <span className="text-gray-500">{mensaje.timestamp}</span>
-                          </>
-                        )}
-                      </div>
-                    ));
-                  })()}
-                </div>
-              </ContainerBox>
-              <div className='input-container'>
-                <InputContainer className='input-box'>
-                  <InputMensaje
-                    className='input-message'
-                    type="text"
-                    placeholder="Escribe un mensaje..."
-                    value={inputValue}
-                    onKeyDown={manejarPresionarEnter}
-                    onChange={(e) => setInputValue(e.target.value)}
-                  />
-                  <button className='buttons' onClick={toggleEmojiPicker}>
-                    😊
-                  </button>
-                </InputContainer>
-                {showEmojiPicker && (
-                  <div className='emoji-picker-container'>
-                    <EmojiPicker onEmojiClick={(emoji) => handleAddEmoji(emoji.emoji)} disableAutoFocus />
-                  </div>
-                )}
-              </div>
-              <div className='action-buttons'>
-                <BotonEnviar className='BotonEnviar' onClick={enviarMensaje}></BotonEnviar>
-                <button className='state' onClick={actualizarEstadoChat}>
-                  Gestionar
-                </button>{' '}
-                <button className='state'>Cerrar</button>
-                <div className='file' style={{ display: 'flex', gap: '5px' }}>
-                  <label htmlFor='file-input'>
-                    <button style={{ width: '150px' }}>Adjuntar archivo</button>
-                  </label>
-                  <input type="file" id='file-input' onChange={handleFileChange} style={{ display: 'none' }} />
-                  <button style={{ width: '150px', height: '44px' }} onClick={handleUpload}>
-                    Subir Archivo
-                  </button>
-                </div>
-              </div>
-            </Box>
-            <Box className='box-number-list'>
-              {mostrarPendientes && <Pendientes mensajes={mensajes} acivarengestion={mostrarEngestion} />}
-              <div className='chat-container'>
-                <ul className='number-list'>
-                  {contactos1.map((contacto, index) => (
-                    <li key={index}>
-                      <CustomButton onClick={() => setNumeroEspecifico(contacto.idChat2)}>
-                        Usuario:{contacto.idChat2}
-                      </CustomButton>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </Box>
-          </Container>
-        </Layout>
-      ) : (
-        <div className="flex flex-col items-center justify-center h-screen">
-          <p className="mb-4">Not signed in</p>
-          <button
-            onClick={() => signIn()}
-            className="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded"
-          >
-            Sign in
-          </button>
-        </div>
-      )}
+          <Box>
+          
+            <div className="chat-container">
+              <h1>{statuschats}</h1>
+              <ul>
+                {contactos1.map((contacto, index) => (
+                  <li key={index}>
+                    
+                    <CustomButton onClick={() => setNumeroEspecifico(contacto.idChat2)}>Usuario:{contacto.idChat2}</CustomButton>
+                     
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Box>
+        </Container>
+      </Layout>
+        </>
+    )}
+    return (
+      <>
+      <div className="flex flex-col items-center justify-center h-screen">
+        <p className="mb-4">Not signed in</p>
+        <button
+          onClick={() => signIn()}
+          className="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded"
+        >
+          Sign in
+        </button>
+      </div>
     </>
-  );
-};
-
-const Box = styled.div`
-  padding: 30px;
-  margin: 30px;
-  border-radius: 10px;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-
-  &.estados {
-    /* Estilos específicos para la clase 'estados' */
-  }
-
-  &.container-messages {
-    /* Estilos específicos para la clase 'container-messages' */
-  }
-
-  &.box-number-list {
-    /* Estilos específicos para la clase 'box-number-list' */
-  }
-`;
-
-const CustomButton = styled.button`
-  background-color: #4caf50;
-  color: white;
-  padding: 10px 20px;
-  font-size: 16px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  width: 100%;
-
-  &:hover {
-    background-color: #45a049;
-  }
-`;
-
-const ButtonContainer = styled.div`
-  display: flex;
-  gap: 10px;
-`;
-
-const Container = styled.div`
-  display: flex;
-  gap: 20px;
-`;
-
-const ContainerBox = styled.div`
-  background-color: #f7f7f7;
-  padding: 15px;
-  border-radius: 10px;
-  overflow-y: scroll;
-`;
-
-const InputContainer = styled.div`
-  margin-top: 5px;
-  display: flex;
-  align-items: center;
-  width: 1020px;
-`;
-
-const InputMensaje = styled.input`
-  display: flex;
-  width: 930px !important;
-  margin-left: 14px;
-  margin-bottom: 20px;
-  background-color: whitesmoke;
-  height: auto;
-  min-height: 50px;
-  max-height: 200px;
-`;
-
-const BotonEnviar = styled.button`
-  background-color: transparent;
-  color: white;
-  padding: 10px 11px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-`;
-
-const BoxMessageList = styled.div`
-  background-color: green;
-  padding: 20px;
-  align-items: center;
-  width: 100%;
-  max-width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-`;
-
-const ContainerMessages = styled.div`
-  background-color: blue;
-  flex-grow: 1;
-  margin-bottom: 20px;
-  width: 100%;
-  max-width: 1024px;
-  margin-left: auto;
-  margin-right: auto;
-  display: flex;
-`;
-
-export default Chats;
+    
+      )
+    };
+  
+  const Box = styled.div`
+    padding: 30px;
+    margin: 30px;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  `;
+  
+  const CustomButton = styled.button`
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+  
+    &:hover {
+      background-color: #45a049;
+    }
+  `;
+  
+  const ButtonContainer = styled.div`
+    display: flex;
+    gap: 10px;
+  `;
+  
+  const Container = styled.div`
+    display: flex;
+    gap: 20px;
+  `;
+  
+  const ContainerBox = styled.div`
+    background-color: #f7f7f7;
+    padding: 15px;
+    border-radius: 10px;
+    overflow-y: scroll;
+    max-height: 400px;
+    scroll-behavior: smooth;
+  `;
+  
+  const p = styled.div`
+    background-color: ${(props) => (props.tipo === 'message-event' ? '#6e6e6' : '#4caf50')};
+    color: ${(props) => (props.tipo === 'message-event' ? 'black' : 'white')};
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+  `;
+  
+  
+  
+  const InputContainer = styled.div`
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+  `;
+  
+  const InputMensaje = styled.input`
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-right: 10px;
+  `;
+  
+  const BotonEnviar = styled.button`
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  
+    &:hover {
+      background-color: #45a049;
+    }
+  `;
+  
+  export default Chats;
+  

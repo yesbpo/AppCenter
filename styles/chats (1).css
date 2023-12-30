@@ -1,0 +1,281 @@
+/*body, html {
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  box-sizing: border-box;
+}*/
+
+.Layout {
+  width: 1024px;
+  height: 768px;
+  margin: 0 auto; /* Centrar el contenedor */
+}
+
+.big-box {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.big-box h {
+  font-size: medium;
+}
+
+.container-messages {
+  background-color: white;
+  flex-grow: 1;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 1024px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/*.box-message-list {
+  background-color: green;
+  /*background-color: white;
+  padding: 20px;
+  align-items: center;
+  width: 100%;
+  max-width: 100%; 
+  height: 100%;
+  box-sizing: border-box;
+}*/
+
+
+
+.message-list {
+  background-color: whitesmoke;
+  height: 335px;
+  width: 100%;
+  overflow-y: auto;
+}
+
+.mensaje {
+  background-color: aquamarine;
+}
+
+.box-number-list {
+  background-color: whitesmoke;
+  width: 30%; /* Ajuste al ancho máximo */
+  height: 585px;
+  overflow-y: scroll;
+  
+}
+
+.number-list {
+  background-color: whitesmoke;
+  height: 585px;
+  margin-bottom: 10px;
+}
+
+.input-message {
+  display: flex;
+  width: 930px !important; /* Añadido !important para forzar el cambio */
+  margin-left: 14px;
+  margin-bottom: 20px;
+  background-color: whitesmoke;
+  height: auto;
+  min-height: 50px;
+  max-height: 200px;
+}
+
+.estados {
+  max-width: 1024px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 15px;
+}
+
+.buttons {
+  display: block;
+  position: relative;
+  left: -975px;
+  bottom: 10px;
+  background-color: transparent;
+}
+
+.emoji-picker-container {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1;
+}
+
+.BotonEnviar {
+  background-image: url("../enviar.png");
+  background-size: cover;
+  position: relative;
+  right: -955px;
+  bottom: 65px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin-right: auto;
+  margin-left: auto;
+  background-color: ghostwhite;
+}
+
+.state {
+  position: relative;
+  right: 10px;
+  bottom: 0;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.file {
+  margin-right: auto;
+  margin-left: auto;
+  position: relative;
+  right: -640px;
+  bottom: 45px;
+}
+
+/*.file{
+  position: relative;
+  right: 10px;
+  /*
+  right: -500px;
+  bottom: 10px;
+  border: none;
+
+}*/
+
+/*
+.Layout div{
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f0f0f0;
+}
+
+.Box div{
+  background-color: #fff;
+  margin: 10px;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.ButtonContainer div{
+  display: flex;
+  gap: 10px;
+}
+
+.CustomButton button{
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #25d366;
+  color: #fff;
+}
+
+.Container div{
+  display: flex;
+  gap: 20px;
+  flex: 1;
+  overflow: hidden;
+}
+
+.ContainerBox div{
+  flex: 1;
+  background-color: #f0f0f0;
+  padding: 15px;
+  border-radius: 8px;
+  overflow-y: auto;
+}
+
+.MessageList div{
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+
+  h2 {
+    margin-bottom: 10px;
+  }
+
+  .mensaje {
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+
+    &.message-event {
+      background-color: #e0e0e0;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    span {
+      font-size: 12px;
+      color: #777;
+    }
+  }
+}
+
+.InputContainer div{
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.InputMensaje input{
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.EmojiButton button {
+  background-color: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.BotonEnviar button{
+  background-color: #25d366;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.NumberList ul{
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  max-height: 100%;
+
+  li {
+    margin-bottom: 10px;
+    cursor: pointer;
+
+    strong {
+      cursor: pointer;
+    }
+  }
+}
+
+.NumberListContainer div{
+  width: 200px;
+  flex-shrink: 0;
+}
+*/
