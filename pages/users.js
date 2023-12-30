@@ -71,7 +71,7 @@ const CrearUsuario = () => {
           <label htmlFor="completeName" className="form-label">Complete Name:</label>
           <input type="text" className="form-control" id="completeName" value={complete_name} onChange={(e) => setComplete_name(e.target.value)} />
         </div>
-        <button type="button" className="btn btn-dark" onClick={handleCrearUsuario}>
+        <button type="button"  onClick={handleCrearUsuario}>
           Crear Usuario
         </button>
       </form>
