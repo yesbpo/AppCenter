@@ -668,9 +668,11 @@ background-color: #f7f7f7;
 padding: 15px;
 border-radius: 10px;
 overflow-y: scroll;
+max-height: 400px;
+scroll-behavior: smooth;
 `;
 
-const P = styled.div`
+const p = styled.div`
 background-color: ${(props) => (props.tipo === 'message-event' ? '#6e6e6' : '#4caf50')};
 color: ${(props) => (props.tipo === 'message-event' ? 'black' : 'white')};
 padding: 10px;
@@ -678,11 +680,12 @@ margin-bottom: 5px;
 border-radius: 5px;
 `;
 
+
+
 const InputContainer = styled.div`
-margin-top: 5px;
+margin-top: 15px;
 display: flex;
 align-items: center;
-width: 1020px;
 `;
 
 const InputMensaje = styled.input`
@@ -690,47 +693,23 @@ flex: 1;
 padding: 10px;
 border: 1px solid #ddd;
 border-radius: 5px;
-margin-left: 14px;
-margin-bottom: 20px;
-background-color: whitesmoke;
-height: auto;
-min-height: 50px;
-max-height: 200px;
+margin-right: 10px;
 `;
 
 const BotonEnviar = styled.button`
-background-color: transparent;
+background-color: #4caf50;
 color: white;
-padding: 10px 11px;
+padding: 10px 20px;
+font-size: 16px;
 border: none;
 border-radius: 5px;
 cursor: pointer;
 transition: background-color 0.3s;
+
+&:hover {
+  background-color: #45a049;
+}
 `;
 
-const BoxMessageList = styled.div`
-background-color: green;
-padding: 20px;
-align-items: center;
-width: 100%;
-max-width: 100%;
-height: 100%;
-box-sizing: border-box;
-display: flex;
-flex-direction: column;
-flex-grow: 1; /* Ajuste para ocupar todo el espacio disponible */
-`;
-
-const ContainerMessages = styled.div`
-background-color: blue;
-flex-grow: 1;
-margin-bottom: 20px;
-width: 100%;
-max-width: 1024px;
-margin-left: auto;
-margin-right: auto;
-display: flex; /* Añadido display flex para que los elementos hijos ocupen todo el espacio */
-`;
-  
   export default Chats;
   
