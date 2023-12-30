@@ -113,12 +113,13 @@ const Sidebar = (props) => {
           <div className="flex items-center justify-between relative">
             <div className="flex items-center ml-8">
               <BadgeCheckIcon className="h-24 w-24 text-light-lighter" />
+              <h1>{session.user.name}</h1>
+
             </div>
             {isCollapsible && (
               <button className={collapseIconClasses} onClick={handleSidebarToggle}>
                 <ChevronDoubleLeftIcon className="h-8 w-8 text-light-lighter" />
-                <h1>{session.user.name}</h1>
-              </button>
+                              </button>
             )}
           </div>
           <div className="flex flex-col items-start mt-24 m-8">
