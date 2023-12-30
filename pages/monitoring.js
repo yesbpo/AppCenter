@@ -653,15 +653,6 @@ setWebhookData(webhookText);
 })()}
     </div> 
       </ContainerBox>
-          
-    
-        
-          
-          <button onClick={actualizarEstadoChat} >Gestionar</button><button >Cerrar</button>
-          <div>
-      <input type="file" onChange={handleFileChange} />
-      <button onClick={handleUpload}>Subir Archivo</button>
-    </div>
         </Box>
         <Box>
         
