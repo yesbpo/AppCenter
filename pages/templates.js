@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useMemo } from 'react';
+//import {Rox, Col, Form} from 'react-bootstrap'
 import axios from 'axios';
 import Layout from '../components/Layout';
 import styled from 'styled-components';
 import EmojiPicker from 'emoji-picker-react';
-import session from 'redux-persist/lib/storage/session';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { useSession, signIn } from 'next-auth/react';
-
 const Reports = (props) => {
   const { data: session } = useSession()
   const [responseData, setResponseData] = useState(null);
@@ -206,7 +206,7 @@ const handleCreateTemplate = async () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://3d29bmtd-8080.use2.devtunnels.ms/gupshup-templates');
+        const response = await fetch('https://appcenteryes.appcenteryes.com/w/gupshup-templates');
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -231,7 +231,7 @@ const handleCreateTemplate = async () => {
           setError(`Error: ${data.message}`);
         }
       } catch (error) {
-        setError(Fetch `error: ${error.message}`);
+        setError(`Fetch error: ${error.message}`);
       }
     };
 
@@ -259,7 +259,7 @@ const handleCreateTemplate = async () => {
         return 'Aprobada';
       case 'PENDING':
         return 'Pendiente';
-      case 'REJECTED':
+      case 'REJECT':
         return 'Rechazada';
       default:
         return status;
@@ -284,7 +284,7 @@ const handleCreateTemplate = async () => {
 //This is the application to delete the templates
   const handleDeleteTemplate = async (elementName) => {
     try {
-      const response = await axios.delete(`https://3d29bmtd-8080.use2.devtunnels.ms/deleteTemplate/${elementName}`);
+      const response = await axios.delete(`https://appcenteryes.appcenteryes.com/w/deleteTemplate/${elementName}`);
 
       if (response.status === 200 && response.data.status === 'success') {
         const updatedTemplates = templates.filter((template) => template.elementName !== elementName);
@@ -314,11 +314,11 @@ const handleCreateTemplate = async () => {
     };
   }, [deleteMessage]);
 
-if(session)
-  {return (
-    <Layout>
+  if(session){
+  return (
+    <Layout >
       <Container>
-        <Button onClick={handleToggleTemplateButtons}>Creación de Plantillas</Button>
+        <Button onClick={handleToggleTemplateButtons} style={{fontWeight: 'bold',margin:'20px'}}>Crear Plantilla</Button>
         {showTemplateButtons && (
           <TemplateButtons>
             {['TEXT', 'IMAGE', 'VIDEO', 'DOCUMENT'].map(type => (
@@ -332,6 +332,8 @@ if(session)
 
       {(selectedTemplateType === 'TEXT' || selectedTemplateType === 'IMAGE' || selectedTemplateType === 'VIDEO' || selectedTemplateType === 'DOCUMENT') && (
         <>
+      
+        <div className='templateStyle'>
           <label>
             Nombre plantilla:
             <input
@@ -392,6 +394,7 @@ if(session)
           onChange={(e) => setHeader(e.target.value)}
           maxLength={160}
         />
+        <button onClick={handleAddPlaceholder}>Agregar variable</button>
       </label>
 
       <Separador />
@@ -408,37 +411,38 @@ if(session)
   )}
 
           <Separador />
-
-          <label>
+        
+          <StyledLabel>
             Content:
-            <textarea
+            <TextArea
               value={content}
               onChange={(e) => setContent(e.target.value)}
-            />
-            <button onClick={handleAddVariable}>Agregar Variable</button>
-          </label>
-
-          <label>
-            <button onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
+            />    
+            <button 
+            onClick={handleAddVariable}>Agregar Variable</button>
+          </StyledLabel>
+          <div style={{display: 'flex'}}>
+          <StyledLabel style={{marginRight: '20px'}}>
+            <EmojiButton onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
               🙂
-            </button>
+            </EmojiButton>
             {showEmojiPicker && (
               <EmojiPicker
                 onEmojiClick={(emoji) => handleAddEmoji(emoji.emoji)}
                 disableAutoFocus
               />
             )}
-          </label>
-
+          </StyledLabel>
+          </div>
           <Separador />
 
-          <label>
+          <StyledLabel>
             Example Content:
-            <textarea
+            <TextArea
               value={exampleContent}
               onChange={(e) => setExampleContent(e.target.value)}
             />
-          </label>
+          </StyledLabel>
 
           <Separador />
 
@@ -463,6 +467,7 @@ if(session)
           </label>
 
           <Separador />
+          </div>
 
           <button onClick={handleCreateTemplate}>Crear Plantilla</button>
 
@@ -473,11 +478,13 @@ if(session)
           )}
 
         </>
-      )}
+      )
+      }
 
 <span>{deleteMessage}</span>
 
-<div>
+
+<div className='CreatedTemplates'>
         {error && <p>{error}</p>}
         {currentTemplates.length > 0 && (
           <ul>
@@ -526,24 +533,33 @@ if(session)
         Sign in
       </button>
     </div>
-  </>
-  
-    )
+  </>)
 };
 
 const Pagination = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-top: 10px;
+  margin-top: 40px;
+
+  button {
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 `;
 
-const Separador = styled.div`
-  border-bottom: 1px solid #ccc; /* Puedes ajustar el color según tus preferencias */
-  margin: 10px 0; /* Puedes ajustar el margen según tus preferencias */
+
+
+const Separador = styled.hr`
+  margin: 20px 0;
+  border: 0;
+  border-top: 1px solid #ccc;
 `;
 
 const Container = styled.div`
-  margin: 20px;
+  margin: 30px;
+  position: relative;
+  text-align: right;
 `;
 
 const Button = styled.button`
@@ -568,6 +584,61 @@ const TemplateButton = styled.button`
 const RequirementText = styled.p`
   color: #555;
   font-size: 12px;
+`;
+
+const StyledLabel = styled.label`
+  display: block;
+  margin-bottom: 15px;
+`;
+
+const TextArea = styled.textarea`
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical; /* Permite que el textarea sea redimensionado verticalmente */
+`;
+
+const EmojiButton = styled.button`
+  background-color: #128c7e;
+  color: #fff;
+  padding: 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+`;
+
+const TemplateList = styled.div`
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+`;
+
+const TemplateItem = styled.div`
+  border-bottom: 1px solid #ddd;
+  padding: 15px;
+  margin-bottom: 15px;
+
+  strong {
+    color: #128c7e;
+  }
+
+  button {
+    background-color: #dc3545;
+    color: #fff;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+  hr {
+    margin-top: 15px;
+  }
 `;
 
 export default Reports;
