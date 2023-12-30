@@ -588,7 +588,7 @@ const nuevoUserId = 0;
           </div >
           <div className='action-buttons'>
             <BotonEnviar onClick={enviarMensaje} >Enviar</BotonEnviar>
-            <button onClick={actualizarEstadoChat} >Gestionar</button><button  onClick={actualizarEstadoChatCerrados}>Cerrar</button>
+            <BotonEnviar onClick={actualizarEstadoChat} >Gestionar</BotonEnviar><BotonEnviar  onClick={actualizarEstadoChatCerrados}>Cerrar</BotonEnviar>
             <div>
         <input type="file" onChange={handleFileChange} />
         <button onClick={handleUpload}>Subir Archivo</button>

@@ -71,9 +71,9 @@ const CrearUsuario = () => {
           <label htmlFor="completeName" className="form-label">Complete Name:</label>
           <input type="text" className="form-control" id="completeName" value={complete_name} onChange={(e) => setComplete_name(e.target.value)} />
         </div>
-        <button type="button"  onClick={handleCrearUsuario}>
+        <BotonEnviar type="button" onClick={handleCrearUsuario}>
           Crear Usuario
-        </button>
+        </BotonEnviar>
       </form>
     </div>
   </div>
@@ -95,5 +95,18 @@ const CrearUsuario = () => {
       
         )
 };
+const BotonEnviar = styled.button`
+background-color: #4caf50;
+color: white;
+padding: 10px 20px;
+font-size: 16px;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+transition: background-color 0.3s;
 
+&:hover {
+  background-color: #45a049;
+}
+`;
 export default CrearUsuario;
