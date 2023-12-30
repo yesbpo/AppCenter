@@ -697,18 +697,17 @@ margin-right: 10px;
 `;
 
 const BotonEnviar = styled.button`
-background-image: url("./enviar.jpeg");
-color: white;
-padding: 10px 20px;
-font-size: 16px;
-border: none;
-border-radius: 5px;
-cursor: pointer;
-transition: background-color 0.3s;
 
-&:hover {
-  background-color: #45a049;
-}
+background-image: url("./enviar.jpeg");
+background-size: cover;
+  position: relative;
+  right: -955px;
+  bottom: 65px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin-right: auto;
+  margin-left: auto;
+  background-color: ghostwhite;
 `;
 
   export default Chats;
