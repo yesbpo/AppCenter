@@ -179,7 +179,7 @@ const Reports = (props) => {
     };
 
     try {
-      const response = await axios.post('http://localhost:5000/createTemplates', templateData);
+      const response = await axios.post('https://appcenteryes.appcenteryes.com/w/createTemplates', templateData);
 
       if (response.status >= 200 && response.status < 300) {
         setResponseData(response.data);
@@ -197,7 +197,7 @@ const Reports = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://3d29bmtd-8080.use2.devtunnels.ms/gupshup-templates');
+        const response = await fetch('https://appcenteryes.appcenteryes.com/w/gupshup-templates');
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
