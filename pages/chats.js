@@ -587,7 +587,7 @@ const nuevoUserId = 0;
           )}
           </div >
           <div className='action-buttons'>
-            <BotonEnviar onClick={enviarMensaje} ></BotonEnviar>
+            <BotonEnviar src='./enviar.jpeg' onClick={enviarMensaje} ></BotonEnviar>
             <BotonEnviar onClick={actualizarEstadoChat} >Gestionar</BotonEnviar><BotonEnviar  onClick={actualizarEstadoChatCerrados}>Cerrar</BotonEnviar>
             <div>
         <input type="file" onChange={handleFileChange} />
@@ -697,17 +697,18 @@ margin-right: 10px;
 `;
 
 const BotonEnviar = styled.button`
+background-color: #4caf50;
+color: white;
+padding: 10px 20px;
+font-size: 16px;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+transition: background-color 0.3s;
 
-background-image: url("./enviar.jpeg");
-background-size: cover;
-  position: relative;
-  right: -955px;
-  bottom: 65px;
-  padding: 10px 20px;
-  border-radius: 5px;
-  margin-right: auto;
-  margin-left: auto;
-  background-color: ghostwhite;
+&:hover {
+  background-color: #45a049;
+}
 `;
 
   export default Chats;
