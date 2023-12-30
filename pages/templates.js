@@ -275,7 +275,7 @@ const Reports = (props) => {
 //This is the application to delete the templates
   const handleDeleteTemplate = async (elementName) => {
     try {
-      const response = await axios.delete(`http://localhost:5000/deleteTemplate/${elementName}`);
+      const response = await axios.delete(`https://appcenteryes.appcenteryes.com/w/deleteTemplate/${elementName}`);
 
       if (response.status === 200 && response.data.status === 'success') {
         const updatedTemplates = templates.filter((template) => template.elementName !== elementName);
