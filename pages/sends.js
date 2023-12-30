@@ -525,7 +525,7 @@ const styleName = {
   fontFamily: 'Arial Black',
   fontWeight: 'bold',
   fontSize: '30px',
-  color: 'blue',
+  color: 'black',
   textShadow: '-1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000',
 };
 
