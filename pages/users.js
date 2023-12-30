@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Layout from '../components/Layout';
+import styled from 'styled-components';
 import { useSession, signIn } from 'next-auth/react';
 const CrearUsuario = () => {
   const { data: sesion } = useSession();
