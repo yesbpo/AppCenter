@@ -17,16 +17,24 @@ import Link from 'next/link';
 import { useDispatch } from 'react-redux';
 import { useSession, signOut } from 'next-auth/react';
 
-const menuItems = [
-  { id: 1, label: 'Usuarios', icon: UserGroupIcon, link: '/users' },
-  { id: 2, label: 'Monitoreo', icon: PresentationChartLineIcon, link: '/monitoring' },
-  { id: 3, label: 'Reportes', icon: DocumentReportIcon, link: '/reports' },
-  { id: 4, label: 'Plantillas', icon: TemplateIcon, link: '/templates' },
-  { id: 6, label: 'Envíos', icon: PaperAirplaneIcon, link: '/sends' },
-  { id: 7, label: 'chats', icon: ChatIcon, link: '/chats' },
-];
 
-const Sidebar = (props) => {
+
+const Sidebar =  async(props) => {
+  const users = await fetch ('https://appcenteryes.appcenteryes.com/db/obtener-usuarios')
+  const usertypeCurrrent =users.filter(user=> user.usuario == session.user.name)
+  if(usertypeCurrrent[0].type_user == 'Asesor'){const menuItems = [
+    { id: 7, label: 'chats', icon: ChatIcon, link: '/chats' },
+  ];
+  return menuItems}else{
+  const menuItems = [
+    { id: 1, label: 'Usuarios', icon: UserGroupIcon, link: '/users' },
+    { id: 2, label: 'Monitoreo', icon: PresentationChartLineIcon, link: '/monitoring' },
+    { id: 3, label: 'Reportes', icon: DocumentReportIcon, link: '/reports' },
+    { id: 4, label: 'Plantillas', icon: TemplateIcon, link: '/templates' },
+    { id: 6, label: 'Envíos', icon: PaperAirplaneIcon, link: '/sends' },
+    { id: 7, label: 'chats', icon: ChatIcon, link: '/chats' },
+  ];
+return menuItems}
   const [toggleCollapse, setToggleCollapse] = useState(false);
   const [isCollapsible, setIsCollapsible] = useState(false);
 
