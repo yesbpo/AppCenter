@@ -12,38 +12,40 @@ function Reports() {
   const [nombreCampaña, setNombreCampaña] = useState('');
   const [tipoMensajes, setTipoMensajes] = useState('ambos'); // Puede ser 'entrantes', 'salientes', o 'ambos'.
   const [datos, setDatos] = useState([]);
-
   const generarReporte = async () => {
     try {
       if (!fechaInicio || !fechaFin) {
         console.error('Por favor, selecciona fechas de inicio y fin.');
         return;
       }
-
-      const response = await fetch(`https://appcenteryes.appcenteryes.com/db/obtener-mensajes-fecha?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`);
-
-      if (!response.ok) {
-        throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+  
+      const response = await axios.post('https://appcenteryes.appcenteryes.com/db/obtener-mensajes-por-fecha', {
+        fechaInicio,
+        fechaFin,
+      });
+  
+      const mensajes = response.data.mensajes;
+  
+      if (mensajes.length > 0) {
+        const datosFiltrados = mensajes.map((mensaje) => ({
+          fecha: mensaje.timestamp,
+          mensaje: mensaje.content,
+          destinatario: mensaje.number,
+          tipo: mensaje.type_message,
+          estado: mensaje.status,
+          idMensaje: mensaje.idMessage,
+          // Agrega más campos según sea necesario
+        }));
+  
+        const csvData = "Fecha,Mensaje,Destinatario,Tipo,Estado,ID Mensaje\n" +
+          datosFiltrados.map((d) => `${d.fecha},${d.mensaje},${d.destinatario},${d.tipo},${d.estado},${d.idMensaje}`).join("\n");
+  
+        const blob = new Blob([csvData], { type: 'text/csv' });
+  
+        saveAs(blob, 'reporte_whatsapp.csv');
+      } else {
+        console.log('No se encontraron mensajes en el rango de fechas especificado.');
       }
-
-      const mensajes = await response.json();
-
-      const datosFiltrados = mensajes.map((mensaje) => ({
-        fecha: mensaje.timestamp,
-        mensaje: mensaje.content,
-        destinatario: mensaje.number,
-        tipo: mensaje.type_message,
-        estado: mensaje.status,
-        idMensaje: mensaje.idMessage,
-        // Agrega más campos según sea necesario
-      }));
-
-      const csvData = "Fecha,Mensaje,Destinatario,Tipo,Estado,ID Mensaje\n" +
-        datosFiltrados.map((d) => `${d.fecha},${d.mensaje},${d.destinatario},${d.tipo},${d.estado},${d.idMensaje}`).join("\n");
-
-      const blob = new Blob([csvData], { type: 'text/csv' });
-
-      saveAs(blob, 'reporte_whatsapp.csv');
     } catch (error) {
       console.error('Error al generar el reporte:', error);
     }
