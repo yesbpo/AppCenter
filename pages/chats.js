@@ -516,96 +516,105 @@ const nuevoUserId = 0;
           </ButtonContainer>
         </Box>
         <Container>
-          <Box className='container-messages'>
-          <h2>Chat {numeroEspecifico}</h2>
-            <ContainerBox ref={containerRef}>
-              <div className='message-list'>
-        
-        
+        <Box className='container-messages flex'>
+  {/* Contenedor del chat */}
+  <div className='chat-container'>
+    <h2>Chat {numeroEspecifico}</h2>
+    <ContainerBox ref={containerRef}>
+      <div className='message-list'>
         {(() => {
-    // Filtra los mensajes por el número específico y contenido no vacío
-    const mensajesFiltrados = mensajes1
-      .filter((mensaje) => mensaje.number === numeroEspecifico && mensaje.content && mensaje.content.trim() !== '')
-      .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)); // Ordena los mensajes por fecha
-  
-    // Mapea y renderiza los mensajes ordenados
-    return mensajesFiltrados.map((mensaje, index) => (
-      <div
-        key={index}
-        className={`mensaje ${mensaje.type_message} ${
-          mensaje.type_comunication === 'message-event' ? 'bg-white text-right' : 'bg-green-500 text-left'
-        } p-4 mb-4`}
-      >
-        {mensaje.type_message === 'image' ? (
-          <img src={mensaje.content} alt="Imagen" className="w-full" />
-        ) : mensaje.type_message === 'audio' ? (
-          <audio controls>
-            <source src={mensaje.content} type="audio/mp3" />
-            Tu navegador no soporta el elemento de audio.
-          </audio>
-        ) : mensaje.type_message === 'sticker' ? (
-          <img src={mensaje.content} alt="Sticker" className="w-20" />
-        ) : mensaje.type_message === 'video' ? (
-          <video controls className="w-full">
-            <source src={mensaje.content} type="video/mp4" />
-            Tu navegador no soporta el elemento de video.
-          </video>
-        ) : mensaje.type_message === 'file' ? (
-          <a href={mensaje.content} target="_blank" rel="noopener noreferrer" className="text-blue-500">
-            Descargar documento
-          </a>
-        ) : (
-          <>
-            <p className="mb-2">{mensaje.content && mensaje.content.trim()}</p>
-            <span className="text-gray-500">{mensaje.timestamp}</span>
-          </>
-        )}
+          // Filtra los mensajes por el número específico y contenido no vacío
+          const mensajesFiltrados = mensajes1
+            .filter((mensaje) => mensaje.number === numeroEspecifico && mensaje.content && mensaje.content.trim() !== '')
+            .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)); // Ordena los mensajes por fecha
+
+          // Mapea y renderiza los mensajes ordenados
+          return mensajesFiltrados.map((mensaje, index) => (
+            <div
+              key={index}
+              className={`mensaje ${mensaje.type_message} ${
+                mensaje.type_comunication === 'message-event' ? 'bg-white text-right' : 'bg-green-500 text-left'
+              } p-4 mb-4`}
+            >
+              {mensaje.type_message === 'image' ? (
+                <img src={mensaje.content} alt="Imagen" className="w-full" />
+              ) : mensaje.type_message === 'audio' ? (
+                <audio controls>
+                  <source src={mensaje.content} type="audio/mp3" />
+                  Tu navegador no soporta el elemento de audio.
+                </audio>
+              ) : mensaje.type_message === 'sticker' ? (
+                <img src={mensaje.content} alt="Sticker" className="w-20" />
+              ) : mensaje.type_message === 'video' ? (
+                <video controls className="w-full">
+                  <source src={mensaje.content} type="video/mp4" />
+                  Tu navegador no soporta el elemento de video.
+                </video>
+              ) : mensaje.type_message === 'file' ? (
+                <a href={mensaje.content} target="_blank" rel="noopener noreferrer" className="text-blue-500">
+                  Descargar documento
+                </a>
+              ) : (
+                <>
+                  <p className="mb-2">{mensaje.content && mensaje.content.trim()}</p>
+                  <span className="text-gray-500">{mensaje.timestamp}</span>
+                </>
+              )}
+            </div>
+          ));
+        })()}
       </div>
-    ));
-  })()}
-      </div> 
-        </ContainerBox>
-        <div className='input-container'>
-            <InputContainer className='input-box'>
-              <InputMensaje
-                type="text"
-                placeholder="Escribe un mensaje..."
-                value={inputValue}
-                onKeyDown={manejarPresionarEnter}
-                onChange={(e) =>
-                  setInputValue(e.target.value)
-                }
-              />
-               <button onClick={toggleEmojiPicker}>😊</button>
-            </InputContainer>
-            {showEmojiPicker && (
-            <EmojiPicker
-              onEmojiClick={(emoji) => handleAddEmoji(emoji.emoji)}
-              disableAutoFocus
-            />
-          )}
-          </div >
-          <div className='action-buttons'>
-            <BotonEnviar  onClick={enviarMensaje} ><PaperAirplaneIcon className="h-5 w-5" /></BotonEnviar>
-            <BotonEnviar onClick={actualizarEstadoChat} >Gestionar</BotonEnviar><BotonEnviar  onClick={actualizarEstadoChatCerrados}>Cerrar</BotonEnviar>
-            <div>
+    </ContainerBox>
+
+    {/* Contenedor de entrada y botones */}
+    <div className='input-container'>
+      <InputContainer className='input-box'>
+        <InputMensaje
+          type="text"
+          placeholder="Escribe un mensaje..."
+          value={inputValue}
+          onKeyDown={manejarPresionarEnter}
+          onChange={(e) => setInputValue(e.target.value)}
+        />
+        <button onClick={toggleEmojiPicker}>😊</button>
+      </InputContainer>
+      {showEmojiPicker && (
+        <EmojiPicker
+          onEmojiClick={(emoji) => handleAddEmoji(emoji.emoji)}
+          disableAutoFocus
+        />
+      )}
+    </div>
+
+    {/* Botones de acción */}
+    <div className='action-buttons'>
+      <BotonEnviar onClick={enviarMensaje}><PaperAirplaneIcon className="h-5 w-5" /></BotonEnviar>
+      <BotonEnviar onClick={actualizarEstadoChat}>Gestionar</BotonEnviar>
+      <BotonEnviar onClick={actualizarEstadoChatCerrados}>Cerrar</BotonEnviar>
+      <div>
         <input type="file" onChange={handleFileChange} />
         <button onClick={handleUpload}>Subir Archivo</button>
       </div>
-      </div>  <Box>
-            <div className="chat-container">
-              <h1>{statuschats}</h1>
-              <ul>
-                {contactos1.map((contacto, index) => (
-                  <li key={index}>
-                    <CustomButton onClick={() => setNumeroEspecifico(contacto.idChat2)}>Usuario:{contacto.idChat2}</CustomButton>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </Box> 
-          </Box>
-          
+    </div>
+  </div>
+
+  {/* Contenedor de contactos */}
+  <Box>
+    <div className="contact-list-container">
+      <h1>{statuschats}</h1>
+      <ul>
+        {contactos1.map((contacto, index) => (
+          <li key={index}>
+            <CustomButton onClick={() => setNumeroEspecifico(contacto.idChat2)}>
+              Usuario: {contacto.idChat2}
+            </CustomButton>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </Box>
+</Box>
+  
         </Container>
       </Layout>
         </>
