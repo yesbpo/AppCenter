@@ -504,14 +504,108 @@ const nuevoUserId = 0;
       {session ? (
         <Layout className='big-box'>
           <Box className='estados' onLoad={updateuser()}>
-            {/* ... (Contenido del componente Box) */}
+            <ButtonContainer>
+              <CustomButton onClick={handleEngestionClick}>En gestion</CustomButton>
+              <CustomButton onClick={handlePendientesClick}>Pendientes</CustomButton>
+              <CustomButton onClick={() => console.log('Cerrados')}>Cerrados</CustomButton>
+              <CustomButton onClick={() => console.log('Agregar Número')}>Agregar Número</CustomButton>
+            </ButtonContainer>
           </Box>
           <Container>
             <Box className='container-messages'>
-              {/* ... (Contenido del componente Box con la clase container-messages) */}
+              <ContainerBox>
+                <div className='message-list'>
+                  <h2>Chat {numeroEspecifico}</h2>
+                  {(() => {
+                    const mensajesFiltrados = mensajes1.filter(
+                      (mensaje) => mensaje.number === numeroEspecifico && mensaje.content && mensaje.content.trim() !== ''
+                    );
+                    return mensajesFiltrados.map((mensaje, index) => (
+                      <div
+                        key={index}
+                        className={`mensaje ${mensaje.type_message} ${
+                          mensaje.type_comunication === 'message-event' ? 'bg-white text-right' : 'bg-green-500 text-left'
+                        } p-4 mb-4`}
+                      >
+                        {mensaje.type_message === 'image' ? (
+                          <img src={mensaje.content} alt="Imagen" className="w-full" />
+                        ) : mensaje.type_message === 'audio' ? (
+                          <audio controls>
+                            <source src={mensaje.content} type="audio/mp3" />
+                            Tu navegador no soporta el elemento de audio.
+                          </audio>
+                        ) : mensaje.type_message === 'sticker' ? (
+                          <img src={mensaje.content} alt="Sticker" className="w-20" />
+                        ) : mensaje.type_message === 'video' ? (
+                          <video controls className="w-full">
+                            <source src={mensaje.content} type="video/mp4" />
+                            Tu navegador no soporta el elemento de video.
+                          </video>
+                        ) : mensaje.type_message === 'file' ? (
+                          <a href={mensaje.content} target="_blank" rel="noopener noreferrer" className="text-blue-500">
+                            Descargar documento
+                          </a>
+                        ) : (
+                          <>
+                            <p className="mb-2">{mensaje.content && mensaje.content.trim()}</p>
+                            <span className="text-gray-500">{mensaje.timestamp}</span>
+                          </>
+                        )}
+                      </div>
+                    ));
+                  })()}
+                </div>
+              </ContainerBox>
+              <div className='input-container'>
+                <InputContainer className='input-box'>
+                  <InputMensaje
+                    className='input-message'
+                    type="text"
+                    placeholder="Escribe un mensaje..."
+                    value={inputValue}
+                    onKeyDown={manejarPresionarEnter}
+                    onChange={(e) => setInputValue(e.target.value)}
+                  />
+                  <button className='buttons' onClick={toggleEmojiPicker}>
+                    😊
+                  </button>
+                </InputContainer>
+                {showEmojiPicker && (
+                  <div className='emoji-picker-container'>
+                    <EmojiPicker onEmojiClick={(emoji) => handleAddEmoji(emoji.emoji)} disableAutoFocus />
+                  </div>
+                )}
+              </div>
+              <div className='action-buttons'>
+                <BotonEnviar className='BotonEnviar' onClick={enviarMensaje}></BotonEnviar>
+                <button className='state' onClick={actualizarEstadoChat}>
+                  Gestionar
+                </button>{' '}
+                <button className='state'>Cerrar</button>
+                <div className='file' style={{ display: 'flex', gap: '5px' }}>
+                  <label htmlFor='file-input'>
+                    <button style={{ width: '150px' }}>Adjuntar archivo</button>
+                  </label>
+                  <input type="file" id='file-input' onChange={handleFileChange} style={{ display: 'none' }} />
+                  <button style={{ width: '150px', height: '44px' }} onClick={handleUpload}>
+                    Subir Archivo
+                  </button>
+                </div>
+              </div>
             </Box>
             <Box className='box-number-list'>
-              {/* ... (Contenido del componente Box con la clase box-number-list) */}
+              {mostrarPendientes && <Pendientes mensajes={mensajes} acivarengestion={mostrarEngestion} />}
+              <div className='chat-container'>
+                <ul className='number-list'>
+                  {contactos1.map((contacto, index) => (
+                    <li key={index}>
+                      <CustomButton onClick={() => setNumeroEspecifico(contacto.idChat2)}>
+                        Usuario:{contacto.idChat2}
+                      </CustomButton>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </Box>
           </Container>
         </Layout>
@@ -582,6 +676,56 @@ const ContainerBox = styled.div`
   overflow-y: scroll;
 `;
 
-// ... (Otros estilos según sea necesario)
+const InputContainer = styled.div`
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  width: 1020px;
+`;
+
+const InputMensaje = styled.input`
+  display: flex;
+  width: 930px !important;
+  margin-left: 14px;
+  margin-bottom: 20px;
+  background-color: whitesmoke;
+  height: auto;
+  min-height: 50px;
+  max-height: 200px;
+`;
+
+const BotonEnviar = styled.button`
+  background-color: transparent;
+  color: white;
+  padding: 10px 11px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+`;
+
+const BoxMessageList = styled.div`
+  background-color: green;
+  padding: 20px;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+`;
+
+const ContainerMessages = styled.div`
+  background-color: blue;
+  flex-grow: 1;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 1024px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+`;
 
 export default Chats;
