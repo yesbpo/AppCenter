@@ -11,7 +11,7 @@
 
 .styleName{
     text-align: center;
-    background-color: #25d366;
+    background-color: #128c7e;
     padding: 8px;
     border-radius: 8px;
     color: #fff;
@@ -54,7 +54,7 @@
 /*Estilo para los botones*/
 
 button {
-    background-color: #25d366; /* Color verde de WhatsApp */
+    background-color: #128c7e; /* Color verde de WhatsApp */
     color: #fff;
     padding: 10px 15px;
     font-size: 16px;
