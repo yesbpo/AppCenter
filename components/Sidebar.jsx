@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import '../styles/sidebar.css'
+
 import classNames from 'classnames';
 import {
   BadgeCheckIcon,
