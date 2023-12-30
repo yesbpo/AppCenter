@@ -516,7 +516,7 @@ const nuevoUserId = 0;
           </ButtonContainer>
         </Box>
         <Container>
-        <Box className='container-messages w-40vw flex'>
+        <Box className='container-messages w-50vw h-40vh flex'>
   {/* Contenedor del chat */}
   <div className='chat-container'>
     <h2>Chat {numeroEspecifico}</h2>
