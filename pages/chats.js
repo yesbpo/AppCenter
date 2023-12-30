@@ -567,7 +567,6 @@ const nuevoUserId = 0;
         </ContainerBox>
         <div className='input-container'>
             <InputContainer className='input-box'>
-            
               <InputMensaje
                 type="text"
                 placeholder="Escribe un mensaje..."
@@ -587,7 +586,7 @@ const nuevoUserId = 0;
           )}
           </div >
           <div className='action-buttons'>
-            <BotonEnviar src='./enviar.jpeg' onClick={enviarMensaje} ></BotonEnviar>
+            <button src='./enviar.jpeg' onClick={enviarMensaje} ></button>
             <BotonEnviar onClick={actualizarEstadoChat} >Gestionar</BotonEnviar><BotonEnviar  onClick={actualizarEstadoChatCerrados}>Cerrar</BotonEnviar>
             <div>
         <input type="file" onChange={handleFileChange} />
@@ -596,15 +595,12 @@ const nuevoUserId = 0;
       </div>   
           </Box>
           <Box>
-          
             <div className="chat-container">
               <h1>{statuschats}</h1>
               <ul>
                 {contactos1.map((contacto, index) => (
                   <li key={index}>
-                    
                     <CustomButton onClick={() => setNumeroEspecifico(contacto.idChat2)}>Usuario:{contacto.idChat2}</CustomButton>
-                     
                   </li>
                 ))}
               </ul>
