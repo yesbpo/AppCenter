@@ -121,6 +121,7 @@ const Sends = (props) => {
     const worksheet = workbook.Sheets[workbook.SheetNames[0]];
     const raw_data = XLSX.utils.sheet_to_row_object_array(worksheet);
     setSheetname(raw_data);
+    setShowFileContent(true);
   };
 
   function asignarDestino(e) {
@@ -201,10 +202,18 @@ const Sends = (props) => {
       for (let rowIndex = 0; rowIndex < sheetname.length; rowIndex++) {
         const dest = sheetname[rowIndex];
         const destinationNumber = String(dest[selectvar]);
-        const formattedDestination = destinationNumber.startsWith("57") ? destinationNumber : `57${destinationNumber}`;
+        const formattedDestination = destinationNumber.padStart(10, '0');
+        const variableValues = {};
+        Object.keys(variableColumnMapping).forEach((variable) => {
+          const columnIndex = variableColumnMapping[variable];
+          if (columnIndex !== undefined && sheetname[rowIndex][columnIndex] !== undefined) {
+            variableValues[variable] = sheetname[rowIndex][columnIndex];
+          }
+        });
+        setVariableValues(variableValues);
 
         const updatedCustomParams = {};
-        Object.keys(variableColumnMapping).forEach((variable) => {
+        Object.keys(customParams).forEach((variable) => {
           const columnIndex = variableColumnMapping[variable];
           if (columnIndex !== undefined && sheetname[rowIndex][columnIndex] !== undefined) {
             updatedCustomParams[variable] = sheetname[rowIndex][columnIndex];
