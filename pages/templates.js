@@ -4,7 +4,7 @@ import axios from 'axios';
 import Layout from '../components/Layout';
 import styled from 'styled-components';
 import EmojiPicker from 'emoji-picker-react';
-import 'bootstrap/dist/css/bootstrap.min.css';
+
 import { useSession, signIn } from 'next-auth/react';
 const Reports = (props) => {
   const { data: session } = useSession()
