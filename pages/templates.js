@@ -156,7 +156,7 @@ const Reports = (props) => {
 
 //This function is to alert the user that the indicated fields are missing.  
   const handleCreateTemplate = async () => {
-    if (!content || !exampleContent || !exampleMedia) {
+    if (!content || !exampleContent ) {
       showTemporaryMessage('Por favor, complete los campos de contenido, contenido de ejemplo y archivo multimedia.');
       return;
     }
