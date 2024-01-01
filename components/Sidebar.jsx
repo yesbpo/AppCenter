@@ -112,7 +112,7 @@ const Sidebar = (props) => {
         <div className="flex flex-col">
           <div className="flex items-center justify-between relative">
             <div className="flex items-center ml-8">
-              <BadgeCheckIcon className="h-24 w-24 text-light-lighter" />
+              <img src="https://1bb437.a2cdn1.secureserver.net/wp-content/uploads/2023/08/Logo-500-full-150x150.jpg" alt="imagen" />
               <h1>{session.user.name}</h1>
 
             </div>
