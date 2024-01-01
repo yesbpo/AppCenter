@@ -40,7 +40,8 @@ function LoginPage() {
         )}
 
         <h1 className="text-slate-200 font-bold text-4xl mb-4">Login</h1>
-         <img  className="p-3 rounded block mb-2 bg-slate-900 text-slate-300 w-5vw" src="https://1bb437.a2cdn1.secureserver.net/wp-content/uploads/2023/08/Logo-500-full-150x150.jpg"></img>
+        <img className="p-3 rounded block mb-2 bg-slate-900 text-slate-300 mx-auto my-auto" src="https://1bb437.a2cdn1.secureserver.net/wp-content/uploads/2023/08/Logo-500-full-150x150.jpg" alt="Logo" />
+
         <label htmlFor="email" className="text-slate-500 mb-2 block text-sm">
           Usuario:
         </label>
