@@ -34,7 +34,7 @@ const Sidebar = async (props) => {
   const [isCollapsible, setIsCollapsible] = useState(false);
 
   const generalUsers = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-usuarios')
-  const users = generalUsers.json();
+  const users = await generalUsers.json();
   const currentUser = users.filter(user => user.usuario == session.user.name)
   const selectedItems = currentUser.type_user === 'Asesor' ? menuItems1 : menuItems;
   // Routing.
