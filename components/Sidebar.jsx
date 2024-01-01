@@ -24,18 +24,22 @@ const menuItems = [
   { id: 4, label: 'Plantillas', icon: TemplateIcon, link: '/templates' },
   { id: 6, label: 'Envíos', icon: PaperAirplaneIcon, link: '/sends' },
   { id: 7, label: 'chats', icon: ChatIcon, link: '/chats' },
-];
+]
+const menuItems1 = [
+  { id: 7, label: 'chats', icon: ChatIcon, link: '/chats' },
+]
 
-const Sidebar = (props) => {
+const Sidebar = async (props) => {
   const [toggleCollapse, setToggleCollapse] = useState(false);
   const [isCollapsible, setIsCollapsible] = useState(false);
 
-  // Redux state.
-  const dispatch = useDispatch();
-
+  const generalUsers = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-usuarios')
+  const users = generalUsers.json();
+  const currentUser = users.filter(user => user.usuario == session.user.name)
+  const selectedItems = currentUser.type_user === 'Asesor' ? menuItems1 : menuItems;
   // Routing.
   const router = useRouter();
-  const activeMenu = useMemo(() => menuItems.find((menu) => menu.link === router.pathname), [
+  const activeMenu = useMemo(() => selectedItems.find((menu) => menu.link === router.pathname), [
     router.pathname,
   ]);
 
@@ -123,7 +127,7 @@ const Sidebar = (props) => {
             )}
           </div>
           <div className="flex flex-col items-start mt-24 m-8">
-            {menuItems.map(({ icon: Icon, ...menu }) => {
+            {selectedItems.map(({ icon: Icon, ...menu }) => {
               const classes = getNavItemClasses(menu);
               return (
                 // eslint-disable-next-line react/jsx-key
