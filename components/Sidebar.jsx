@@ -140,7 +140,7 @@ const Sidebar = (props) => {
                               </button>
             )}
           </div>
-          <div className="h-full flex flex-col items-start mt-24 m-8">
+          <div className="h-full flex flex-col items-start mt-2 m-8">
             {selectedItems.map(({ icon: Icon, ...menu }) => {
               const classes = getNavItemClasses(menu);
               return (
