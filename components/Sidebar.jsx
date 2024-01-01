@@ -41,7 +41,7 @@ const Sidebar = (props) => {
         const usersData = await generalUsers.json();
         const currentUser = usersData.filter((u) => u.usuario == session.user.name)
         setUsers(currentUser);
-        console.log(currentUser.usuario)
+        console.log(currentUser[0].usuario)
       } catch (error) {
         console.error('Error fetching users:', error);
       }
