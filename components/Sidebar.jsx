@@ -41,7 +41,7 @@ const Sidebar = (props) => {
         const usersData = await generalUsers.json();
         const currentUser = usersData.filter((u) => u.usuario == session.user.name)
         setUsers(currentUser);
-        console.log(currentUser[0].usuario)
+        console.log(currentUser)
       } catch (error) {
         console.error('Error fetching users:', error);
       }
@@ -50,7 +50,7 @@ const Sidebar = (props) => {
     fetchData();
   }, []);
   
-  const selectedItems = users[0].type_user === 'Asesor' ? menuItems1 : menuItems;
+  const selectedItems = users.type_user === 'Asesor' ? menuItems1 : menuItems;
   // Routing.
   const router = useRouter();
   const activeMenu = useMemo(() => selectedItems.find((menu) => menu.link === router.pathname), [
