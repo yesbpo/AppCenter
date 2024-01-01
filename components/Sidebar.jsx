@@ -32,10 +32,10 @@ const menuItems1 = [
 const Sidebar = async (props) => {
   const [toggleCollapse, setToggleCollapse] = useState(false);
   const [isCollapsible, setIsCollapsible] = useState(false);
-
+  const { data: session } = useSession();
   const generalUsers = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-usuarios')
   const users = await generalUsers.json();
-  const currentUser = users.filter(user => user.usuario == session.user.name)
+  const currentUser = users.filter((user) => user.usuario == session.user.name)
   const selectedItems = currentUser.type_user === 'Asesor' ? menuItems1 : menuItems;
   // Routing.
   const router = useRouter();
@@ -100,7 +100,7 @@ const Sidebar = async (props) => {
     }
   };
 
-  const { data: session } = useSession();
+  
 
   if (session) {
     // TODO: - Change the icon for an actual logo
