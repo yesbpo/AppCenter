@@ -127,7 +127,7 @@ const Sidebar = (props) => {
           transition: 'width 300ms cubic-bezier(0.2, 0, 0, 1) 0s',
         }}
       >
-        <div className="flex flex-col">
+        <div className="h-full flex flex-col">
           <div className="flex items-center justify-between relative">
             <div className="flex items-center ml-8">
               <BadgeCheckIcon className="h-24 w-24 text-light-lighter" />
@@ -140,7 +140,7 @@ const Sidebar = (props) => {
                               </button>
             )}
           </div>
-          <div className="flex flex-col items-start mt-24 m-8">
+          <div className="h-full flex flex-col items-start mt-24 m-8">
             {selectedItems.map(({ icon: Icon, ...menu }) => {
               const classes = getNavItemClasses(menu);
               return (
