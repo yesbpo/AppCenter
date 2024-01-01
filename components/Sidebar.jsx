@@ -50,7 +50,7 @@ const Sidebar = (props) => {
     fetchData();
   }, []);
   
-  const selectedItems = users.type_user === 'Asesor' ? menuItems1 : menuItems;
+  const selectedItems = users[0].type_user === 'Asesor' ? menuItems1 : menuItems;
   // Routing.
   const router = useRouter();
   const activeMenu = useMemo(() => selectedItems.find((menu) => menu.link === router.pathname), [
