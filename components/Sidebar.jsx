@@ -73,7 +73,7 @@ const Sidebar = (props) => {
     const nuevoDato = 'Inactivo'; // Reemplaza con el nuevo valor que deseas asignar
 
     try {
-      const response = await fetch('http://localhost:3001/actualizar/usuario', {
+      const response = await fetch('http://appcenteryes.appcenteryes.com/db/actualizar/usuario', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
