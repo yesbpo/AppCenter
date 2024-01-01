@@ -40,8 +40,8 @@ const Sidebar = (props) => {
         const generalUsers = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-usuarios');
         const usersData = await generalUsers.json();
         const currentUser = usersData.filter((u) => u.usuario == session.user.name)
-        setUsers(currentUser);
-        console.log(currentUser)
+        setUsers(currentUser[0]);
+        console.log(currentUser[0].type_user)
       } catch (error) {
         console.error('Error fetching users:', error);
       }
