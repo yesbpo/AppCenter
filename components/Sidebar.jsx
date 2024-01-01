@@ -29,14 +29,27 @@ const menuItems1 = [
   { id: 7, label: 'chats', icon: ChatIcon, link: '/chats' },
 ]
 
-const Sidebar = async (props) => {
+const Sidebar = (props) => {
   const [toggleCollapse, setToggleCollapse] = useState(false);
   const [isCollapsible, setIsCollapsible] = useState(false);
   const { data: session } = useSession();
-  const generalUsers = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-usuarios')
-  const users = await generalUsers.json();
-  const currentUser = users.filter((user) => user.usuario == session.user.name)
-  const selectedItems = currentUser.type_user === 'Asesor' ? menuItems1 : menuItems;
+  const [ users, setUsers] =useState([])
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const generalUsers = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-usuarios');
+        const usersData = await generalUsers.json();
+        const currentUser = users.filter((user) => user.usuario == session.user.name)
+        setUsers(currentUser);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+  
+  const selectedItems = users.type_user === 'Asesor' ? menuItems1 : menuItems;
   // Routing.
   const router = useRouter();
   const activeMenu = useMemo(() => selectedItems.find((menu) => menu.link === router.pathname), [
