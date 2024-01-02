@@ -195,7 +195,7 @@ const [file, setFile] = useState(null);
       }
     };
     
-    
+    handleUpload()
   };
 
  
