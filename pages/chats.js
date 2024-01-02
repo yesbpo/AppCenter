@@ -362,7 +362,12 @@ const nuevoUserId = 0;
       setMsg((prevMsg) => [...prevMsg, inputValue]);
       const fechaActual = new Date();
 const options = { timeZone: 'America/Bogota', hour12: false };
-const fechaFormateada = fechaActual.toLocaleString('en-US', options).replace(/,/g, '');
+const anio = fechaActual.getFullYear();
+const mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
+const dia = fechaActual.getDate().toString().padStart(2, '0');
+const hora = fechaActual.getHours().toString().padStart(2, '0');
+const minutos = fechaActual.getMinutes().toString().padStart(2, '0');
+const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
       setMensajes((prevMensajes) => (
         [
           ...prevMensajes,
@@ -417,7 +422,7 @@ const fechaFormateada = fechaActual.toLocaleString('en-US', options).replace(/,/
         status: 'sent', // Puedes ajustar este valor según tus necesidades
         number: numeroEspecifico,
         type_message: 'text',
-        timestamp: fechaFormateada.split('/').reverse().join('-').replace(/,/, ''),
+        timestamp: `${anio}-${mes}-${dia} ${hora}:${minutos}:${segundos}`,
         idMessage: idMessage // Puedes ajustar este valor según tus necesidades
       }),
     });
@@ -528,13 +533,7 @@ const fechaFormateada = fechaActual.toLocaleString('en-US', options).replace(/,/
           // Filtra los mensajes por el número específico y contenido no vacío
           const mensajesFiltrados = mensajes1
             .filter((mensaje) => mensaje.number === numeroEspecifico && mensaje.content && mensaje.content.trim() !== '')
-            .sort((a, b) => {
-              const options = { timeZone: 'America/Bogota', hour12: false };
-              const fechaA = new Date(a.timestamp).toLocaleString('en-US', options).replace(/,/g, '');
-              const fechaB = new Date(b.timestamp).toLocaleString('en-US', options).replace(/,/g, '');
-            
-              return new Date(fechaA) - new Date(fechaB);
-            }); // Ordena los mensajes por fecha
+            .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)); // Ordena los mensajes por fecha
 
           // Mapea y renderiza los mensajes ordenados
           return mensajesFiltrados.map((mensaje, index) => (
