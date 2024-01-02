@@ -34,11 +34,13 @@ const CrearUsuario = () => {
       if (response.ok) {
         const data = await response.json();
         console.log(data); // Aquí puedes manejar la respuesta del servidor
+         return <><h1>{data}</h1></>;
       } else {
         console.error('Error al crear el usuario:', response.statusText);
       }
     } catch (error) {
       console.error('Error de red:', error.message);
+      return <><h1>{error.message}</h1></>;
     }
   };
   if (sesion){
