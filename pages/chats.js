@@ -75,9 +75,6 @@ const Chats = () => {
       // Puedes manejar el error según tus necesidades
     }
   };
-
-    handleUpload()
-  };
   const handleEngestionClick = async () => {
     conection();
     setStatuschats('En gestion')
@@ -116,88 +113,91 @@ const [file, setFile] = useState(null);
   
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
-    const handleUpload = async () => {
-      if (!file) {
-        alert('Selecciona un archivo primero.');
-        return;
+    
+    
+    handleUpload()
+  };
+  const handleUpload = async () => {
+    if (!file) {
+      alert('Selecciona un archivo primero.');
+      return;
+    }
+  
+    const imgbbApiKey = 'e31e20927215f7f1aa0598b395ff6261';
+    const imgbbUploadUrl = 'https://api.imgbb.com/1/upload';
+  
+    const formData = new FormData();
+    formData.append('image', file);
+  
+    try {
+      // Subir la imagen a imgBB
+      const imgbbResponse = await fetch(`${imgbbUploadUrl}?key=${imgbbApiKey}`, {
+        method: 'POST',
+        body: formData,
+      });
+  
+      if (!imgbbResponse.ok) {
+        throw new Error(`Error al subir la imagen a imgBB: ${imgbbResponse.status} ${imgbbResponse.statusText}`);
       }
-    
-      const imgbbApiKey = 'e31e20927215f7f1aa0598b395ff6261';
-      const imgbbUploadUrl = 'https://api.imgbb.com/1/upload';
-    
-      const formData = new FormData();
-      formData.append('image', file);
-    
-      try {
-        // Subir la imagen a imgBB
-        const imgbbResponse = await fetch(`${imgbbUploadUrl}?key=${imgbbApiKey}`, {
-          method: 'POST',
-          body: formData,
-        });
-    
-        if (!imgbbResponse.ok) {
-          throw new Error(`Error al subir la imagen a imgBB: ${imgbbResponse.status} ${imgbbResponse.statusText}`);
-        }
-    
-        const imgbbData = await imgbbResponse.json();
-        const imageUrl = imgbbData.data.url;
-    
-        // Preparar datos del mensaje
-        const mensajeData = {
-          channel: 'whatsapp',
-          source: '3202482534',
-          'src.name': 'YESVARIOS',
-          destination: numeroEspecifico,
-          message: JSON.stringify({
-            type: 'image',
-            originalUrl: imageUrl,
-            previewUrl: imageUrl,
-            caption: 'Envío de imagen',
-          }),
-          disablePreview: true,
-        };
-    
-        // Enviar mensaje a través de la API de envíos
-        const envioResponse = await fetch('https://appcenteryes.appcenteryes.com/w/api/envios', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: new URLSearchParams(mensajeData).toString(),
-        });
-    
-        if (!envioResponse.ok) {
-          throw new Error(`Error al enviar el mensaje: ${envioResponse.status} ${envioResponse.statusText}`);
-        }
-    
-        const envioData = await envioResponse.json();
-        console.log('Respuesta del servidor de envíos:', envioData);
-    
-        const idMessage = envioData.messageId;
-    
-        // Actualizar el mensaje enviado en el servidor
-        const actualizarMensajeResponse = await fetch('https://appcenteryes.appcenteryes.com/db/mensajeenviado', {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            content: mensajeData.message.originalUrl,
-            idMessage,
-          }),
-        });
-    
-        if (!actualizarMensajeResponse.ok) {
-          throw new Error(`Error al actualizar el mensaje enviado: ${actualizarMensajeResponse.status} ${actualizarMensajeResponse.statusText}`);
-        }
-    
-        const actualizarMensajeData = await actualizarMensajeResponse.json();
-        console.log('Respuesta del servidor de actualización de mensaje:', actualizarMensajeData);
-      } catch (error) {
-        console.error('Error:', error.message);
+  
+      const imgbbData = await imgbbResponse.json();
+      const imageUrl = imgbbData.data.url;
+  
+      // Preparar datos del mensaje
+      const mensajeData = {
+        channel: 'whatsapp',
+        source: '3202482534',
+        'src.name': 'YESVARIOS',
+        destination: numeroEspecifico,
+        message: JSON.stringify({
+          type: 'image',
+          originalUrl: imageUrl,
+          previewUrl: imageUrl,
+          caption: 'Envío de imagen',
+        }),
+        disablePreview: true,
+      };
+  
+      // Enviar mensaje a través de la API de envíos
+      const envioResponse = await fetch('https://appcenteryes.appcenteryes.com/w/api/envios', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams(mensajeData).toString(),
+      });
+  
+      if (!envioResponse.ok) {
+        throw new Error(`Error al enviar el mensaje: ${envioResponse.status} ${envioResponse.statusText}`);
       }
-    };
-    
+  
+      const envioData = await envioResponse.json();
+      console.log('Respuesta del servidor de envíos:', envioData);
+  
+      const idMessage = envioData.messageId;
+  
+      // Actualizar el mensaje enviado en el servidor
+      const actualizarMensajeResponse = await fetch('https://appcenteryes.appcenteryes.com/db/mensajeenviado', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: mensajeData.message.originalUrl,
+          idMessage,
+        }),
+      });
+  
+      if (!actualizarMensajeResponse.ok) {
+        throw new Error(`Error al actualizar el mensaje enviado: ${actualizarMensajeResponse.status} ${actualizarMensajeResponse.statusText}`);
+      }
+  
+      const actualizarMensajeData = await actualizarMensajeResponse.json();
+      console.log('Respuesta del servidor de actualización de mensaje:', actualizarMensajeData);
+    } catch (error) {
+      console.error('Error:', error.message);
+    }
+  };
  
   // Llamada a la función
   
