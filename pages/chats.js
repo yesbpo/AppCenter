@@ -417,7 +417,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        content: mensajeData.message,
+        content: inputValue,
         type_comunication: 'message-event', // Puedes ajustar este valor según tus necesidades
         status: 'sent', // Puedes ajustar este valor según tus necesidades
         number: numeroEspecifico,
