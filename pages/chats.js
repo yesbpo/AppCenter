@@ -527,7 +527,12 @@ const options = { timeZone: 'America/Bogota', hour12: false };
           // Filtra los mensajes por el número específico y contenido no vacío
           const mensajesFiltrados = mensajes1
             .filter((mensaje) => mensaje.number === numeroEspecifico && mensaje.content && mensaje.content.trim() !== '')
-            .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)); // Ordena los mensajes por fecha
+            .sort((a, b) => {
+              const fechaA = new Date(a.timestamp).toLocaleString('en-US', options).replace(/,/g, '');
+              const fechaB = new Date(b.timestamp).toLocaleString('en-US', options).replace(/,/g, '');
+            
+              return new Date(fechaA) - new Date(fechaB);
+            }); // Ordena los mensajes por fecha
 
           // Mapea y renderiza los mensajes ordenados
           return mensajesFiltrados.map((mensaje, index) => (
