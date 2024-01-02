@@ -375,7 +375,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
             numero: mensajeData.destination,
             tipo: 'message-event',
             contenido: mensajeData.message,
-            date: fechaActual.toLocaleString('en-US', options).replace(/,/g, ''),
+            date: `${anio}-${mes}-${dia} ${hora}:${minutos}:${segundos}`,
           },
         ]
       ));
