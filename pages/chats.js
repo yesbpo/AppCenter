@@ -140,6 +140,14 @@ const [file, setFile] = useState(null);
         throw new Error(`Error al subir la imagen a imgBB: ${imgbbResponse.status} ${imgbbResponse.statusText}`);
       }
       else{
+        const fechaActual = new Date();
+const options = { timeZone: 'America/Bogota', hour12: false };
+const anio = fechaActual.getFullYear();
+const mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
+const dia = fechaActual.getDate().toString().padStart(2, '0');
+const hora = fechaActual.getHours().toString().padStart(2, '0');
+const minutos = fechaActual.getMinutes().toString().padStart(2, '0');
+const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
         const imgbbData = await imgbbResponse.json();
         const imageUrl = imgbbData.data.url;
             // Preparar datos del mensaje
