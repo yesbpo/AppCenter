@@ -528,6 +528,7 @@ const options = { timeZone: 'America/Bogota', hour12: false };
           const mensajesFiltrados = mensajes1
             .filter((mensaje) => mensaje.number === numeroEspecifico && mensaje.content && mensaje.content.trim() !== '')
             .sort((a, b) => {
+              const options = { timeZone: 'America/Bogota', hour12: false };
               const fechaA = new Date(a.timestamp).toLocaleString('en-US', options).replace(/,/g, '');
               const fechaB = new Date(b.timestamp).toLocaleString('en-US', options).replace(/,/g, '');
             
