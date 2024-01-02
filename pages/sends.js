@@ -73,7 +73,7 @@ const Sends = (props) => {
   };
 
   useEffect(() => {
-    const apiUrl2 = 'https://appcenteryes.appcenteryes.com/w/api/templates';
+    const apiUrl2 = 'https://3d29bmtd-8080.use2.devtunnels.ms/api/templates';
     axios.get(apiUrl2)
       .then(response => {
         setTemplates(response.data);
@@ -152,176 +152,106 @@ const Sends = (props) => {
       [index]: value,
     }));
   };
-  const conection =()=> {
-    const socket = io('https://appcenteryes.appcenteryes.com/w');
-    socket.on( async(data) => {
-      const datosAInsertar = {
-        status: data.payload.type,
-        attachments: data.payload.destination,
-        message: messageWithVariables,
-        timestamp: new Date().toISOString().slice(0, 19).replace('T', ' ')
-      };
-   try{
-     const respnseweb = await fetch("https://appcenteryes.appcenteryes.com/db/insertar-datos-template", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-          // Puedes agregar más encabezados según sea necesario
-        },
-        body: JSON.stringify(datosAInsertar)
-      })
-          }
-      catch(error){
-        console.error('Error al enviar la solicitud:', error);
-        // Puedes manejar errores aquí
-      }
-       
-        // Cierra el socket aquí
-        socket.close();
-    
-    
-      })
-    }
 
-    const enviar = async () => {
-      const socket = io('https://appcenteryes.appcenteryes.com/w/');
-        socket.on(async data => {
-          console.log(data)
-          const datosAInsertar = {
-            status: data.payload.type,
-            attachments: data.payload.destination,
-            message: messageWithVariables,
-            timestamp: new Date().toISOString().slice(0, 19).replace('T', ' ')
-          };
-          await fetch("https://appcenteryes.appcenteryes.com/db/insertar-datos-template", {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-              // Puedes agregar más encabezados según sea necesario
-            },
-            body: JSON.stringify(datosAInsertar)
-          })
-          .then(response => response.json())
-          .then(data => {
-            console.log('Respuesta del servidor:', data);
-            // Puedes manejar la respuesta del servidor aquí
-          })
-          .catch(error => {
-            console.error('Error al enviar la solicitud:', error);
-            // Puedes manejar errores aquí
-          });
+
+  const enviar = () => {
+    if (sheetname.length > 0) {
+      sheetname.forEach((dest, rowIndex) => {
+        const destinationNumber = String(dest[selectvar]);
+        const formattedDestination = destinationNumber.startsWith("57") ? destinationNumber : `57${destinationNumber}`;
+
+        // Personalizar customParams con datos de la columna seleccionada
+      const updatedCustomParams = {};
+      Object.keys(variableColumnMapping).forEach((variable) => {
+        const columnIndex = variableColumnMapping[variable];
+        const columnValue = dest[columnIndex];
+        updatedCustomParams[variable] = columnValue;
+      });
+
+      setCustomParams(updatedCustomParams);
+
+        const url = 'https://api.gupshup.io/wa/api/v1/template/msg';
+        const apiKey = '6ovjpik6ouhlyoalchzu4r2csmeqwlbg';
+        const messageWithVariables = replaceVariables(selectedTemplateData, variableValues);
+
+        // Reemplazar las variables con los valores de la columna seleccionada
+        Object.keys(variableColumnMapping).forEach((variable) => {
+          const columnIndex = variableColumnMapping[variable];
+          const columnValue = dest[columnIndex];
+          const variableValue = customParams[variable] !== undefined ? customParams[variable] : columnValue;
+          messageWithVariables = messageWithVariables.replace(`{{${variable}}}`, variableValue);
         });
+
+        const data = {
+          channel: 'whatsapp',
+          source: '5718848135',
+          'src.name': 'Pb1yes',
+          destination: formattedDestination,
+          template: JSON.stringify({
+            id: selectedTemplateId ? selectedTemplateId : '',
+            params: Object.values(updatedCustomParams),
+          }),
+          channel: 'whatsapp',
+          disablePreview: true,
+        };
         
-      if (sheetname.length > 0) {
-        for (let rowIndex = 0; rowIndex < sheetname.length; rowIndex++) {
-          const dest = sheetname[rowIndex];
-          const destinationNumber = String(dest[selectvar]);
-          const formattedDestination = destinationNumber.startsWith("57") ? destinationNumber : `57${destinationNumber}`;
-    
-          // Personalizar customParams con datos de la columna seleccionada
-          const updatedCustomParams = {};
-          Object.keys(variableColumnMapping).forEach((variable) => {
-            const columnIndex = variableColumnMapping[variable];
-            const columnValue = dest[columnIndex];
-            updatedCustomParams[variable] = columnValue;
+        // Tipo de plantilla seleccionada
+      switch (selectedTemplateType) {
+        case 'Texto':
+          data.message = messageWithVariables;
+          break;
+        case 'Imagen':
+          data.message = JSON.stringify({
+            type: 'image',
+            image: {
+              link: selectedImageUrl,
+            },
           });
-    
-          setCustomParams(updatedCustomParams);
-    
-          const url = 'https://api.gupshup.io/wa/api/v1/template/msg';
-          const apiKey = '6ovjpik6ouhlyoalchzu4r2csmeqwlbg';
-          const messageWithVariables = replaceVariables(selectedTemplateData, variableValues);
-    
-          // Reemplazar las variables con los valores de la columna seleccionada
-          Object.keys(variableColumnMapping).forEach((variable) => {
-            const columnIndex = variableColumnMapping[variable];
-            const columnValue = dest[columnIndex];
-            const variableValue = customParams[variable] !== undefined ? customParams[variable] : columnValue;
-            messageWithVariables = messageWithVariables.replace(`{{${variable}}}`, variableValue);
+          break;
+        case 'Video':
+          data.message = JSON.stringify({
+            type: 'video',
+            video: {
+              link: selectedVideoUrl,
+            },
           });
-    
-          const data = {
-            channel: 'whatsapp',
-            source: '5718848135',
-            'src.name': 'Pb1yes',
-            destination: formattedDestination,
-            template: JSON.stringify({
-              id: selectedTemplateId ? selectedTemplateId : '',
-              params: Object.values(updatedCustomParams),
-            }),
-            channel: 'whatsapp',
-            disablePreview: true,
-            message: '',  // Esta propiedad se asignará según el tipo de plantilla más adelante
-          };
-    
-          // Tipo de plantilla seleccionada
-          switch (selectedTemplateType) {
-            case 'Texto':
-              data.message = messageWithVariables;
-              break;
-            case 'Imagen':
-              data.message = JSON.stringify({
-                type: 'image',
-                image: {
-                  link: selectedImageUrl,
-                },
-              });
-              break;
-            case 'Video':
-              data.message = JSON.stringify({
-                type: 'video',
-                video: {
-                  link: selectedVideoUrl,
-                },
-              });
-              break;
-            case 'Documento':
-              data.message = JSON.stringify({
-                type: 'document',
-                document: {
-                  link: 'https://mail.google.com/mail/u/0?ui=2&ik=97abb4c14a&attid=0.1&permmsgid=msg-f:1786087961629059212&th=18c97589ba80688c&view=att&disp=safe',
-                },
-              });
-              break;
-            default:
-              console.warn('Tipo de plantilla no reconocido:', selectedTemplateType);
-              return;
-          }
-    
-          const headers = {
-            'Cache-Control': 'no-cache',
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'apikey': apiKey,
-          };
-    
-          const formData = new URLSearchParams();
-          Object.entries(data).forEach(([key, value]) => {
-            formData.append(key, value);
+          break;
+        case 'Documento':
+          data.message = JSON.stringify({
+            type: 'document',
+            document: {
+              link: 'https://mail.google.com/mail/u/0?ui=2&ik=97abb4c14a&attid=0.1&permmsgid=msg-f:1786087961629059212&th=18c97589ba80688c&view=att&disp=safe',
+            },
           });
-    
-          try {
-            // Enviar solicitud a la API
-            const response = await axios.post(url, formData, { headers });
-    
-            console.log('Respuesta del servidor:', response.data);
-    
-            // Activar el socket después de enviar la solicitud
-            
-          } catch (error) {
-            console.error('Error al realizar la solicitud:', error);
-          }
-        }
-    
-        // Cerrar el socket al finalizar todas las iteraciones
-        
-      } else {
-        console.log('No hay datos masivos.');
+          break;
+        default:
+          console.warn('Tipo de plantilla no reconocido:', selectedTemplateType);
+          return;
       }
-    };
-    
-    // Llamada a la función para enviar datos
-    
-    
+
+        const headers = {
+          'Cache-Control': 'no-cache',
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'apikey': apiKey,
+        };
+
+        const formData = new URLSearchParams();
+        Object.entries(data).forEach(([key, value]) => {
+          formData.append(key, value);
+        });
+
+        axios.post(url, formData, { headers })
+          .then((response) => {
+            console.log('Respuesta del servidor:', response.data);
+          })
+          .catch((error) => {
+            console.error('Error al realizar la solicitud:', error);
+          });
+      });
+    } else {
+      console.log('No hay datos masivos.');
+    }
+  };
 
   const handleShowContent = () => {
     if (sheetname.length === 0) {
@@ -337,7 +267,7 @@ const Sends = (props) => {
 
     // Reemplazar las variables en orden
     Object.keys(values).forEach(variable => {
-      const variablePattern = new RegExp(`\\{\\{${variable}\\}\\}, 'g'`);
+      const variablePattern = new RegExp(`\\{\\{${variable}\\}\\}`, 'g');
       replacedTemplate = replacedTemplate.replace(variablePattern, values[variable]);
     });
 
@@ -525,7 +455,7 @@ const styleName = {
   fontFamily: 'Arial Black',
   fontWeight: 'bold',
   fontSize: '30px',
-  color: 'black',
+  color: '#fff',
   textShadow: '-1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000',
 };
 

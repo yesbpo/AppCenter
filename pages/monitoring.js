@@ -581,22 +581,17 @@ setWebhookData(webhookText);
         {resultados1.map((resultado, index) => (
           <CustomButton className="cursor-pointer" key={index}
           onClick={()=>{handleEngestionClick(resultado.asesor.id)}}>
-            Asesor: {resultado.asesor.usuario}, En gestión: {resultado.frecuencia}
+          {resultado.asesor.usuario}, En gestión: {resultado.frecuencia}
           </CustomButton>
         ))}
       
     </div>
 
     <div className="p-2 border border-gray-300 rounded">
-      
-      
-        
           <CustomButton className="cursor-pointer" 
           onClick={()=>{handleClosedClick()}}>
             Asesor: {}, Cerrados: {resultados2}
           </CustomButton>
-
-      
     </div>
 
           <CustomButton onClick={() => console.log('Agregar Número')}>Agregar Número</CustomButton>
