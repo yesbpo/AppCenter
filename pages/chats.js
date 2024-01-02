@@ -75,6 +75,9 @@ const Chats = () => {
       // Puedes manejar el error según tus necesidades
     }
   };
+
+    handleUpload()
+  };
   const handleEngestionClick = async () => {
     conection();
     setStatuschats('En gestion')
@@ -195,9 +198,6 @@ const [file, setFile] = useState(null);
       }
     };
     
-    handleUpload()
-  };
-
  
   // Llamada a la función
   
