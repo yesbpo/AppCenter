@@ -600,10 +600,10 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
       <BotonEnviar onClick={enviarMensaje}><PaperAirplaneIcon className="h-5 w-5" /></BotonEnviar>
       <BotonEnviar onClick={actualizarEstadoChat}>Gestionar</BotonEnviar>
       <BotonEnviar onClick={actualizarEstadoChatCerrados}>Cerrar</BotonEnviar>
-      <div>
+      {/*div>
         <input type="file" onChange={handleFileChange} />
         <button onClick={handleUpload}>Subir Archivo</button>
-      </div>
+      </div>*/}
     </div>
   </div>
 
