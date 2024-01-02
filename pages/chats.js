@@ -360,7 +360,8 @@ const nuevoUserId = 0;
       };
       
       setMsg((prevMsg) => [...prevMsg, inputValue]);
-      
+      const fechaActual = new Date();
+const options = { timeZone: 'America/Bogota', hour12: false };
       setMensajes((prevMensajes) => (
         [
           ...prevMensajes,
@@ -368,7 +369,7 @@ const nuevoUserId = 0;
             numero: mensajeData.destination,
             tipo: 'message-event',
             contenido: mensajeData.message,
-            date: new Date().toLocaleString(),
+            date: fechaActual.toLocaleString('en-US', options).replace(/,/g, ''),
           },
         ]
       ));
@@ -415,7 +416,7 @@ const nuevoUserId = 0;
         status: 'sent', // Puedes ajustar este valor según tus necesidades
         number: numeroEspecifico,
         type_message: 'text',
-        timestamp: new Date().toISOString().slice(0, 19).replace('T', ' '),
+        timestamp: fechaActual.toLocaleString('en-US', options).replace(/,/g, ''),
         idMessage: idMessage // Puedes ajustar este valor según tus necesidades
       }),
     });
