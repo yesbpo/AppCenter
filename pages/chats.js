@@ -429,6 +429,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
     
     if (guardarMensajeResponse.ok) {
       const guardarMensajeData = await guardarMensajeResponse.json();
+      console.log(guardarMensajeData)
           } else {
       
     }conection()
