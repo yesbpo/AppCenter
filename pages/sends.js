@@ -73,7 +73,7 @@ const Sends = (props) => {
   };
 
   useEffect(() => {
-    const apiUrl2 = 'https://appcenteryes.appcenteryes.com/w/api/templates';
+    const apiUrl2 = 'https://3d29bmtd-8080.use2.devtunnels.ms/api/templates';
     axios.get(apiUrl2)
       .then(response => {
         setTemplates(response.data);
@@ -184,8 +184,8 @@ const Sends = (props) => {
 
         const data = {
           channel: 'whatsapp',
-          source: '573202482534',
-          'src.name': 'YESVARIOS',
+          source: '5718848135',
+          'src.name': 'Pb1yes',
           destination: formattedDestination,
           template: JSON.stringify({
             id: selectedTemplateId ? selectedTemplateId : '',
