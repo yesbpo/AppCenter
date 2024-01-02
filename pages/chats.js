@@ -194,7 +194,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
         type_comunication: 'message-event', // Puedes ajustar este valor según tus necesidades
         status: 'sent', // Puedes ajustar este valor según tus necesidades
         number: numeroEspecifico,
-        type_message: 'imagen',
+        type_message: 'image',
         timestamp: `${anio}-${mes}-${dia} ${hora}:${minutos}:${segundos}`,
         idMessage: idMessage // Puedes ajustar este valor según tus necesidades
       }),
