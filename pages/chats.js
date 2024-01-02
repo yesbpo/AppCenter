@@ -362,6 +362,7 @@ const nuevoUserId = 0;
       setMsg((prevMsg) => [...prevMsg, inputValue]);
       const fechaActual = new Date();
 const options = { timeZone: 'America/Bogota', hour12: false };
+const fechaFormateada = fechaActual.toLocaleString('en-US', options).replace(/,/g, '');
       setMensajes((prevMensajes) => (
         [
           ...prevMensajes,
@@ -416,7 +417,7 @@ const options = { timeZone: 'America/Bogota', hour12: false };
         status: 'sent', // Puedes ajustar este valor según tus necesidades
         number: numeroEspecifico,
         type_message: 'text',
-        timestamp: fechaActual.toLocaleString('en-US', options).replace(/,/g, ''),
+        timestamp: fechaFormateada.split('/').reverse().join('-').replace(/,/, ''),
         idMessage: idMessage // Puedes ajustar este valor según tus necesidades
       }),
     });
