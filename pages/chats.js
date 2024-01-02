@@ -360,7 +360,14 @@ const nuevoUserId = 0;
       };
       
       setMsg((prevMsg) => [...prevMsg, inputValue]);
-      
+      const fechaActual = new Date();
+const options = { timeZone: 'America/Bogota', hour12: false };
+const anio = fechaActual.getFullYear();
+const mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
+const dia = fechaActual.getDate().toString().padStart(2, '0');
+const hora = fechaActual.getHours().toString().padStart(2, '0');
+const minutos = fechaActual.getMinutes().toString().padStart(2, '0');
+const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
       setMensajes((prevMensajes) => (
         [
           ...prevMensajes,
@@ -368,7 +375,7 @@ const nuevoUserId = 0;
             numero: mensajeData.destination,
             tipo: 'message-event',
             contenido: mensajeData.message,
-            date: new Date().toLocaleString(),
+            date: `${anio}-${mes}-${dia} ${hora}:${minutos}:${segundos}`,
           },
         ]
       ));
@@ -410,24 +417,26 @@ const nuevoUserId = 0;
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        content: mensajeData.message,
+        content: inputValue,
         type_comunication: 'message-event', // Puedes ajustar este valor según tus necesidades
         status: 'sent', // Puedes ajustar este valor según tus necesidades
         number: numeroEspecifico,
         type_message: 'text',
-        timestamp: new Date().toISOString().slice(0, 19).replace('T', ' '),
+        timestamp: `${anio}-${mes}-${dia} ${hora}:${minutos}:${segundos}`,
         idMessage: idMessage // Puedes ajustar este valor según tus necesidades
       }),
     });
     
     if (guardarMensajeResponse.ok) {
       const guardarMensajeData = await guardarMensajeResponse.json();
+      console.log(guardarMensajeData)
+      setInputValue('')
           } else {
       
     }conection()
       }
     
-      setInputValue('')
+      
       
     } catch (error) {
       

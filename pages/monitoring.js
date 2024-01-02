@@ -560,7 +560,7 @@ setWebhookData(webhookText);
       
           
       
-      <p>Bienvenido, {session.user.type_user}!</p>        
+              
       <Box onLoad={updateuser()}>
         <ButtonContainer>
         <div className="p-2 border border-gray-300 rounded">

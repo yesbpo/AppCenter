@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 
 import classNames from 'classnames';
 import {
@@ -24,18 +24,36 @@ const menuItems = [
   { id: 4, label: 'Plantillas', icon: TemplateIcon, link: '/templates' },
   { id: 6, label: 'Envíos', icon: PaperAirplaneIcon, link: '/sends' },
   { id: 7, label: 'chats', icon: ChatIcon, link: '/chats' },
-];
+]
+const menuItems1 = [
+  { id: 7, label: 'chats', icon: ChatIcon, link: '/chats' },
+]
 
 const Sidebar = (props) => {
   const [toggleCollapse, setToggleCollapse] = useState(false);
   const [isCollapsible, setIsCollapsible] = useState(false);
+  const { data: session } = useSession();
+  const [ users, setUsers] =useState([])
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const generalUsers = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-usuarios');
+        const usersData = await generalUsers.json();
+        const currentUser = usersData.filter((u) => u.usuario == session.user.name)
+        setUsers(currentUser[0]);
+        console.log(currentUser[0].type_user)
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
 
-  // Redux state.
-  const dispatch = useDispatch();
-
+    fetchData();
+  }, []);
+  
+  const selectedItems = users.type_user === 'Asesor' ? menuItems1 : menuItems;
   // Routing.
   const router = useRouter();
-  const activeMenu = useMemo(() => menuItems.find((menu) => menu.link === router.pathname), [
+  const activeMenu = useMemo(() => selectedItems.find((menu) => menu.link === router.pathname), [
     router.pathname,
   ]);
 
@@ -73,7 +91,7 @@ const Sidebar = (props) => {
     const nuevoDato = 'Inactivo'; // Reemplaza con el nuevo valor que deseas asignar
 
     try {
-      const response = await fetch('http://localhost:3001/actualizar/usuario', {
+      const response = await fetch('https://appcenteryes.appcenteryes.com/db/actualizar/usuario', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -96,7 +114,7 @@ const Sidebar = (props) => {
     }
   };
 
-  const { data: session } = useSession();
+  
 
   if (session) {
     // TODO: - Change the icon for an actual logo
@@ -109,7 +127,7 @@ const Sidebar = (props) => {
           transition: 'width 300ms cubic-bezier(0.2, 0, 0, 1) 0s',
         }}
       >
-        <div className="flex flex-col">
+        <div className="h-full flex flex-col">
           <div className="flex items-center justify-between relative">
             <div className="flex items-center ml-8">
               <BadgeCheckIcon className="h-24 w-24 text-light-lighter" />
@@ -122,8 +140,8 @@ const Sidebar = (props) => {
                               </button>
             )}
           </div>
-          <div className="flex flex-col items-start mt-24 m-8">
-            {menuItems.map(({ icon: Icon, ...menu }) => {
+          <div className="h-full flex flex-col items-start mt-2 m-8">
+            {selectedItems.map(({ icon: Icon, ...menu }) => {
               const classes = getNavItemClasses(menu);
               return (
                 // eslint-disable-next-line react/jsx-key
