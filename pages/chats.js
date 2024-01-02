@@ -125,13 +125,13 @@ const [file, setFile] = useState(null);
   
     const imgbbApiKey = 'e31e20927215f7f1aa0598b395ff6261';
     const imgbbUploadUrl = 'https://api.imgbb.com/1/upload';
-  
+    const imgbbUpload = 'https://appcenteryes.appcenteryes.com/w/upload'
     const formData = new FormData();
     formData.append('image', file);
   
     try {
       // Subir la imagen a imgBB
-      const imgbbResponse = await fetch(`${imgbbUploadUrl}?key=${imgbbApiKey}`, {
+      const imgbbResponse = await fetch(`${imgbbUpload}`, {
         method: 'POST',
         body: formData,
       });
