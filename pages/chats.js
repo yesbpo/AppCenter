@@ -109,88 +109,99 @@ const Chats = () => {
 );
 
 const [file, setFile] = useState(null);
-const [url, setUrl] = useState('');
+
   
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
-  };
-
-  const handleUpload = async () => {
-    if (!file) {
-      alert('Selecciona un archivo primero.');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('archivo', file);
-
-    try {
-      const response = await fetch('https://3d29bmtd-8080.use2.devtunnels.ms/upload', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-
-        // Actualizar el mensajeData para incluir información del archivo
+    const handleUpload = async () => {
+      if (!file) {
+        alert('Selecciona un archivo primero.');
+        return;
+      }
+    
+      const imgbbApiKey = 'e31e20927215f7f1aa0598b395ff6261';
+      const imgbbUploadUrl = 'https://api.imgbb.com/1/upload';
+    
+      const formData = new FormData();
+      formData.append('image', file);
+    
+      try {
+        // Subir la imagen a imgBB
+        const imgbbResponse = await fetch(`${imgbbUploadUrl}?key=${imgbbApiKey}`, {
+          method: 'POST',
+          body: formData,
+        });
+    
+        if (!imgbbResponse.ok) {
+          throw new Error(`Error al subir la imagen a imgBB: ${imgbbResponse.status} ${imgbbResponse.statusText}`);
+        }
+    
+        const imgbbData = await imgbbResponse.json();
+        const imageUrl = imgbbData.data.url;
+    
+        // Preparar datos del mensaje
         const mensajeData = {
           channel: 'whatsapp',
-          source: '5718848135',
-          'src.name': 'Pb1yes',
+          source: '3202482534',
+          'src.name': 'YESVARIOS',
           destination: numeroEspecifico,
           message: JSON.stringify({
-            type: 'image', // Puedes ajustar esto según el tipo de archivo
-            originalUrl: data.url, // URL generada después de la carga del archivo
-            previewUrl: data.url, // Puedes ajustar esto según tus necesidades
+            type: 'image',
+            originalUrl: imageUrl,
+            previewUrl: imageUrl,
             caption: 'Envío de imagen',
           }),
           disablePreview: true,
         };
-
-        const responseEnvio = await fetch('https://appcenteryes.appcenteryes.com/w/api/envios', {
+    
+        // Enviar mensaje a través de la API de envíos
+        const envioResponse = await fetch('https://appcenteryes.appcenteryes.com/w/api/envios', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
           body: new URLSearchParams(mensajeData).toString(),
         });
-
-        if (!responseEnvio.ok) {
-     
+    
+        if (!envioResponse.ok) {
+          throw new Error(`Error al enviar el mensaje: ${envioResponse.status} ${envioResponse.statusText}`);
         }
-
-        const responseData = await responseEnvio.json();
-        console.log('Respuesta del servidor:', responseData);
-
-        const idMessage = responseData.messageId;
-
+    
+        const envioData = await envioResponse.json();
+        console.log('Respuesta del servidor de envíos:', envioData);
+    
+        const idMessage = envioData.messageId;
+    
+        // Actualizar el mensaje enviado en el servidor
         const actualizarMensajeResponse = await fetch('https://appcenteryes.appcenteryes.com/db/mensajeenviado', {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            content: mensajeData.message,
+            content: mensajeData.message.originalUrl,
             idMessage,
           }),
         });
-
-        if (actualizarMensajeResponse.ok) {
-          const actualizarMensajeData = await actualizarMensajeResponse.json();
-     
-        } else {
     
-          // Resto del código para guardar el mensaje en el servidor...
+        if (!actualizarMensajeResponse.ok) {
+          throw new Error(`Error al actualizar el mensaje enviado: ${actualizarMensajeResponse.status} ${actualizarMensajeResponse.statusText}`);
         }
-      } else {
-        alert(`Error al subir el archivo: ${response.status} ${response.statusText}`);
-      }
-    } catch (error) {
     
-    }
+        const actualizarMensajeData = await actualizarMensajeResponse.json();
+        console.log('Respuesta del servidor de actualización de mensaje:', actualizarMensajeData);
+      } catch (error) {
+        console.error('Error:', error.message);
+      }
+    };
+    
+    
   };
 
+ 
+  // Llamada a la función
+  
+  
 
   const [numeroEspecifico, setNumeroEspecifico] = useState('');
   // Ejemplo de consumo de la ruta con JavaScript y fetch
@@ -352,8 +363,8 @@ const nuevoUserId = 0;
     try {
       const mensajeData = {
         channel: 'whatsapp',
-        source: '5718848135',
-        'src.name': 'Pb1yes',
+        source: '3202482534',
+        'src.name': 'YESVARIOS',
         destination: numeroEspecifico,
         message: inputValue,
         disablePreview: true,
@@ -600,10 +611,9 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
       <BotonEnviar onClick={enviarMensaje}><PaperAirplaneIcon className="h-5 w-5" /></BotonEnviar>
       <BotonEnviar onClick={actualizarEstadoChat}>Gestionar</BotonEnviar>
       <BotonEnviar onClick={actualizarEstadoChatCerrados}>Cerrar</BotonEnviar>
-      {/*div>
+      <div>
         <input type="file" onChange={handleFileChange} />
-        <button onClick={handleUpload}>Subir Archivo</button>
-      </div>*/}
+      </div>
     </div>
   </div>
 
