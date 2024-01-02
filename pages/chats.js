@@ -153,7 +153,7 @@ const [file, setFile] = useState(null);
           type: 'image',
           originalUrl: imageUrl,
           previewUrl: imageUrl,
-          caption: 'Envío de imagen',
+          caption: inputValue,
         }),
         disablePreview: true,
       };
@@ -177,16 +177,29 @@ const [file, setFile] = useState(null);
       const idMessage = envioData.messageId;
   
       // Actualizar el mensaje enviado en el servidor
-      const actualizarMensajeResponse = await fetch('https://appcenteryes.appcenteryes.com/db/mensajeenviado', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          content: mensajeData.message.originalUrl,
-          idMessage,
-        }),
-      });
+      const guardarMensajeResponse = await fetch('https://appcenteryes.appcenteryes.com/db/guardar-mensajes', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        content: imageUrl + " " + mensajeData.message.caption,
+        type_comunication: 'message-event', // Puedes ajustar este valor según tus necesidades
+        status: 'sent', // Puedes ajustar este valor según tus necesidades
+        number: numeroEspecifico,
+        type_message: 'image',
+        timestamp: `${anio}-${mes}-${dia} ${hora}:${minutos}:${segundos}`,
+        idMessage: idMessage // Puedes ajustar este valor según tus necesidades
+      }),
+    });
+    
+    if (guardarMensajeResponse.ok) {
+      const guardarMensajeData = await guardarMensajeResponse.json();
+      console.log(guardarMensajeData)
+      setInputValue('')
+          } else {
+      
+    }
   
       if (!actualizarMensajeResponse.ok) {
         throw new Error(`Error al actualizar el mensaje enviado: ${actualizarMensajeResponse.status} ${actualizarMensajeResponse.statusText}`);
