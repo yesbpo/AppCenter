@@ -190,7 +190,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        content: imageUrl + " " + mensajeData.message.caption,
+        content: {file: imageUrl,  text: mensajeData.message.caption},
         type_comunication: 'message-event', // Puedes ajustar este valor según tus necesidades
         status: 'sent', // Puedes ajustar este valor según tus necesidades
         number: numeroEspecifico,
@@ -581,7 +581,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
               } p-4 mb-4`}
             >
               {mensaje.type_message === 'image' ? (
-                <img src={mensaje.content} alt="Imagen" className="w-full" />
+                <img src={mensaje.content || mensaje.content.file } alt="Imagen" className="w-full" />
               ) : mensaje.type_message === 'audio' ? (
                 <audio controls>
                   <source src={mensaje.content} type="audio/mp3" />
