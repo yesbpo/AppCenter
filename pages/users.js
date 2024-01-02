@@ -15,7 +15,7 @@ const CrearUsuario = () => {
       const createdAt = new Date(); // Puedes ajustar cómo obtienes la fecha de creación
       const updatedAt = new Date(); // Puedes ajustar cómo obtienes la fecha de actualización
 
-      const response = await fetch('http://146.190.143.165:3001/crear-usuario', {
+      const response = await fetch('https://appcenteryes.appcenteryes.com/db/crear-usuario', {
                method: 'POST',
         headers: {
           'Content-Type': 'application/json',
