@@ -139,11 +139,10 @@ const [file, setFile] = useState(null);
       if (!imgbbResponse.ok) {
         throw new Error(`Error al subir la imagen a imgBB: ${imgbbResponse.status} ${imgbbResponse.statusText}`);
       }
-  
-      const imgbbData = await imgbbResponse.json();
-      const imageUrl = imgbbData.data.url;
-  
-      // Preparar datos del mensaje
+      else{
+        const imgbbData = await imgbbResponse.json();
+        const imageUrl = imgbbData.data.url;
+            // Preparar datos del mensaje
       const mensajeData = {
         channel: 'whatsapp',
         source: '3202482534',
@@ -187,7 +186,7 @@ const [file, setFile] = useState(null);
         type_comunication: 'message-event', // Puedes ajustar este valor según tus necesidades
         status: 'sent', // Puedes ajustar este valor según tus necesidades
         number: numeroEspecifico,
-        type_message: 'image',
+        type_message: 'imagen',
         timestamp: `${anio}-${mes}-${dia} ${hora}:${minutos}:${segundos}`,
         idMessage: idMessage // Puedes ajustar este valor según tus necesidades
       }),
@@ -204,6 +203,10 @@ const [file, setFile] = useState(null);
       if (!actualizarMensajeResponse.ok) {
         throw new Error(`Error al actualizar el mensaje enviado: ${actualizarMensajeResponse.status} ${actualizarMensajeResponse.statusText}`);
       }
+  
+      }
+      
+  
   
       const actualizarMensajeData = await actualizarMensajeResponse.json();
       console.log('Respuesta del servidor de actualización de mensaje:', actualizarMensajeData);
