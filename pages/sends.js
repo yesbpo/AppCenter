@@ -240,7 +240,7 @@ console.log(messageWithVariables)
           formData.append(key, value);
         });
 
-        const envioResponse = fetch(url, options)
+        const envioResponse = fetch(url, headers)
   .then(response => {
     // Verificar si la respuesta tiene éxito (código de estado en el rango 200-299)
     if (!response.ok) {
@@ -248,12 +248,12 @@ console.log(messageWithVariables)
     }
     const fechaActual = new Date();
 const options = { timeZone: 'America/Bogota', hour12: false };
-const anio = fechaActual.getFullYear();
-const mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
-const dia = fechaActual.getDate().toString().padStart(2, '0');
-const hora = fechaActual.getHours().toString().padStart(2, '0');
-const minutos = fechaActual.getMinutes().toString().padStart(2, '0');
-const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
+const anio = fechaActual.toLocaleString('en-US', { year: 'numeric', timeZone: options.timeZone });
+const mes = fechaActual.toLocaleString('en-US', { month: '2-digit', timeZone: options.timeZone });
+const dia = fechaActual.toLocaleString('en-US', { day: '2-digit', timeZone: options.timeZone });
+const hora = fechaActual.toLocaleString('en-US', { hour: '2-digit', hour12: false, timeZone: options.timeZone });
+const minutos = fechaActual.toLocaleString('en-US', { minute: '2-digit', timeZone: options.timeZone });
+const segundos = fechaActual.toLocaleString('en-US', { second: '2-digit', timeZone: options.timeZone });
     const data1 = {
       idmessageTemplate: response.messageId,
       status: 'sent',
