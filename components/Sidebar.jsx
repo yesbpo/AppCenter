@@ -34,10 +34,10 @@ const Sidebar = (props) => {
   const [isCollapsible, setIsCollapsible] = useState(false);
   const { data: session } = useSession();
   const [userown, setUserown] = useState('');
-  setUserown(session.user.name)
+  
   const [ users, setUsers] =useState([])
   useEffect(() => {
-    
+    setUserown(session.user.name)
     const fetchData = async () => {
       try {
         const generalUsers = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-usuarios');
