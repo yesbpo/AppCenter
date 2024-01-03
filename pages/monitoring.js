@@ -16,7 +16,7 @@ const [asesores, setAsesores] = useState([]);
 const [resultados, setResultados] = useState([]);
 const [resultados1, setResultados1] = useState([]);
 const [resultados2, setResultados2] = useState([]);
-
+const [resultadost, setResultadost] = useState([]);
 useEffect(() => {
   const obtenerMensajes = async () => {
     try {
@@ -38,7 +38,8 @@ useEffect(() => {
       const chatscerrados = chats.filter((valor) => valor.status === 'closed');
       const chatCerrado = chatscerrados.map((chat) => chat.userId);
       const chatGestion = chatsengestion.map((chat) => chat.userId);
-      const chatsPendings = chatspendientes.map((chat) => chat.userId);
+      const chatsPendings = chats.map((chat) => chat.userId);
+     
       console.log(chatsPendings)
       // pendientes
       const frecuencias = {};
@@ -93,14 +94,15 @@ const { data: session } = useSession();
   const toggleEmojiPicker = () => {
     setShowEmojiPicker((prevShow) => !prevShow);
   };
-  
+  const [contactos2, setContactos2] = useState([]);
+
   const [contactos1, setContactos1] = useState([]);
   const [contactos, setContactos] = useState([
     { user: null, fecha: null, mensajes: [{ tipomensaje: '', datemessage: '', content: '' }] },
   ]);
   const [webhookData, setWebhookData] = useState(null);
   const [mensajes1, setMensajes1] = useState([]);
-  
+  const [mensajes2, setMensajes2] = useState([]);
      const handlePendientesClick = async (iduser) => {
       conection();
       
@@ -123,6 +125,28 @@ const { data: session } = useSession();
       setMensajes1(data);
       setContactos1(withoutGest);
       setStatuschats('Pendientes');
+      try {
+        const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
+        const responseChats = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-chats');
+        const responseUsers = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-usuarios');
+        // El usuario está autenticado, puedes acceder a la sesión
+        
+        if (!response.ok) {
+          throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+        }
+        const users = await responseUsers.json()
+        const Id = iduser
+        const dataChats =  await responseChats.json();
+        const chatsPending = dataChats.filter(d=> d.status == 'in process')
+        const withoutGest = chatsPending.filter(d => d.userId == Id )
+        console.log(Id)
+        const data = await response.json();
+        setMensajes2(data);
+        setContactos2(withoutGest);
+      } catch (error) {
+        console.error('Error al obtener mensajes:', error);
+        // Puedes manejar el error según tus necesidades
+      }
     } catch (error) {
       console.error('Error al obtener mensajes:', error);
       // Puedes manejar el error según tus necesidades
@@ -147,8 +171,8 @@ const { data: session } = useSession();
       const withoutGest = chatsPending.filter(d => d.userId == Id )
       console.log(Id)
       const data = await response.json();
-      setMensajes1(data);
-      setContactos1(withoutGest);
+      setMensajes2(data);
+      setContactos2(withoutGest);
     } catch (error) {
       console.error('Error al obtener mensajes:', error);
       // Puedes manejar el error según tus necesidades
@@ -569,7 +593,7 @@ setWebhookData(webhookText);
         {resultados.map((resultado, index) => (
           <CustomButton className="cursor-pointer" key={index}
             onClick={()=>{handlePendientesClick(resultado.asesor.id)}}>
-            Asesor: {resultado.asesor.usuario}, Pendientes: {resultado.frecuencia}
+            {resultado.asesor.usuario}, Pendientes: {resultado.frecuencia}
           </CustomButton>
         ))}
       
@@ -607,7 +631,7 @@ setWebhookData(webhookText);
       
       {(() => {
   // Filtra los mensajes por el número específico y contenido no vacío
-  const mensajesFiltrados = mensajes1
+  const mensajesFiltrados = mensajes1 && mensajes2
     .filter((mensaje) => mensaje.number === numeroEspecifico && mensaje.content && mensaje.content.trim() !== '')
     .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)); // Ordena los mensajes por fecha
 
@@ -656,6 +680,18 @@ setWebhookData(webhookText);
             <h1>{statuschats}</h1>
             <ul>
               {contactos1.map((contacto, index) => (
+                <li key={index}>
+                  
+                  <CustomButton onClick={() => setNumeroEspecifico(contacto.idChat2)}>Usuario:{contacto.idChat2}</CustomButton>
+                   
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="chat-container">
+            <h1>{statuschats}</h1>
+            <ul>
+              {contactos2.map((contacto, index) => (
                 <li key={index}>
                   
                   <CustomButton onClick={() => setNumeroEspecifico(contacto.idChat2)}>Usuario:{contacto.idChat2}</CustomButton>
