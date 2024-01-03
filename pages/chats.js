@@ -520,7 +520,6 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
             <CustomButton onClick={handleEngestionClick}>En gestion</CustomButton>
              {/* Mostrar Activos si 'mostrarActivos' es true */}
             <CustomButton onClick={handlePendientesClick}>Pendientes</CustomButton>
-            <CustomButton onClick={() => console.log('Cerrados')}>Cerrados</CustomButton>
             <CustomButton onClick={() => console.log('Agregar Número')}>Agregar Número</CustomButton>
           </ButtonContainer>
         </Box>
@@ -542,7 +541,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
             <div
               key={index}
               className={`mensaje ${mensaje.type_message} ${
-                mensaje.type_comunication === 'message-event' ? 'bg-white text-right' : 'bg-green-500 text-left'
+                mensaje.type_comunication === 'message-event' ? 'bg-white text-right' : 'green-500 text-left'
               } p-4 mb-4`}
             >
               {mensaje.type_message === 'image' ? (
