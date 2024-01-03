@@ -707,8 +707,8 @@ setWebhookData(webhookText);
     )  };
 
   const Box = styled.div`
-  padding: 30px;
-  margin: 30px;
+  padding: 10px;
+  margin: 10px;
   border-radius: 10px;
   overflow-y: scroll;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -745,7 +745,7 @@ const ContainerBox = styled.div`
   padding: 15px;
   border-radius: 10px;
   overflow-y: scroll;
-  max-height: 400px;
+  max-height: 300px;
 `;
 
 const p = styled.div`
