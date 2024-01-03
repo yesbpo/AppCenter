@@ -491,7 +491,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
   const updateuser = async () => {
     const usuario = session.user.name; // Reemplaza con el nombre de usuario que deseas actualizar
     const nuevoDato = 'Activo'; // Reemplaza con el nuevo valor que deseas asignar
-    conection()
+    
       try {
         const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
 
