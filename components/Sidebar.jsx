@@ -28,7 +28,7 @@ const menuItems = [
 const menuItems1 = [
   { id: 7, label: 'chats', icon: ChatIcon, link: '/chats' },
 ]
-
+const [userown, setUserown] = useState(session.user.name)
 const Sidebar = (props) => {
   const [toggleCollapse, setToggleCollapse] = useState(false);
   const [isCollapsible, setIsCollapsible] = useState(false);
@@ -87,7 +87,7 @@ const Sidebar = (props) => {
   };
 
   const updateuser = async () => {
-    const usuario = session.user.name; // Reemplaza con el nombre de usuario que deseas actualizar
+    const usuario = userown // Reemplaza con el nombre de usuario que deseas actualizar
     const nuevoDato = 'Inactivo'; // Reemplaza con el nuevo valor que deseas asignar
 
     try {
