@@ -184,7 +184,7 @@ const Sends = (props) => {
 console.log(messageWithVariables)
         const data = {
           channel: 'whatsapp',
-          source: '573202482534',
+          source: '3202482534',
           'src.name': 'YESVARIOS',
           destination: formattedDestination,
           template: JSON.stringify({
