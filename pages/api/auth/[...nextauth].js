@@ -30,7 +30,33 @@ export const authOptions = {
          const matchPassword = await credentials.password == userFound.password;
  
          if (!matchPassword) throw new Error('Wrong password')
- 
+         const updateuser = async () => {
+          const usuario = userFound.usuario; // Reemplaza con el nombre de usuario que deseas actualizar
+          const nuevoDato = 'Activo'; // Reemplaza con el nuevo valor que deseas asignar
+        
+          try {
+            const response = await fetch('https://appcenteryes.appcenteryes.com/db/actualizar/usuario', {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                nuevoDato: nuevoDato,
+                usuario: usuario
+              }),
+            });
+        
+            if (response.ok) {
+              const data = await response.json();
+             // Aquí puedes manejar la respuesta del servidor
+            } else {
+              console.error('Error al actualizar el usuario:', response.statusText);
+            }
+            
+          } catch (error) {
+            
+          }
+        };
          return {
              id: userFound.id,
              name: userFound.usuario,

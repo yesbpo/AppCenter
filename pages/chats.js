@@ -20,7 +20,7 @@ const Chats = () => {
   
   useEffect(() => {
     scrollToBottom();
-    updateuser();
+    
   }, []); // El array vacío asegura que el efecto se ejecute solo una vez al montar el componente
 
   const { data: session } = useSession();
@@ -507,24 +507,6 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
     const usuario = session.user.name; // Reemplaza con el nombre de usuario que deseas actualizar
     const nuevoDato = 'Activo'; // Reemplaza con el nuevo valor que deseas asignar
   
-    try {
-      const response = await fetch('https://appcenteryes.appcenteryes.com/db/actualizar/usuario', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          nuevoDato: nuevoDato,
-          usuario: usuario
-        }),
-      });
-  
-      if (response.ok) {
-        const data = await response.json();
-       // Aquí puedes manejar la respuesta del servidor
-      } else {
-        console.error('Error al actualizar el usuario:', response.statusText);
-      }
       try {
         const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
 
@@ -539,9 +521,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
         // Puedes manejar el error según tus necesidades
       }
     
-    } catch (error) {
-      
-    }
+
   };
   
   if(session){
