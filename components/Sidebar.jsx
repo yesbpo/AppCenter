@@ -88,7 +88,7 @@ const Sidebar = (props) => {
   };
 
   const updateuser = async () => {
-    const usuario = userown // Reemplaza con el nombre de usuario que deseas actualizar
+    setUserown(userown) // Reemplaza con el nombre de usuario que deseas actualizar
     const nuevoDato = 'Inactivo'; // Reemplaza con el nuevo valor que deseas asignar
 
     try {
