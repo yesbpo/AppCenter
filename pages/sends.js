@@ -154,7 +154,7 @@ const Sends = (props) => {
   };
 
 
-  const enviar = () => {
+  const enviar =  () => {
     if (sheetname.length > 0) {
       sheetname.forEach((dest, rowIndex) => {
         const destinationNumber = String(dest[selectvar]);
@@ -240,13 +240,59 @@ console.log(messageWithVariables)
           formData.append(key, value);
         });
 
-        axios.post(url, formData, { headers })
-          .then((response) => {
-            console.log('Respuesta del servidor:', response.data);
-          })
-          .catch((error) => {
-            console.error('Error al realizar la solicitud:', error);
-          });
+        const envioResponse = fetch(url, options)
+  .then(response => {
+    // Verificar si la respuesta tiene éxito (código de estado en el rango 200-299)
+    if (!response.ok) {
+      throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+    }
+    const fechaActual = new Date();
+const options = { timeZone: 'America/Bogota', hour12: false };
+const anio = fechaActual.getFullYear();
+const mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
+const dia = fechaActual.getDate().toString().padStart(2, '0');
+const hora = fechaActual.getHours().toString().padStart(2, '0');
+const minutos = fechaActual.getMinutes().toString().padStart(2, '0');
+const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
+    const data1 = {
+      idmessageTemplate: response.messageId,
+      status: 'sent',
+      attachments: data.destination,
+      message: messageWithVariables,
+      timestamp:`${anio}-${mes}-${dia} ${hora}:${minutos}:${segundos}`,
+    };
+    
+    // Configuración de la solicitud
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data1),
+    };
+    
+    // Realizar la solicitud fetch
+    fetch('https://appcenteryes.appcenteryes.com/db/insertar-datos-template/', requestOptions)
+      .then(response => response.json())
+      .then(data => {
+        console.log('Respuesta del servidor:', data);
+        // Manejar la respuesta del servidor aquí
+      })
+      .catch(error => {
+        console.error('Error al realizar la solicitud:', error);
+        // Manejar errores aquí
+      });
+    // Parsear la respuesta como JSON
+    return response.json();
+  })
+  .then(data => {
+    // Manejar los datos de la respuesta
+    console.log('Respuesta del servidor:', data);
+  })
+  .catch(error => {
+    // Manejar errores de la solicitud
+    console.error('Error al realizar la solicitud:', error);
+  });
       });
     } else {
       console.log('No hay datos masivos.');
