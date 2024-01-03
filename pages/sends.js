@@ -240,7 +240,7 @@ console.log(messageWithVariables)
           formData.append(key, value);
         });
 
-        const envioResponse = fetch(url, headers)
+        const envioResponse = fetch(url, {method: 'POST',headers: headers})
   .then(response => {
     // Verificar si la respuesta tiene éxito (código de estado en el rango 200-299)
     if (!response.ok) {
