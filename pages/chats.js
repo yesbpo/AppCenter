@@ -118,12 +118,8 @@ const [file, setFile] = useState(null);
     
   };
   const handleUpload = async () => {
-    if (!file) {
-      alert('Selecciona un archivo primero.');
-      return;
-    }
-  
-    const imgbbApiKey = 'e31e20927215f7f1aa0598b395ff6261';
+    if (file) {
+      const imgbbApiKey = 'e31e20927215f7f1aa0598b395ff6261';
     const imgbbUploadUrl = 'https://api.imgbb.com/1/upload';
     const imgbbUpload = 'https://appcenteryes.appcenteryes.com/w/upload'
     const formData = new FormData();
@@ -153,7 +149,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
             // Preparar datos del mensaje
       const mensajeData = {
         channel: 'whatsapp',
-        source: '3202482534',
+        source: '573202482534',
         'src.name': 'YESVARIOS',
         destination: numeroEspecifico,
         message: JSON.stringify({
@@ -164,7 +160,6 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
         }),
         disablePreview: true,
       };
-  
       // Enviar mensaje a través de la API de envíos
       const envioResponse = await fetch('https://appcenteryes.appcenteryes.com/w/api/envios', {
         method: 'POST',
@@ -173,16 +168,12 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
         },
         body: new URLSearchParams(mensajeData).toString(),
       });
-  
       if (!envioResponse.ok) {
         throw new Error(`Error al enviar el mensaje: ${envioResponse.status} ${envioResponse.statusText}`);
       }
-  
       const envioData = await envioResponse.json();
       console.log('Respuesta del servidor de envíos:', envioData);
-  
       const idMessage = envioData.messageId;
-  
       // Actualizar el mensaje enviado en el servidor
       const guardarMensajeResponse = await fetch('https://appcenteryes.appcenteryes.com/db/guardar-mensajes', {
       method: 'POST',
@@ -199,28 +190,24 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
         idMessage: idMessage // Puedes ajustar este valor según tus necesidades
       }),
     });
-    
     if (guardarMensajeResponse.ok) {
       const guardarMensajeData = await guardarMensajeResponse.json();
       console.log(guardarMensajeData)
       setInputValue('')
-          } else {
-      
+          } else { 
     }
-  
       if (!actualizarMensajeResponse.ok) {
         throw new Error(`Error al actualizar el mensaje enviado: ${actualizarMensajeResponse.status} ${actualizarMensajeResponse.statusText}`);
       }
-  
       }
-      
-  
-  
       const actualizarMensajeData = await actualizarMensajeResponse.json();
       console.log('Respuesta del servidor de actualización de mensaje:', actualizarMensajeData);
     } catch (error) {
       console.error('Error:', error.message);
     }
+    }
+  
+    
   };
  
   // Llamada a la función
@@ -301,9 +288,7 @@ const nuevoUserId = 0;
   const conection =()=> {
     const socket = io('https://appcenteryes.appcenteryes.com/w');
     socket.on( async(data) => {
-    
-    
-    
+  
         try {
           const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
   
@@ -506,7 +491,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
   const updateuser = async () => {
     const usuario = session.user.name; // Reemplaza con el nombre de usuario que deseas actualizar
     const nuevoDato = 'Activo'; // Reemplaza con el nuevo valor que deseas asignar
-  
+    conection()
       try {
         const response = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-mensajes');
 
