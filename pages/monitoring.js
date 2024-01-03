@@ -600,18 +600,6 @@ setWebhookData(webhookText);
     </div>
 
     <div className="p-2 border border-gray-300 rounded">
-      
-      
-        {resultados1.map((resultado, index) => (
-          <CustomButton className="cursor-pointer" key={index}
-          onClick={()=>{handleEngestionClick(resultado.asesor.id)}}>
-          {resultado.asesor.usuario}, En gestión: {resultado.frecuencia}
-          </CustomButton>
-        ))}
-      
-    </div>
-
-    <div className="p-2 border border-gray-300 rounded">
           <CustomButton className="cursor-pointer" 
           onClick={()=>{handleClosedClick()}}>
             Asesor: {}, Cerrados: {resultados2}
@@ -688,8 +676,9 @@ setWebhookData(webhookText);
               ))}
             </ul>
           </div>
-          <div className="chat-container">
-            <h1>{statuschats}</h1>
+        </Box>
+        <Box>          <div className="chat-container">
+            <h1>En gestion</h1>
             <ul>
               {contactos2.map((contacto, index) => (
                 <li key={index}>
@@ -699,8 +688,7 @@ setWebhookData(webhookText);
                 </li>
               ))}
             </ul>
-          </div>
-        </Box>
+          </div></Box>
       </Container>
     </Layout>
       </>
