@@ -109,10 +109,11 @@ const Sidebar = (props) => {
       } else {
         console.error('Error al actualizar el usuario:', response.statusText);
       }
-      signOut();
+      
     } catch (error) {
       console.error('Error de red:', error.message);
     }
+    signOut();
   };
 
   
