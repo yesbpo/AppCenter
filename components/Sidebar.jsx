@@ -33,9 +33,11 @@ const Sidebar = (props) => {
   const [toggleCollapse, setToggleCollapse] = useState(false);
   const [isCollapsible, setIsCollapsible] = useState(false);
   const { data: session } = useSession();
-  const [userown, setUserown] = useState(session.user.name)
+  const [userown, setUserown] = useState('');
+  setUserown(session.user.name)
   const [ users, setUsers] =useState([])
   useEffect(() => {
+    
     const fetchData = async () => {
       try {
         const generalUsers = await fetch('https://appcenteryes.appcenteryes.com/db/obtener-usuarios');
@@ -88,7 +90,7 @@ const Sidebar = (props) => {
   };
 
   const updateuser = async () => {
-    setUserown(userown) // Reemplaza con el nombre de usuario que deseas actualizar
+    const usuario = userown // Reemplaza con el nombre de usuario que deseas actualizar
     const nuevoDato = 'Inactivo'; // Reemplaza con el nuevo valor que deseas asignar
 
     try {
