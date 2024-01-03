@@ -602,7 +602,7 @@ setWebhookData(webhookText);
     <div className="p-2 border border-gray-300 rounded">
           <CustomButton className="cursor-pointer" 
           onClick={()=>{handleClosedClick()}}>
-             {}, Cerrados: {resultados2}
+             {}Chats cerrados: {resultados2}
           </CustomButton>
     </div>
         </ButtonContainer>
