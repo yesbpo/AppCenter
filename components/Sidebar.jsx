@@ -28,11 +28,12 @@ const menuItems = [
 const menuItems1 = [
   { id: 7, label: 'chats', icon: ChatIcon, link: '/chats' },
 ]
-const [userown, setUserown] = useState(session.user.name)
+
 const Sidebar = (props) => {
   const [toggleCollapse, setToggleCollapse] = useState(false);
   const [isCollapsible, setIsCollapsible] = useState(false);
   const { data: session } = useSession();
+  const [userown, setUserown] = useState(session.user.name)
   const [ users, setUsers] =useState([])
   useEffect(() => {
     const fetchData = async () => {
