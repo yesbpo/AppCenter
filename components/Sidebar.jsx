@@ -105,10 +105,11 @@ const Sidebar = (props) => {
       if (response.ok) {
         const data = await response.json();
         console.log(data); // Aquí puedes manejar la respuesta del servidor
-        signOut();
+        
       } else {
         console.error('Error al actualizar el usuario:', response.statusText);
       }
+      signOut();
     } catch (error) {
       console.error('Error de red:', error.message);
     }
