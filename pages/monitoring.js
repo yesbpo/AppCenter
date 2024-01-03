@@ -593,7 +593,7 @@ setWebhookData(webhookText);
         {resultados.map((resultado, index) => (
           <CustomButton className="cursor-pointer" key={index}
             onClick={()=>{handlePendientesClick(resultado.asesor.id)}}>
-            {resultado.asesor.usuario}, Pendientes: {resultado.frecuencia}
+            {resultado.asesor.usuario}, N° Chats: {resultado.frecuencia}
           </CustomButton>
         ))}
       
@@ -602,11 +602,9 @@ setWebhookData(webhookText);
     <div className="p-2 border border-gray-300 rounded">
           <CustomButton className="cursor-pointer" 
           onClick={()=>{handleClosedClick()}}>
-            Asesor: {}, Cerrados: {resultados2}
+             {}, Cerrados: {resultados2}
           </CustomButton>
     </div>
-
-          <CustomButton onClick={() => console.log('Agregar Número')}>Agregar Número</CustomButton>
         </ButtonContainer>
       </Box>
       <Container>
@@ -712,6 +710,7 @@ setWebhookData(webhookText);
   padding: 30px;
   margin: 30px;
   border-radius: 10px;
+  overflow-y: scroll;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 `;
 
