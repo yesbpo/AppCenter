@@ -173,7 +173,7 @@ const Sends = (props) => {
         const url = 'https://api.gupshup.io/wa/api/v1/template/msg';
         const apiKey = '6ovjpik6ouhlyoalchzu4r2csmeqwlbg';
         var messageWithVariables = replaceVariables(selectedTemplateData, variableValues);
-
+        console.log(messageWithVariables)
         // Reemplazar las variables con los valores de la columna seleccionada
         Object.keys(variableColumnMapping).forEach((variable) => {
           const columnIndex = variableColumnMapping[variable];
@@ -181,7 +181,7 @@ const Sends = (props) => {
           const variableValue = customParams[variable] !== undefined ? customParams[variable] : columnValue;
           messageWithVariables = messageWithVariables.replace(`{{${variable}}}, variableValue`);
         });
-
+        console.log(messageWithVariables)
         const data = {
           channel: 'whatsapp',
           source: '573202482534',
@@ -194,7 +194,7 @@ const Sends = (props) => {
           channel: 'whatsapp',
           disablePreview: true,
         };
-        
+        console.log(messageWithVariables)
         // Tipo de plantilla seleccionada
       switch (selectedTemplateType) {
         case 'Texto':
@@ -228,7 +228,7 @@ const Sends = (props) => {
           console.warn('Tipo de plantilla no reconocido:', selectedTemplateType);
           return;
       }
-
+      console.log(messageWithVariables)
         const headers = {
           'Cache-Control': 'no-cache',
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -239,17 +239,18 @@ const Sends = (props) => {
         Object.entries(data).forEach(([key, value]) => {
           formData.append(key, value);
         });
-
+        console.log(messageWithVariables)
         try {
           const response = await fetch(url, {
             method: 'POST',
             body: formData,
             headers: headers,
           });
-        
+          console.log(messageWithVariables)
           if (!response.ok) {
             throw new Error('Error en la solicitud: ' + response.statusText);
           }
+          console.log(messageWithVariables)
           const responseData = await response.json();
           console.log('Respuesta del servidor:', responseData);
           const fechaActual = new Date();
@@ -261,7 +262,7 @@ const Sends = (props) => {
           const minutos = fechaActual.toLocaleString('en-US', { minute: '2-digit', timeZone: options.timeZone });
           const segundos = fechaActual.toLocaleString('en-US', { second: '2-digit', timeZone: options.timeZone });
           // guardar mensaje
-          console.log('data para enviar a mensajeri',messageWithVariables)
+          console.log(messageWithVariables)
           const datos = {
             content: messageWithVariables,
             type_comunication: 'message',
