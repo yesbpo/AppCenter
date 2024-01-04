@@ -156,7 +156,7 @@ const Sends = (props) => {
 
   const enviar = () => {
     if (sheetname.length > 0) {
-      sheetname.forEach((dest, rowIndex) => {
+      sheetname.forEach( async (dest, rowIndex) => {
         const destinationNumber = String(dest[selectvar]);
         const formattedDestination = destinationNumber.startsWith("57") ? destinationNumber : `57${destinationNumber}`;
 
@@ -184,8 +184,8 @@ const Sends = (props) => {
 
         const data = {
           channel: 'whatsapp',
-          source: '5718848135',
-          'src.name': 'Pb1yes',
+          source: '573202482534',
+          'src.name': 'YESVARIOS',
           destination: formattedDestination,
           template: JSON.stringify({
             id: selectedTemplateId ? selectedTemplateId : '',
@@ -240,13 +240,22 @@ const Sends = (props) => {
           formData.append(key, value);
         });
 
-        axios.post(url, formData, { headers })
-          .then((response) => {
-            console.log('Respuesta del servidor:', response.data);
-          })
-          .catch((error) => {
-            console.error('Error al realizar la solicitud:', error);
+        try {
+          const response = await fetch(url, {
+            method: 'POST',
+            body: formData,
+            headers: headers,
           });
+        
+          if (!response.ok) {
+            throw new Error('Error en la solicitud: ' + response.statusText);
+          }
+        
+          const responseData = await response.json();
+          console.log('Respuesta del servidor:', responseData);
+        } catch (error) {
+          console.error('Error al realizar la solicitud:', error);
+        }
       });
     } else {
       console.log('No hay datos masivos.');
