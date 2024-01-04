@@ -250,9 +250,44 @@ const Sends = (props) => {
           if (!response.ok) {
             throw new Error('Error en la solicitud: ' + response.statusText);
           }
-        
           const responseData = await response.json();
           console.log('Respuesta del servidor:', responseData);
+          const fechaActual = new Date();
+          const options = { timeZone: 'America/Bogota', hour12: false };
+          const anio = fechaActual.toLocaleString('en-US', { year: 'numeric', timeZone: options.timeZone });
+          const mes = fechaActual.toLocaleString('en-US', { month: '2-digit', timeZone: options.timeZone });
+          const dia = fechaActual.toLocaleString('en-US', { day: '2-digit', timeZone: options.timeZone });
+          const hora = fechaActual.toLocaleString('en-US', { hour: '2-digit', hour12: false, timeZone: options.timeZone });
+          const minutos = fechaActual.toLocaleString('en-US', { minute: '2-digit', timeZone: options.timeZone });
+          const segundos = fechaActual.toLocaleString('en-US', { second: '2-digit', timeZone: options.timeZone });
+          const datosdenetrada = {
+              idmessageTemplate: response.messageId,
+              status: 'sent',
+              attachments: data.destination,
+              message: messageWithVariables,
+              timestamp:`${anio}-${mes}-${dia} ${hora}:${minutos}:${segundos}`,
+              };
+              try {
+                const responseguardar = await fetch(url, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    // Otros encabezados si es necesario
+                  },
+                  body: JSON.stringify(datosdenetrada), // Convierte los datos a formato JSON
+                });
+            
+                if (!responseguardar.ok) {
+                  throw new Error(`Error en la solicitud: ${response.statusText}`);
+                }
+            
+                const data1 = await responseguardar.json(); // Parsea la respuesta como JSON
+                console.log('Respuesta del servidor:', data1);
+                // Puedes realizar acciones adicionales con la respuesta aquí
+              } catch (error) {
+                console.error('Error al realizar la solicitud:', error);
+                // Manejo de errores
+              }
         } catch (error) {
           console.error('Error al realizar la solicitud:', error);
         }
