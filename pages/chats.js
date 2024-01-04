@@ -130,6 +130,10 @@ const [file, setFile] = useState(null);
       const imgbbResponse = await fetch(`${imgbbUploadUrl}`, {
         method: 'POST',
         body: formData,
+        headers: {
+          'Authorization': `Bearer ${imgbbApiKey}`,
+          // Otros encabezados si es necesario
+        }
       });
   
       if (!imgbbResponse.ok) {
