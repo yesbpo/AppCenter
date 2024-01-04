@@ -173,7 +173,7 @@ const Sends = (props) => {
 
       setCustomParams(updatedCustomParams);
 
-        const url = process.env.TEMPLATE_SEND;
+        const url = 'https://api.gupshup.io/wa/api/v1/template/msg';
         const apiKey = '6ovjpik6ouhlyoalchzu4r2csmeqwlbg';
         const messageWithVariables = replaceVariables(selectedTemplateData, variableValues);
 
