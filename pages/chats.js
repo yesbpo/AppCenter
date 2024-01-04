@@ -546,8 +546,8 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
               } p-4 mb-4`}
             >  {mensaje.type_message === 'image' ? (
               <>
-                <img src={JSON.parse(mensaje.content).file} alt="Imagen" className="w-full" />
-                <p>{JSON.parse(mensaje.content).text}</p>
+                <img src={mensaje.content.file.file} alt="Imagen" className="w-full" />
+                <p>{mensaje.content.text}</p>
               </>
             ) : null}
         
