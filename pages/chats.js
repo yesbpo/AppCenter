@@ -550,7 +550,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
               {mensaje.type_message === 'image' ? (
                 <img src={mensaje.content} alt="Imagen" className="w-full" />
               ) :mensaje.type_message === 'image' ? (
-                <img src={mensaje.content.file} alt="Imagen" className="w-full" />
+                <img src={mensajeData.content.file.replace(/['"]+/g, '')} alt="Imagen" className="w-full" />
               ): mensaje.type_message === 'audio' ? (
                 <audio controls>
                   <source src={mensaje.content} type="audio/mp3" />
