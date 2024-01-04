@@ -181,7 +181,7 @@ const Sends = (props) => {
           const variableValue = customParams[variable] !== undefined ? customParams[variable] : columnValue;
           messageWithVariables = messageWithVariables.replace(`{{${variable}}}, variableValue`);
         });
-
+console.log('ingres', messageWithVariables)
         const data = {
           channel: 'whatsapp',
           source: '573202482534',
