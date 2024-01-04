@@ -42,7 +42,7 @@ function Reports() {
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Reporte');
   
-        const blob = XLSX.write(wb, { bookType: 'xlsx', type: 'blob' });
+        const blob = XLSX.write(wb, { bookType: 'xlsx', mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'  });
   
         saveAs(blob, 'reporte_whatsapp.xlsx');
       } else {
