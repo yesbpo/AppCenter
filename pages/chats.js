@@ -121,7 +121,7 @@ const [file, setFile] = useState(null);
         const formData = new FormData();
         formData.append('archivo', file);
 
-        const response = await fetch('http://localhost:3000/w/subir-archivo', {
+        const response = await fetch('https://appcenteryes.appcenteryes.com/w/subir-archivo', {
           method: 'POST',
           body: formData,
         });
