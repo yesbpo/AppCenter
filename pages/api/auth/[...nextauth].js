@@ -57,6 +57,7 @@ export const authOptions = {
             
           }
         };
+        updateuser()
          return {
              id: userFound.id,
              name: userFound.usuario,
