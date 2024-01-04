@@ -179,7 +179,7 @@ const Sends = (props) => {
           const columnIndex = variableColumnMapping[variable];
           const columnValue = dest[columnIndex];
           const variableValue = customParams[variable] !== undefined ? customParams[variable] : columnValue;
-          messageWithVariables = messageWithVariables.replace(`{{${variable}}}, variableValue`);
+          messageWithVariables = messageWithVariables.replace(`{{${variable}}}`, variableValue);
         });
         console.log(messageWithVariables)
         const data = {
