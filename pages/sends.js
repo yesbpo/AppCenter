@@ -3,7 +3,7 @@ import Layout from "../components/Layout";
 import styled from "styled-components";
 import * as XLSX from 'xlsx';
 import axios from 'axios';
-import io from 'socket.io-client';
+
 const contarRepeticionesPatron = (str) => {
   const patron = /\{\{\d+\}\}/g;
   const contar = str.match(patron);
@@ -154,11 +154,9 @@ const Sends = (props) => {
   };
 
 
-  const enviar =  () => {
+  const enviar = () => {
     if (sheetname.length > 0) {
-      console.log(sheetname)
       sheetname.forEach((dest, rowIndex) => {
-        console.log(sheetname)
         const destinationNumber = String(dest[selectvar]);
         const formattedDestination = destinationNumber.startsWith("57") ? destinationNumber : `57${destinationNumber}`;
 
@@ -181,13 +179,13 @@ const Sends = (props) => {
           const columnIndex = variableColumnMapping[variable];
           const columnValue = dest[columnIndex];
           const variableValue = customParams[variable] !== undefined ? customParams[variable] : columnValue;
-          messageWithVariables = messageWithVariables.replace(`{{${variable}}}`, variableValue);
+          messageWithVariables = messageWithVariables.replace(`{{${variable}}}, variableValue`);
         });
-        console.log(messageWithVariables)
+
         const data = {
           channel: 'whatsapp',
-          source: '573202482534',
-          'src.name': 'YESVARIOS',
+          source: '5718848135',
+          'src.name': 'Pb1yes',
           destination: formattedDestination,
           template: JSON.stringify({
             id: selectedTemplateId ? selectedTemplateId : '',
@@ -231,49 +229,25 @@ const Sends = (props) => {
           return;
       }
 
-       
+        const headers = {
+          'Cache-Control': 'no-cache',
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'apikey': apiKey,
+        };
 
-
-      
-      const headers = {
-        'Cache-Control': 'no-cache',
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'apikey': apiKey,
-      };
-
-      const formData = new URLSearchParams();
-      Object.entries(data).forEach(([key, value]) => {
-        formData.append(key, value);
-      });
-        const envioResponse = fetch(url, {
-          method: 'POST',
-          headers: headers,
-          body: formData,
+        const formData = new URLSearchParams();
+        Object.entries(data).forEach(([key, value]) => {
+          formData.append(key, value);
         });
-        // Verificar si la respuesta tiene éxito (código de estado en el rango 200-299)
-    if (!envioResponse.ok) {
-      throw new Error(`Error en la solicitud: ${envioResponse.status} ${envioResponse.statusText}`);
-    }
-    const fechaActual = new Date();
-    const options = { timeZone: 'America/Bogota', hour12: false };
-    const anio = fechaActual.toLocaleString('en-US', { year: 'numeric', timeZone: options.timeZone });
-    const mes = fechaActual.toLocaleString('en-US', { month: '2-digit', timeZone: options.timeZone });
-    const dia = fechaActual.toLocaleString('en-US', { day: '2-digit', timeZone: options.timeZone });
-    const hora = fechaActual.toLocaleString('en-US', { hour: '2-digit', hour12: false, timeZone: options.timeZone });
-    const minutos = fechaActual.toLocaleString('en-US', { minute: '2-digit', timeZone: options.timeZone });
-    const segundos = fechaActual.toLocaleString('en-US', { second: '2-digit', timeZone: options.timeZone });
-    const data1 = {
-      idmessageTemplate: envioResponse.messageId,
-      status: 'sent',
-      attachments: data.destination,
-      message: messageWithVariables,
-      timestamp:`${anio}-${mes}-${dia} ${hora}:${minutos}:${segundos}`,
-    };
-  
-  
-  })
-  
 
+        axios.post(url, formData, { headers })
+          .then((response) => {
+            console.log('Respuesta del servidor:', response.data);
+          })
+          .catch((error) => {
+            console.error('Error al realizar la solicitud:', error);
+          });
+      });
     } else {
       console.log('No hay datos masivos.');
     }
