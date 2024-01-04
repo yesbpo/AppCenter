@@ -120,7 +120,7 @@ const [file, setFile] = useState(null);
   const handleUpload = async () => {
     if (file) {
       const imgbbApiKey = 'e31e20927215f7f1aa0598b395ff6261';
-    const imgbbUploadUrl = 'https://api.imgbb.com/1/upload';
+    const imgbbUploadUrl = `https://api.imgbb.com/1/upload?key=${imgbbApiKey}`;
     const imgbbUpload = 'https://appcenteryes.appcenteryes.com/w/upload'
     const formData = new FormData();
     formData.append('image', file);
@@ -130,10 +130,7 @@ const [file, setFile] = useState(null);
       const imgbbResponse = await fetch(`${imgbbUploadUrl}`, {
         method: 'POST',
         body: formData,
-        headers: {
-          'Authorization': `Bearer ${imgbbApiKey}`,
-          // Otros encabezados si es necesario
-        }
+        
       });
   
       if (!imgbbResponse.ok) {
