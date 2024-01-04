@@ -158,6 +158,7 @@ const Sends = (props) => {
     if (sheetname.length > 0) {
       console.log(sheetname)
       sheetname.forEach((dest, rowIndex) => {
+        console.log(sheetname)
         const destinationNumber = String(dest[selectvar]);
         const formattedDestination = destinationNumber.startsWith("57") ? destinationNumber : `57${destinationNumber}`;
 
