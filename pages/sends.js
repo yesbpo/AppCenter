@@ -261,6 +261,7 @@ const Sends = (props) => {
           const minutos = fechaActual.toLocaleString('en-US', { minute: '2-digit', timeZone: options.timeZone });
           const segundos = fechaActual.toLocaleString('en-US', { second: '2-digit', timeZone: options.timeZone });
           // guardar mensaje
+          console.log('data para enviar a mensajeri',messageWithVariables)
           const datos = {
             content: messageWithVariables,
             type_comunication: 'message',
