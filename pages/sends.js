@@ -260,6 +260,40 @@ const Sends = (props) => {
           const hora = fechaActual.toLocaleString('en-US', { hour: '2-digit', hour12: false, timeZone: options.timeZone });
           const minutos = fechaActual.toLocaleString('en-US', { minute: '2-digit', timeZone: options.timeZone });
           const segundos = fechaActual.toLocaleString('en-US', { second: '2-digit', timeZone: options.timeZone });
+          // guardar mensaje
+          const datos = {
+            content: messageWithVariables,
+            type_comunication: 'message',
+            status: 'sent',
+            number: data.destination,
+            timestamp: `${anio}-${mes}-${dia} ${hora}:${minutos}:${segundos}`,
+            type_message: 'text',
+            idMessage: responseData.messageId,
+          };
+        
+          try {
+            const response = await fetch( 'https://appcenteryes.appcenteryes.com/db/guardar-mensajes', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                // Otros encabezados si es necesario
+              },
+              body: JSON.stringify(datos), // Convierte los datos a formato JSON
+            });
+        
+            if (!response.ok) {
+              throw new Error(`Error en la solicitud: ${response.statusText}`);
+            }
+        
+            const data = await response.json(); // Parsea la respuesta como JSON
+            console.log('Respuesta del servidor:', data);
+            // Puedes realizar acciones adicionales con la respuesta aquí
+          } catch (error) {
+            console.error('Error al realizar la solicitud:', error);
+            // Manejo de errores
+          }
+
+          // guardar template
           const datosdenetrada = {
               idmessageTemplate: responseData.messageId,
               status: 'sent',
