@@ -232,18 +232,20 @@ const Sends = (props) => {
           return;
       }
 
-        const headers = {
-          'Cache-Control': 'no-cache',
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'apikey': apiKey,
-        };
-
-        const formData = new URLSearchParams();
-        Object.entries(data).forEach(([key, value]) => {
-          formData.append(key, value);
-        });
+       
         enviomasivo()
-     const enviomasivo = async() =>{   
+     const enviomasivo = async() =>{ 
+      console.log('entra')  
+      const headers = {
+        'Cache-Control': 'no-cache',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'apikey': apiKey,
+      };
+
+      const formData = new URLSearchParams();
+      Object.entries(data).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
         const envioResponse = await fetch(url, {
           method: 'POST',
           headers: headers,
