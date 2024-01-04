@@ -42,9 +42,9 @@ function Reports() {
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Reporte');
   
-        const blob = XLSX.write(wb, { bookType: 'xlsx', mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'  });
+        XLSX.writeFile(wb, 'resportewhatsapp');
   
-        saveAs(blob, 'reporte_whatsapp.xlsx');
+       
       } else {
         console.log('No se encontraron mensajes en el rango de fechas especificado.');
       }
