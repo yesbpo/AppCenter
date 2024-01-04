@@ -172,7 +172,7 @@ const Sends = (props) => {
 
         const url = 'https://api.gupshup.io/wa/api/v1/template/msg';
         const apiKey = '6ovjpik6ouhlyoalchzu4r2csmeqwlbg';
-        const messageWithVariables = replaceVariables(selectedTemplateData, variableValues);
+        var messageWithVariables = replaceVariables(selectedTemplateData, variableValues);
 
         // Reemplazar las variables con los valores de la columna seleccionada
         Object.keys(variableColumnMapping).forEach((variable) => {
@@ -181,7 +181,7 @@ const Sends = (props) => {
           const variableValue = customParams[variable] !== undefined ? customParams[variable] : columnValue;
           messageWithVariables = messageWithVariables.replace(`{{${variable}}}, variableValue`);
         });
-console.log('ingres', messageWithVariables)
+
         const data = {
           channel: 'whatsapp',
           source: '573202482534',
