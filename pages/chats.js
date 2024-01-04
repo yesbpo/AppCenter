@@ -127,7 +127,7 @@ const [file, setFile] = useState(null);
   
     try {
       // Subir la imagen a imgBB
-      const imgbbResponse = await fetch(`${imgbbUpload}`, {
+      const imgbbResponse = await fetch(`${imgbbUploadUrl}`, {
         method: 'POST',
         body: formData,
       });
