@@ -194,7 +194,7 @@ const Sends = (props) => {
           channel: 'whatsapp',
           disablePreview: true,
         };
-        console.log(messageWithVariables)
+        console.log(data.params)
         // Tipo de plantilla seleccionada
       switch (selectedTemplateType) {
         case 'Texto':
