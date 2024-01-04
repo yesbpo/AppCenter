@@ -114,8 +114,36 @@ const [file, setFile] = useState(null);
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
     
-    
-    
+  };
+  const handleFileUpload = async () => {
+    if (file) {
+      try {
+        const formData = new FormData();
+        formData.append('archivo', file);
+
+        const response = await fetch('http://localhost:3000/w/subir-archivo', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+        }
+
+        const responseData = await response.json();
+
+        if (responseData.url) {
+          alert(`El archivo se cargó correctamente. URL: ${responseData.url}`);
+        } else {
+          throw new Error('No se recibió una URL del servidor.');
+        }
+      } catch (error) {
+        console.error('Error al subir el archivo:', error.message);
+        alert('Error al subir el archivo.');
+      }
+    } else {
+      alert('Por favor, selecciona un archivo antes de subirlo.');
+    }
   };
   const handleUpload = async () => {
     if (file) {
@@ -606,7 +634,8 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
       <BotonEnviar onClick={actualizarEstadoChatCerrados}>Cerrar</BotonEnviar>
       <div>
         <input type="file" onChange={handleFileChange} />
-       <BotonEnviar onClick={handleUpload}>enviar adjunto</BotonEnviar> 
+       <BotonEnviar onClick={handleUpload}>enviar adjunto</BotonEnviar>
+       <BotonEnviar onClick={handleFileUpload}>subir archivo</BotonEnviar> 
       </div>
     </div>
   </div>
