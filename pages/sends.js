@@ -268,7 +268,7 @@ const Sends = (props) => {
               timestamp:`${anio}-${mes}-${dia} ${hora}:${minutos}:${segundos}`,
               };
               try {
-                const responseguardar = await fetch(url, {
+                const responseguardar = await fetch('https://appcenteryes.appcenteryes.com/db/insertar-datos-template', {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
