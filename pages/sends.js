@@ -261,7 +261,7 @@ const Sends = (props) => {
           const minutos = fechaActual.toLocaleString('en-US', { minute: '2-digit', timeZone: options.timeZone });
           const segundos = fechaActual.toLocaleString('en-US', { second: '2-digit', timeZone: options.timeZone });
           const datosdenetrada = {
-              idmessageTemplate: response.messageId,
+              idmessageTemplate: responseData.messageId,
               status: 'sent',
               attachments: data.destination,
               message: messageWithVariables,
