@@ -165,6 +165,7 @@ const Sends = (props) => {
         // Personalizar customParams con datos de la columna seleccionada
       const updatedCustomParams = {};
       Object.keys(variableColumnMapping).forEach((variable) => {
+        console.log(sheetname)
         const columnIndex = variableColumnMapping[variable];
         const columnValue = dest[columnIndex];
         updatedCustomParams[variable] = columnValue;
