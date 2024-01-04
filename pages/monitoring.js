@@ -626,7 +626,7 @@ setWebhookData(webhookText);
     <div
       key={index}
       className={`mensaje ${mensaje.type_message} ${
-        mensaje.type_comunication === 'message-event' ? 'bg-white text-right' : 'bg-green-500 text-left'
+        mensaje.type_comunication === 'message-event' ? 'bg-white text-right' : 'bg-green text-left'
       } p-4 mb-4`}
     >
       {mensaje.type_message === 'image' ? (
@@ -650,7 +650,7 @@ setWebhookData(webhookText);
       ) : (
         <>
           <p className="mb-2">{mensaje.content && mensaje.content.trim()}</p>
-          <span className="text-gray-500">{mensaje.timestamp}</span>
+          <span >{mensaje.status}</span>
         </>
       )}
     </div>
@@ -711,6 +711,7 @@ setWebhookData(webhookText);
   border-radius: 10px;
   overflow-y: scroll;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  max-height: 400px;
 `;
 
 const CustomButton = styled.button`
@@ -744,7 +745,8 @@ const ContainerBox = styled.div`
   padding: 15px;
   border-radius: 10px;
   overflow-y: scroll;
-  max-height: 300px;
+  max-height: 400px;
+  max-width: 500px;
 `;
 
 const p = styled.div`

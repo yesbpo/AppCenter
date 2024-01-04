@@ -685,7 +685,7 @@ padding: 15px;
 border-radius: 10px;
 overflow-y: scroll;
 max-height: 300px;
-max-width: 400px;
+max-width: 500px;
 scroll-behavior: smooth;
 `;
 
