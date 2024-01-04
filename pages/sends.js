@@ -165,7 +165,6 @@ const Sends = (props) => {
         // Personalizar customParams con datos de la columna seleccionada
       const updatedCustomParams = {};
       Object.keys(variableColumnMapping).forEach((variable) => {
-        console.log('entra22')
         const columnIndex = variableColumnMapping[variable];
         const columnValue = dest[columnIndex];
         updatedCustomParams[variable] = columnValue;
@@ -179,7 +178,6 @@ const Sends = (props) => {
 
         // Reemplazar las variables con los valores de la columna seleccionada
         Object.keys(variableColumnMapping).forEach((variable) => {
-          console.log(variableColumnMapping,'entra')
           const columnIndex = variableColumnMapping[variable];
           const columnValue = dest[columnIndex];
           const variableValue = customParams[variable] !== undefined ? customParams[variable] : columnValue;
@@ -236,7 +234,7 @@ const Sends = (props) => {
        
 
 
-      console.log('entra')  
+      
       const headers = {
         'Cache-Control': 'no-cache',
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -254,7 +252,7 @@ const Sends = (props) => {
         });
         // Verificar si la respuesta tiene éxito (código de estado en el rango 200-299)
     if (!envioResponse.ok) {
-      throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+      throw new Error(`Error en la solicitud: ${envioResponse.status} ${envioResponse.statusText}`);
     }
     const fechaActual = new Date();
     const options = { timeZone: 'America/Bogota', hour12: false };
@@ -265,7 +263,7 @@ const Sends = (props) => {
     const minutos = fechaActual.toLocaleString('en-US', { minute: '2-digit', timeZone: options.timeZone });
     const segundos = fechaActual.toLocaleString('en-US', { second: '2-digit', timeZone: options.timeZone });
     const data1 = {
-      idmessageTemplate: response.messageId,
+      idmessageTemplate: envioResponse.messageId,
       status: 'sent',
       attachments: data.destination,
       message: messageWithVariables,
