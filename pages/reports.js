@@ -19,15 +19,15 @@ function Reports() {
         console.error('Por favor, selecciona fechas de inicio y fin.');
         return;
       }
-
+  
       const response = await fetch(`https://appcenteryes.appcenteryes.com/db/obtener-mensajes-por-fecha?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`);
-
+  
       if (!response.ok) {
         throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
       }
-
+  
       const mensajes = await response.json();
-
+  
       if (mensajes.mensajes.length > 0) {
         const datosFiltrados = mensajes.mensajes.map((mensaje) => ({
           fecha: mensaje.timestamp,
@@ -37,13 +37,14 @@ function Reports() {
           estado: mensaje.status,
           idMensaje: mensaje.idMessage,
         }));
-
-        const csvData = "Fecha,Mensaje,Destinatario,Tipo,Estado,ID Mensaje\n" +
-          datosFiltrados.map((d) => `${d.fecha},${d.mensaje},${d.destinatario},${d.tipo},${d.estado},${d.idMensaje}`).join("\n");
-
-        const blob = new Blob([csvData], { type: 'text/csv' });
-
-        saveAs(blob, 'reporte_whatsapp.csv');
+  
+        const ws = XLSX.utils.json_to_sheet(datosFiltrados);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Reporte');
+  
+        const blob = XLSX.write(wb, { bookType: 'xlsx', type: 'blob' });
+  
+        saveAs(blob, 'reporte_whatsapp.xlsx');
       } else {
         console.log('No se encontraron mensajes en el rango de fechas especificado.');
       }
@@ -51,7 +52,6 @@ function Reports() {
       console.error('Error al generar el reporte:', error);
     }
   };
-
   useEffect(() => {
     fetch('https://appcenteryes.appcenteryes.com/w/api/templates')
       .then(response => response.json())
