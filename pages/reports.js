@@ -42,7 +42,7 @@ function Reports() {
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Reporte');
   
-        XLSX.writeFile(wb, 'resportewhatsapp');
+        XLSX.writeFile(wb, 'resportewhatsapp.xlsx');
   
        
       } else {
