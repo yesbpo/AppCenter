@@ -234,8 +234,8 @@ const Sends = (props) => {
       }
 
        
-        enviomasivo()
-     const enviomasivo = async() =>{ 
+
+
       console.log('entra')  
       const headers = {
         'Cache-Control': 'no-cache',
@@ -247,7 +247,7 @@ const Sends = (props) => {
       Object.entries(data).forEach(([key, value]) => {
         formData.append(key, value);
       });
-        const envioResponse = await fetch(url, {
+        const envioResponse = fetch(url, {
           method: 'POST',
           headers: headers,
           body: formData,
@@ -271,14 +271,7 @@ const Sends = (props) => {
       message: messageWithVariables,
       timestamp:`${anio}-${mes}-${dia} ${hora}:${minutos}:${segundos}`,
     };
-  }
-    // Configuración de la solicitud
   
-    
-    // Realizar la solicitud fetch
-    
-    // Parsear la respuesta como JSON
-
   
   })
   
