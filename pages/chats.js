@@ -544,7 +544,12 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
               className={`mensaje ${mensaje.type_message} ${
                 mensaje.type_comunication === 'message-event' ? 'bg-white text-right' : 'bg-green text-left'
               } p-4 mb-4`}
-            >
+            > {mensajeData.message && JSON.parse(mensajeData.message).type === 'image' ? (
+              <>
+                <img src={JSON.parse(mensajeData.message).originalUrl} alt="Imagen" className="w-full" />
+                <p>{JSON.parse(mensajeData.message).caption}</p>
+              </>
+            ) : null}
               {mensaje.type_message === 'image' ? (
                 <img src={mensaje.content || mensaje.content[file] } alt="Imagen" className="w-full" />
               ) : mensaje.type_message === 'audio' ? (
