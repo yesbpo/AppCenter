@@ -542,7 +542,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
             <div
               key={index}
               className={`mensaje ${mensaje.type_message} ${
-                mensaje.type_comunication === 'message-event' ? 'bg-white text-right' : 'bg-green-900 text-left'
+                mensaje.type_comunication === 'message-event' ? 'bg-white text-right' : 'bg-green text-left'
               } p-4 mb-4`}
             >
               {mensaje.type_message === 'image' ? (
