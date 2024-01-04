@@ -156,6 +156,7 @@ const Sends = (props) => {
 
   const enviar =  () => {
     if (sheetname.length > 0) {
+      console.log(sheetname)
       sheetname.forEach((dest, rowIndex) => {
         const destinationNumber = String(dest[selectvar]);
         const formattedDestination = destinationNumber.startsWith("57") ? destinationNumber : `57${destinationNumber}`;
@@ -181,7 +182,7 @@ const Sends = (props) => {
           const variableValue = customParams[variable] !== undefined ? customParams[variable] : columnValue;
           messageWithVariables = messageWithVariables.replace(`{{${variable}}}`, variableValue);
         });
-console.log(messageWithVariables)
+        console.log(messageWithVariables)
         const data = {
           channel: 'whatsapp',
           source: '573202482534',
