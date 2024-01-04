@@ -179,6 +179,7 @@ const Sends = (props) => {
 
         // Reemplazar las variables con los valores de la columna seleccionada
         Object.keys(variableColumnMapping).forEach((variable) => {
+          console.log(variableColumnMapping,'entra')
           const columnIndex = variableColumnMapping[variable];
           const columnValue = dest[columnIndex];
           const variableValue = customParams[variable] !== undefined ? customParams[variable] : columnValue;
