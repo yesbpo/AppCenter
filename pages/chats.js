@@ -566,7 +566,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
               ) : (
                 <>
                   <p className="mb-2">{mensaje.content && mensaje.content.trim()}</p>
-                  <span className="text-gray-500">{mensaje.status}</span>
+                  <span >{mensaje.status}</span>
                 </>
               )}
             </div>
