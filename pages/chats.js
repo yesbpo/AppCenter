@@ -684,7 +684,8 @@ background-color: #f7f7f7;
 padding: 15px;
 border-radius: 10px;
 overflow-y: scroll;
-max-height: 400px;
+max-height: 300px;
+max-width: 400px;
 scroll-behavior: smooth;
 `;
 
