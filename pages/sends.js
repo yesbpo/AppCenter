@@ -170,7 +170,7 @@ const Sends = (props) => {
 
       setCustomParams(updatedCustomParams);
 
-        const url = 'https://api.gupshup.io/wa/api/v1/template/msg';
+        const url = process.env.TEMPLETE_SEND;
         const apiKey = '6ovjpik6ouhlyoalchzu4r2csmeqwlbg';
         const messageWithVariables = replaceVariables(selectedTemplateData, variableValues);
 
@@ -239,21 +239,25 @@ console.log(messageWithVariables)
         Object.entries(data).forEach(([key, value]) => {
           formData.append(key, value);
         });
-
-        const envioResponse = fetch(url, {method: 'POST',headers: headers})
-  .then(response => {
-    // Verificar si la respuesta tiene éxito (código de estado en el rango 200-299)
+        enviomasivo()
+     const enviomasivo = async() =>{   
+        const envioResponse = await fetch(url, {
+          method: 'POST',
+          headers: headers,
+          body: formData,
+        });
+        // Verificar si la respuesta tiene éxito (código de estado en el rango 200-299)
     if (!response.ok) {
       throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
     }
     const fechaActual = new Date();
-const options = { timeZone: 'America/Bogota', hour12: false };
-const anio = fechaActual.toLocaleString('en-US', { year: 'numeric', timeZone: options.timeZone });
-const mes = fechaActual.toLocaleString('en-US', { month: '2-digit', timeZone: options.timeZone });
-const dia = fechaActual.toLocaleString('en-US', { day: '2-digit', timeZone: options.timeZone });
-const hora = fechaActual.toLocaleString('en-US', { hour: '2-digit', hour12: false, timeZone: options.timeZone });
-const minutos = fechaActual.toLocaleString('en-US', { minute: '2-digit', timeZone: options.timeZone });
-const segundos = fechaActual.toLocaleString('en-US', { second: '2-digit', timeZone: options.timeZone });
+    const options = { timeZone: 'America/Bogota', hour12: false };
+    const anio = fechaActual.toLocaleString('en-US', { year: 'numeric', timeZone: options.timeZone });
+    const mes = fechaActual.toLocaleString('en-US', { month: '2-digit', timeZone: options.timeZone });
+    const dia = fechaActual.toLocaleString('en-US', { day: '2-digit', timeZone: options.timeZone });
+    const hora = fechaActual.toLocaleString('en-US', { hour: '2-digit', hour12: false, timeZone: options.timeZone });
+    const minutos = fechaActual.toLocaleString('en-US', { minute: '2-digit', timeZone: options.timeZone });
+    const segundos = fechaActual.toLocaleString('en-US', { second: '2-digit', timeZone: options.timeZone });
     const data1 = {
       idmessageTemplate: response.messageId,
       status: 'sent',
@@ -261,39 +265,18 @@ const segundos = fechaActual.toLocaleString('en-US', { second: '2-digit', timeZo
       message: messageWithVariables,
       timestamp:`${anio}-${mes}-${dia} ${hora}:${minutos}:${segundos}`,
     };
-    
+  }
     // Configuración de la solicitud
-    const requestOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data1),
-    };
+  
     
     // Realizar la solicitud fetch
-    fetch('https://appcenteryes.appcenteryes.com/db/insertar-datos-template/', requestOptions)
-      .then(response => response.json())
-      .then(data => {
-        console.log('Respuesta del servidor:', data);
-        // Manejar la respuesta del servidor aquí
-      })
-      .catch(error => {
-        console.error('Error al realizar la solicitud:', error);
-        // Manejar errores aquí
-      });
+    
     // Parsear la respuesta como JSON
-    return response.json();
+
+  
   })
-  .then(data => {
-    // Manejar los datos de la respuesta
-    console.log('Respuesta del servidor:', data);
-  })
-  .catch(error => {
-    // Manejar errores de la solicitud
-    console.error('Error al realizar la solicitud:', error);
-  });
-      });
+  
+
     } else {
       console.log('No hay datos masivos.');
     }
