@@ -173,7 +173,7 @@ const Sends = (props) => {
 
       setCustomParams(updatedCustomParams);
 
-        const url = process.env.TEMPLETE_SEND;
+        const url = process.env.TEMPLATE_SEND;
         const apiKey = '6ovjpik6ouhlyoalchzu4r2csmeqwlbg';
         const messageWithVariables = replaceVariables(selectedTemplateData, variableValues);
 
@@ -253,7 +253,7 @@ const Sends = (props) => {
           body: formData,
         });
         // Verificar si la respuesta tiene éxito (código de estado en el rango 200-299)
-    if (!response.ok) {
+    if (!envioResponse.ok) {
       throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
     }
     const fechaActual = new Date();
