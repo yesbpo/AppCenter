@@ -173,7 +173,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
         throw new Error(`Error al enviar el mensaje: ${envioResponse.status} ${envioResponse.statusText}`);
       }
       const envioData = await envioResponse.json();
-      console.log('Respuesta del servidor de envíos:', envioData);
+      console.log('Respuesta del servidor de envíos:',imageUrl );
       const idMessage = envioData.messageId;
       // Actualizar el mensaje enviado en el servidor
       const guardarMensajeResponse = await fetch('https://appcenteryes.appcenteryes.com/db/guardar-mensajes', {
@@ -194,6 +194,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
     if (guardarMensajeResponse.ok) {
       const guardarMensajeData = await guardarMensajeResponse.json();
       console.log(guardarMensajeData)
+      console.log('Respuesta del servidor de envíos:',imageUrl );
       setInputValue('')
           } else { 
     }
@@ -544,12 +545,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
               className={`mensaje ${mensaje.type_message} ${
                 mensaje.type_comunication === 'message-event' ? 'bg-white text-right' : 'bg-green text-left'
               } p-4 mb-4`}
-            >  {mensaje.type_message === 'image' ? (
-              <>
-                <img src={mensaje.content.file.file} alt="Imagen" className="w-full" />
-                <p>{mensaje.content.text}</p>
-              </>
-            ) : null}
+            > 
         
               {mensaje.type_message === 'image' ? (
                 <img src={mensaje.content.file || mensaje.content} alt="Imagen" className="w-full" />
