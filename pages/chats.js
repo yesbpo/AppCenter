@@ -794,7 +794,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
 
   {/* Contenedor de contactos */}
   <ContainerBox >
-  <Box>
+  <Box className='bg-primary'>
     <div className="contact-list-container">
       <h1>{statuschats}</h1>
       <ul>
@@ -832,7 +832,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
     };
  
 const Box = styled.div`
-background-color: blue; 
+ 
 padding: 30px;
 margin: 30px;
 border-radius: 10px;
