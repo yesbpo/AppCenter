@@ -169,10 +169,10 @@ if (file.type.startsWith('image/')) {
           destination: numeroEspecifico,
           message: JSON.stringify({
             type : 'file',
-            name: "samplefile.pdf",
+            contentType: file.type,
             originalUrl: base + documentUrl,
             previewUrl: base + documentUrl,
-            
+            caption: inputValue,
           }),
           disablePreview: true,
         };
