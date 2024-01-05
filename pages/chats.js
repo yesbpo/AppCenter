@@ -518,6 +518,7 @@ const handleFileChange = (e) => {
         if (!envioResponse.ok) {
           throw new Error(`Error al enviar el mensaje: ${envioResponse.status} ${envioResponse.statusText}`);
         }
+        
         const envioData = await envioResponse.json();
         console.log('Respuesta del servidor de envíos:',documentUrl );
         const idMessage = envioData.messageId;
@@ -540,16 +541,15 @@ const handleFileChange = (e) => {
       if (guardarMensajeResponse.ok) {
         const guardarMensajeData = await guardarMensajeResponse.json();
         console.log(guardarMensajeData)
-        console.log('Respuesta del servidor de envíos:',content );
         setInputValue('')
-            } else { 
+      } else { 
       }
         
         }
         
       } catch (error) {
         console.error('Error al subir el archivo:', error.message);
-        alert('Error al subir el archivo.');
+        setInputValue('')
       }
     } else{
     if (!inputValue.trim()){
