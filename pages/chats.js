@@ -185,7 +185,15 @@ const [file, setFile] = useState(null);
                 caption: inputValue,
               };
               break;
-          
+              case 'audio':
+              // Lógica para el tipo 'image'
+              tipoadjunto = {
+                type: 'audio',
+                originalUrl: base + documentUrl,
+                previewUrl: base + documentUrl,
+                caption: inputValue,
+              };
+              break;
             default:
               // Lógica para otros tipos, si es necesario
               tipoadjunto = null;
@@ -335,7 +343,7 @@ const [file, setFile] = useState(null);
           
             // Se ejecutará cada vez que el componente se monte o actualice
             const audioElement = new Audio('https://appcenteryes.appcenteryes.com/w/uploads/short-success-sound-glockenspiel-treasure-video-game-6346.mp3');
-          if(data.length > mensajes1.length){
+          if(data1.length > mensajes1.length){
             handleEvent()
           }
             const handleEvent = () => {
@@ -599,14 +607,14 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
                 <img src={limpiarLink(mensaje.content)} alt="Imagen" className="w-full" />
               ): mensaje.type_message === 'audio' ? (
                 <audio controls>
-                  <source src={mensaje.content} type="audio/mp3" />
+                  <source src={limpiarLink(mensaje.content)||mensaje.content} type="audio/mp3" />
                   Tu navegador no soporta el elemento de audio.
                 </audio>
               ) : mensaje.type_message === 'sticker' ? (
                 <img src={mensaje.content} alt="Sticker" className="w-20" />
               ) : mensaje.type_message === 'video' ? (
                 <video controls className="w-full">
-                  <source src={mensaje.content[file]||mensaje.content} type="video/mp4" />
+                  <source src={limpiarLink(mensaje.content)||mensaje.content} type="video/mp4" />
                   Tu navegador no soporta el elemento de video.
                 </video>
               ) : mensaje.type_message === 'file' ? (
@@ -651,7 +659,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
       <BotonEnviar onClick={actualizarEstadoChat}>Gestionar</BotonEnviar>
       <BotonEnviar onClick={actualizarEstadoChatCerrados}>Cerrar</BotonEnviar>
       <div>
-        <input type="file" onChange={handleFileChange} />
+        <input type="file" onChange={handleFileChange}> simbol</input>
        
        <BotonEnviar onClick={handleFileUpload}>subir archivo</BotonEnviar> 
       </div>
