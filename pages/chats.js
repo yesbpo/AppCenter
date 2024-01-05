@@ -343,13 +343,7 @@ const [file, setFile] = useState(null);
           
             // Se ejecutará cada vez que el componente se monte o actualice
             const audioElement = new Audio('https://appcenteryes.appcenteryes.com/w/uploads/short-success-sound-glockenspiel-treasure-video-game-6346.mp3');
-          if(data1.length > mensajes1.length){
-            handleEvent()
-          }
-            const handleEvent = () => {
-              // Reproducir el sonido cuando ocurra el evento
-              audioElement.play();
-            };
+          
         } catch (error) {
           
           // Puedes manejar el error según tus necesidades
