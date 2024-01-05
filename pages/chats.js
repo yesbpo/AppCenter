@@ -114,11 +114,19 @@ const Chats = () => {
 
 const [file, setFile] = useState(null);
 
+const fileInputRef = useRef(null);
+
+const handleButtonClick = () => {
+  // Simular clic en el input de archivo cuando se hace clic en el botón
+  fileInputRef.current.click();
+};
+
+const handleFileChange = (e) => {
+  // Manejar el cambio de archivo aquí
+  setFile(e.target.files[0]);
+  console.log('Archivo seleccionado:', file.name);
+};
   
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-    
-  };
   const handleFileUpload = async () => {
     if (file) {
      
@@ -653,7 +661,21 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
       <BotonEnviar onClick={actualizarEstadoChat}>Gestionar</BotonEnviar>
       <BotonEnviar onClick={actualizarEstadoChatCerrados}>Cerrar</BotonEnviar>
       <div>
-        <input type="file" onChange={handleFileChange}> simbol</input>
+      <div>
+      {/* Este es el botón o etiqueta personalizado */}
+      <label className="custom-file-input-label" onClick={handleButtonClick}>
+        Seleccionar Archivo
+      </label>
+
+      {/* Este es el input de archivo real, oculto con estilos personalizados */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+         // Puedes ajustar las extensiones permitidas
+      />
+    </div> 
        
        <BotonEnviar onClick={handleFileUpload}>subir archivo</BotonEnviar> 
       </div>
