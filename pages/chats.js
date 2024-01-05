@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import io from 'socket.io-client';
 import { useSession, signIn } from 'next-auth/react';
 import EmojiPicker from 'emoji-picker-react';
-import { PaperAirplaneIcon } from '@heroicons/react/solid';
+import { PaperAirplaneIcon, PaperClipIcon } from '@heroicons/react/solid';
 const Chats = () => {
   const [statuschats, setStatuschats] = useState('')
   const containerRef = useRef(null);
