@@ -832,6 +832,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
     };
  
 const Box = styled.div`
+background-color: blue; 
 padding: 30px;
 margin: 30px;
 border-radius: 10px;
