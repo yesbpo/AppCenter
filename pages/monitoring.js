@@ -630,7 +630,7 @@ setWebhookData(webhookText);
       } p-4 mb-4`}
     >
       {mensaje.type_message === 'image' ? (
-        <img src={mensaje.content || `"${mensaje.content[file]}"`} alt="Imagen" className="w-full" />
+        <img src={`"${mensaje.content[file]}"`|| mensaje.content  } alt="Imagen" className="w-full" />
       ) : mensaje.type_message === 'audio' ? (
         <audio controls>
           <source src={mensaje.content} type="audio/mp3" />
