@@ -714,9 +714,9 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
             > 
         
               { mensaje.type_message === 'image'  ? (
-                <img src={limpiarLink(mensaje.content) || mensaje.content}  alt="Imagen" className="w-full" />
+                <img src={limpiarLink(mensaje.content) || mensaje.content}  alt="Imagen" className="w-20vw" />
               ) :mensaje.type_message === 'image' ? (
-                <img src={limpiarLink(mensaje.content)} alt="Imagen" className="w-full" />
+                <img src={limpiarLink(mensaje.content)} alt="Imagen" className="w-20vw" />
               ): mensaje.type_message === 'audio' ? (
                 <audio controls>
                   <source src={mensaje.content} type="audio/mp3" />
@@ -725,12 +725,12 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
               ) : mensaje.type_message === 'sticker' ? (
                 <img src={mensaje.content} alt="Sticker" className="w-20" />
               ) : mensaje.type_message === 'video' ? (
-                <video controls className="w-full">
+                <video controls className="w-20vw">
                   <source src={limpiarLink(mensaje.content)||mensaje.content} type="video/mp4" />
                   Tu navegador no soporta el elemento de video.
                 </video>
               ) : mensaje.type_message === 'file' ? (
-                <a href={ limpiarLink(mensaje.content)||mensaje.content} target="_blank" rel="noopener noreferrer" className="text-blue-500">
+                <a href={ limpiarLink(mensaje.content)||mensaje.content} target="_blank" rel="noopener noreferrer" className="text-blue">
                   Descargar documento
                 </a>
               ) : (
