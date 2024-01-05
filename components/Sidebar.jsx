@@ -108,9 +108,9 @@ const Sidebar = (props) => {
       if (response.ok) {
         const data = await response.json();
         console.log(data); // Aquí puedes manejar la respuesta del servidor
-        setTimeout(() => {
+        
           signOut();
-        }, 3000);    
+         
       } else {
         console.error('Error al actualizar el usuario:', response.statusText);
       }
