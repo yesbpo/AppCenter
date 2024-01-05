@@ -648,7 +648,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
       <BotonEnviar onClick={actualizarEstadoChatCerrados}>Cerrar</BotonEnviar>
       <div>
         <input type="file" onChange={handleFileChange} />
-       <BotonEnviar onClick={handleUpload}>enviar adjunto</BotonEnviar>
+       
        <BotonEnviar onClick={handleFileUpload}>subir archivo</BotonEnviar> 
       </div>
     </div>
