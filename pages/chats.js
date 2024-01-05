@@ -664,7 +664,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
       <div>
       {/* Este es el botón o etiqueta personalizado */}
       <label className="custom-file-input-label" onClick={handleButtonClick}>
-        Seleccionar Archivo
+      <PaperClipIcon className="w-5 h-5 mr-2" />
       </label>
 
       {/* Este es el input de archivo real, oculto con estilos personalizados */}
