@@ -222,7 +222,7 @@ const [file, setFile] = useState(null);
           type_comunication: 'message-event', // Puedes ajustar este valor según tus necesidades
           status: 'sent', // Puedes ajustar este valor según tus necesidades
           number: numeroEspecifico,
-          type_message: file.type,
+          type_message: cleanedType,
           timestamp: `${anio}-${mes}-${dia} ${hora}:${minutos}:${segundos}`,
           idMessage: idMessage // Puedes ajustar este valor según tus necesidades
         }),
@@ -673,8 +673,8 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
               } p-4 mb-4`}
             > 
         
-              { /^image\//.test(mensaje.type_message) || mensaje.type_message === 'image'  ? (
-                <img src={mensaje.content} alt="Imagen" className="w-full" />
+              { mensaje.type_message === 'image'  ? (
+                <img src={mensaje.content[file] || mensaje.content}  alt="Imagen" className="w-full" />
               ) :mensaje.type_message === 'image' ? (
                 <img src={`"${mensaje.content.file}"`} alt="Imagen" className="w-full" />
               ): mensaje.type_message === 'audio' ? (
@@ -686,11 +686,11 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
                 <img src={mensaje.content} alt="Sticker" className="w-20" />
               ) : mensaje.type_message === 'video' ? (
                 <video controls className="w-full">
-                  <source src={mensaje.content} type="video/mp4" />
+                  <source src={mensaje.content[file]||mensaje.content} type="video/mp4" />
                   Tu navegador no soporta el elemento de video.
                 </video>
               ) : mensaje.type_message === 'file' ? (
-                <a href={mensaje.content} target="_blank" rel="noopener noreferrer" className="text-blue-500">
+                <a href={ mensaje.content[file]||mensaje.content} target="_blank" rel="noopener noreferrer" className="text-blue-500">
                   Descargar documento
                 </a>
               ) : (
