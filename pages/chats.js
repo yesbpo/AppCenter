@@ -230,7 +230,7 @@ const [file, setFile] = useState(null);
       if (guardarMensajeResponse.ok) {
         const guardarMensajeData = await guardarMensajeResponse.json();
         console.log(guardarMensajeData)
-        console.log('Respuesta del servidor de envíos:',documentUrl );
+        console.log('Respuesta del servidor de envíos:',content );
         setInputValue('')
             } else { 
       }
@@ -674,9 +674,9 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
             > 
         
               { mensaje.type_message === 'image'  ? (
-                <img src={mensaje.content[file] || mensaje.content}  alt="Imagen" className="w-full" />
+                <img src={JSON.parse(mensaje.content).file || mensaje.content}  alt="Imagen" className="w-full" />
               ) :mensaje.type_message === 'image' ? (
-                <img src={`"${mensaje.content.file}"`} alt="Imagen" className="w-full" />
+                <img src={JSON.parse(mensaje.content).file} alt="Imagen" className="w-full" />
               ): mensaje.type_message === 'audio' ? (
                 <audio controls>
                   <source src={mensaje.content} type="audio/mp3" />
