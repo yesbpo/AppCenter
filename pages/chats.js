@@ -169,7 +169,7 @@ if (file.type.startsWith('image/')) {
           destination: numeroEspecifico,
           message: JSON.stringify({
             
-            contentType: file.type,
+            type: cleanedType,
             originalUrl: base + documentUrl,
             previewUrl: base + documentUrl,
             caption: inputValue,
