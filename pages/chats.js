@@ -117,6 +117,7 @@ const [file, setFile] = useState(null);
   };
   const handleFileUpload = async () => {
     if (file) {
+      
       try {
         const formData = new FormData();
         formData.append('archivo', file);
@@ -129,14 +130,79 @@ const [file, setFile] = useState(null);
         if (!response.ok) {
           throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
         }
+        else{
+          const base = "https://appcenteryes.appcenteryes.com/w"
 
-        const responseData = await response.json();
+          const responseData = await response.json();
 
         if (responseData.url) {
           alert(`El archivo se cargó correctamente. URL: ${responseData.url}`);
         } else {
           throw new Error('No se recibió una URL del servidor.');
         }
+          const fechaActual = new Date();
+  const options = { timeZone: 'America/Bogota', hour12: false };
+  const anio = fechaActual.getFullYear();
+  const mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
+  const dia = fechaActual.getDate().toString().padStart(2, '0');
+  const hora = fechaActual.getHours().toString().padStart(2, '0');
+  const minutos = fechaActual.getMinutes().toString().padStart(2, '0');
+  const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
+          const documentUrl = responseData.url;
+              // Preparar datos del mensaje
+        const mensajeData = {
+          channel: 'whatsapp',
+          source: '573202482534',
+          'src.name': 'YESVARIOS',
+          destination: numeroEspecifico,
+          message: JSON.stringify({
+            type: file.type,
+            originalUrl: base + documentUrl,
+            previewUrl: base + documentUrl,
+            caption: inputValue,
+          }),
+          disablePreview: true,
+        };
+        // Enviar mensaje a través de la API de envíos
+        const envioResponse = await fetch('https://appcenteryes.appcenteryes.com/w/api/envios', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams(mensajeData).toString(),
+        });
+        if (!envioResponse.ok) {
+          throw new Error(`Error al enviar el mensaje: ${envioResponse.status} ${envioResponse.statusText}`);
+        }
+        const envioData = await envioResponse.json();
+        console.log('Respuesta del servidor de envíos:',documentUrl );
+        const idMessage = envioData.messageId;
+        // Actualizar el mensaje enviado en el servidor
+        const guardarMensajeResponse = await fetch('https://appcenteryes.appcenteryes.com/db/guardar-mensajes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: {file: base + documentUrl,  text: mensajeData.message.caption},
+          type_comunication: 'message-event', // Puedes ajustar este valor según tus necesidades
+          status: 'sent', // Puedes ajustar este valor según tus necesidades
+          number: numeroEspecifico,
+          type_message: file.type,
+          timestamp: `${anio}-${mes}-${dia} ${hora}:${minutos}:${segundos}`,
+          idMessage: idMessage // Puedes ajustar este valor según tus necesidades
+        }),
+      });
+      if (guardarMensajeResponse.ok) {
+        const guardarMensajeData = await guardarMensajeResponse.json();
+        console.log(guardarMensajeData)
+        console.log('Respuesta del servidor de envíos:',documentUrl );
+        setInputValue('')
+            } else { 
+      }
+        
+        }
+        
       } catch (error) {
         console.error('Error al subir el archivo:', error.message);
         alert('Error al subir el archivo.');
@@ -226,9 +292,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
       setInputValue('')
           } else { 
     }
-      if (!actualizarMensajeResponse.ok) {
-        throw new Error(`Error al actualizar el mensaje enviado: ${actualizarMensajeResponse.status} ${actualizarMensajeResponse.statusText}`);
-      }
+      
       }
       const actualizarMensajeData = await actualizarMensajeResponse.json();
       console.log('Respuesta del servidor de actualización de mensaje:', actualizarMensajeData);
