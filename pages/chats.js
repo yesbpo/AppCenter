@@ -172,7 +172,7 @@ if (file.type.startsWith('image/')) {
             name: "samplefile.pdf",
             originalUrl: base + documentUrl,
             previewUrl: base + documentUrl,
-            caption: inputValue,
+            
           }),
           disablePreview: true,
         };
