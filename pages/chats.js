@@ -648,7 +648,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
     } catch (error) {
       
     }
-  };
+  
 
   useEffect(() => {
     const apiUrl2 = "https://appcenteryes,appcenteryes.com/w/api/users";
@@ -693,7 +693,8 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
         // Puedes manejar el error según tus necesidades
       }
     
-    }
+  }
+}
   };
   function limpiarLink(dataString) {
     const match = dataString.match(/"file":"([^"]*)"/);
