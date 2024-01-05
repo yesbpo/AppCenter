@@ -117,7 +117,14 @@ const [file, setFile] = useState(null);
   };
   const handleFileUpload = async () => {
     if (file) {
+      const audioElement = new Audio('https://appcenteryes.appcenteryes.com/w/uploads/short-success-sound-glockenspiel-treasure-video-game-6346.mp3');
       
+        handleEvent()
+      
+        const handleEvent = () => {
+          // Reproducir el sonido cuando ocurra el evento
+          audioElement.play();
+        };
       try {
         const formData = new FormData();
         formData.append('archivo', file);
