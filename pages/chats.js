@@ -131,7 +131,7 @@ const [file, setFile] = useState(null);
           throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
         }
         else{
-          const base = "https://appcenteryes.appcenteryes.com/w"
+          const base = "https://appcenteryes.appcenteryes.com"
 
           const responseData = await response.json();
 
