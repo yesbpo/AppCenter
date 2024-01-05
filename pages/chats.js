@@ -188,7 +188,7 @@ const [file, setFile] = useState(null);
               break;
           }
           
-              // Preparar datos del mensaje
+         // Preparar datos del mensaje
         const mensajeData = {
           channel: 'whatsapp',
           source: '573202482534',
@@ -245,111 +245,14 @@ const [file, setFile] = useState(null);
       alert('Por favor, selecciona un archivo antes de subirlo.');
     }
   };
-  const handleUpload = async () => {
-    if (file) {
-      const imgbbApiKey = 'e31e20927215f7f1aa0598b395ff6261';
-    const imgbbUploadUrl = `https://api.imgbb.com/1/upload?key=${imgbbApiKey}`;
-    const imgbbUpload = 'https://appcenteryes.appcenteryes.com/w/upload'
-    const formData = new FormData();
-    formData.append('image', file);
-  
-    try {
-      // Subir la imagen a imgBB
-      const imgbbResponse = await fetch(`${imgbbUploadUrl}`, {
-        method: 'POST',
-        body: formData,
-        
-      });
-  
-      if (!imgbbResponse.ok) {
-        throw new Error(`Error al subir la imagen a imgBB: ${imgbbResponse.status} ${imgbbResponse.statusText}`);
-      }
-      else{
-        const fechaActual = new Date();
-const options = { timeZone: 'America/Bogota', hour12: false };
-const anio = fechaActual.getFullYear();
-const mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
-const dia = fechaActual.getDate().toString().padStart(2, '0');
-const hora = fechaActual.getHours().toString().padStart(2, '0');
-const minutos = fechaActual.getMinutes().toString().padStart(2, '0');
-const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
-        const imgbbData = await imgbbResponse.json();
-        const imageUrl = imgbbData.data.url;
-            // Preparar datos del mensaje
-      const mensajeData = {
-        channel: 'whatsapp',
-        source: '573202482534',
-        'src.name': 'YESVARIOS',
-        destination: numeroEspecifico,
-        message: JSON.stringify({
-          type: 'image',
-          originalUrl: imageUrl,
-          previewUrl: imageUrl,
-          caption: inputValue,
-        }),
-        disablePreview: true,
-      };
-      // Enviar mensaje a través de la API de envíos
-      const envioResponse = await fetch('https://appcenteryes.appcenteryes.com/w/api/envios', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams(mensajeData).toString(),
-      });
-      if (!envioResponse.ok) {
-        throw new Error(`Error al enviar el mensaje: ${envioResponse.status} ${envioResponse.statusText}`);
-      }
-      const envioData = await envioResponse.json();
-      console.log('Respuesta del servidor de envíos:',imageUrl );
-      const idMessage = envioData.messageId;
-      // Actualizar el mensaje enviado en el servidor
-      const guardarMensajeResponse = await fetch('https://appcenteryes.appcenteryes.com/db/guardar-mensajes', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        content: {file: imageUrl,  text: mensajeData.message.caption},
-        type_comunication: 'message-event', // Puedes ajustar este valor según tus necesidades
-        status: 'sent', // Puedes ajustar este valor según tus necesidades
-        number: numeroEspecifico,
-        type_message: 'image',
-        timestamp: `${anio}-${mes}-${dia} ${hora}:${minutos}:${segundos}`,
-        idMessage: idMessage // Puedes ajustar este valor según tus necesidades
-      }),
-    });
-    if (guardarMensajeResponse.ok) {
-      const guardarMensajeData = await guardarMensajeResponse.json();
-      console.log(guardarMensajeData)
-      console.log('Respuesta del servidor de envíos:',imageUrl );
-      setInputValue('')
-          } else { 
-    }
-      
-      }
-      const actualizarMensajeData = await actualizarMensajeResponse.json();
-      console.log('Respuesta del servidor de actualización de mensaje:', actualizarMensajeData);
-    } catch (error) {
-      console.error('Error:', error.message);
-    }
-    }
-  
-    
-  };
- 
   // Llamada a la función
-  
-  
-
   const [numeroEspecifico, setNumeroEspecifico] = useState('');
   // Ejemplo de consumo de la ruta con JavaScript y fetch
-const actualizarEstadoChatCerrados = async () => {
+  const actualizarEstadoChatCerrados = async () => {
   conection();
-const idChat2 = numeroEspecifico;
-const nuevoEstado = 'closed';
-const nuevoUserId = 0;
-
+  const idChat2 = numeroEspecifico;
+  const nuevoEstado = 'closed';
+  const nuevoUserId = 0;
   try {
     const response = await fetch('https://appcenteryes.appcenteryes.com/db/actualizar-estado-chat', {
       method: 'PUT',
@@ -423,9 +326,18 @@ const nuevoUserId = 0;
           if (!response.ok) {
            
           }
-  
           const data1 = await response.json();
           setMensajes1(data1);
+          
+            // Se ejecutará cada vez que el componente se monte o actualice
+            const audioElement = new Audio('https://appcenteryes.appcenteryes.com/w/uploads/short-success-sound-glockenspiel-treasure-video-game-6346.mp3');
+          if(data.length > mensajes1.length){
+            handleEvent()
+          }
+            const handleEvent = () => {
+              // Reproducir el sonido cuando ocurra el evento
+              audioElement.play();
+            };
         } catch (error) {
           
           // Puedes manejar el error según tus necesidades
