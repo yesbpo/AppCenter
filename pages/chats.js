@@ -149,6 +149,9 @@ const [file, setFile] = useState(null);
   const minutos = fechaActual.getMinutes().toString().padStart(2, '0');
   const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
           const documentUrl = responseData.url;
+          const cleanedType = file.type.includes('application')
+  ? 'file'
+  : file.type.replace(/^image\/(.+)$/, 'image');
               // Preparar datos del mensaje
         const mensajeData = {
           channel: 'whatsapp',
@@ -156,7 +159,7 @@ const [file, setFile] = useState(null);
           'src.name': 'YESVARIOS',
           destination: numeroEspecifico,
           message: JSON.stringify({
-            type: file.type,
+            type: cleanedType,
             originalUrl: base + documentUrl,
             previewUrl: base + documentUrl,
             caption: inputValue,
