@@ -150,7 +150,7 @@ const [file, setFile] = useState(null);
   const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
           const documentUrl = responseData.url;
           const cleanedType = file.type.includes('application')
-  ? 'file'
+  ? 'document'
   : file.type.replace(/^image\/(.+)$/, 'image');
               // Preparar datos del mensaje
         const mensajeData = {
