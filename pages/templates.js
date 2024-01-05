@@ -394,7 +394,7 @@ const handleCreateTemplate = async () => {
           onChange={(e) => setHeader(e.target.value)}
           maxLength={160}
         />
-        <button onClick={handleAddPlaceholder}>Agregar variable</button>
+       
       </label>
 
       <Separador />
