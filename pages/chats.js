@@ -443,13 +443,13 @@ const handleFileChange = (e) => {
           throw new Error('No se recibió una URL del servidor.');
         }
           const fechaActual = new Date();
-  const options = { timeZone: 'America/Bogota', hour12: false };
-  const anio = fechaActual.getFullYear();
-  const mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
-  const dia = fechaActual.getDate().toString().padStart(2, '0');
-  const hora = fechaActual.getHours().toString().padStart(2, '0');
-  const minutos = fechaActual.getMinutes().toString().padStart(2, '0');
-  const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
+          const options = { timeZone: 'America/Bogota', hour12: false };
+          const anio = fechaActual.getFullYear();
+          const mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
+          const dia = fechaActual.getDate().toString().padStart(2, '0');
+          const hora = fechaActual.getHours().toString().padStart(2, '0');
+          const minutos = fechaActual.getMinutes().toString().padStart(2, '0');
+          const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
           const documentUrl = responseData.url;
           const cleanedType = file.type.includes('application')
           ? 'file'
@@ -542,6 +542,7 @@ const handleFileChange = (e) => {
         const guardarMensajeData = await guardarMensajeResponse.json();
         console.log(guardarMensajeData)
         setInputValue('')
+        setFile('')
       } else { 
       }
         
@@ -771,7 +772,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
       <BotonEnviar onClick={actualizarEstadoChat}>Gestionar</BotonEnviar>
       <BotonEnviar onClick={actualizarEstadoChatCerrados}>Cerrar</BotonEnviar>
       <label className="custom-file-input-label" onClick={handleButtonClick}>
-      <PaperClipIcon className="w-5 h-10 mr-2" />
+      <PaperClipIcon className="w-5 h-10 mr-2" />{file.name}
       </label>
       <input
         type="file"
