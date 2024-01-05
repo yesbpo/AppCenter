@@ -782,11 +782,11 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
       />
       <div>
       <div>
-      {/* Este es el botón o etiqueta personalizado */}
+      
       
     </div> 
        
-       <BotonEnviar onClick={handleFileUpload}>subir archivo</BotonEnviar> 
+ 
       </div>
     </div>
   </div>
