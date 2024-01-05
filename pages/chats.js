@@ -418,7 +418,140 @@ const handleFileChange = (e) => {
   )
   }
   const enviarMensaje = async () => {
-  
+    if (file) {
+     
+      try {
+        const formData = new FormData();
+        formData.append('archivo', file);
+
+        const response = await fetch('https://appcenteryes.appcenteryes.com/w/subir-archivo', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+        }
+        else{
+          const base = "https://appcenteryes.appcenteryes.com"
+
+          const responseData = await response.json();
+
+        if (responseData.url) {
+          alert(`El archivo se cargó correctamente. URL: ${responseData.url}`);
+        } else {
+          throw new Error('No se recibió una URL del servidor.');
+        }
+          const fechaActual = new Date();
+  const options = { timeZone: 'America/Bogota', hour12: false };
+  const anio = fechaActual.getFullYear();
+  const mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
+  const dia = fechaActual.getDate().toString().padStart(2, '0');
+  const hora = fechaActual.getHours().toString().padStart(2, '0');
+  const minutos = fechaActual.getMinutes().toString().padStart(2, '0');
+  const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
+          const documentUrl = responseData.url;
+          const cleanedType = file.type.includes('application')
+          ? 'file'
+          :  file.type.replace(/^(image|video)\/(.+)$/, '$1');
+          let tipoadjunto;
+          switch (cleanedType) {
+            case 'file':
+              // Lógica para el tipo 'file'
+              tipoadjunto = {
+                type: cleanedType,
+                url: base + documentUrl,
+                filename: file, 
+              };
+              break;
+            
+            case 'video':
+              // Lógica para el tipo 'video'
+              tipoadjunto = {
+                type: 'video',
+                url: base + documentUrl,
+                caption: inputValue,
+              };
+              break;
+          
+            case 'image':
+              // Lógica para el tipo 'image'
+              tipoadjunto = {
+                type: 'image',
+                originalUrl: base + documentUrl,
+                previewUrl: base + documentUrl,
+                caption: inputValue,
+              };
+              break;
+              case 'audio':
+              // Lógica para el tipo 'image'
+              tipoadjunto = {
+                type: 'audio',
+                originalUrl: base + documentUrl,
+                previewUrl: base + documentUrl,
+                caption: inputValue,
+              };
+              break;
+            default:
+              // Lógica para otros tipos, si es necesario
+              tipoadjunto = null;
+              break;
+          }
+          
+         // Preparar datos del mensaje
+        const mensajeData = {
+          channel: 'whatsapp',
+          source: '573202482534',
+          'src.name': 'YESVARIOS',
+          destination: numeroEspecifico,
+          message: JSON.stringify(tipoadjunto),
+          disablePreview: true,
+        };
+        // Enviar mensaje a través de la API de envíos
+        const envioResponse = await fetch('https://appcenteryes.appcenteryes.com/w/api/envios', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams(mensajeData).toString(),
+        });
+        if (!envioResponse.ok) {
+          throw new Error(`Error al enviar el mensaje: ${envioResponse.status} ${envioResponse.statusText}`);
+        }
+        const envioData = await envioResponse.json();
+        console.log('Respuesta del servidor de envíos:',documentUrl );
+        const idMessage = envioData.messageId;
+        // Actualizar el mensaje enviado en el servidor
+        const guardarMensajeResponse = await fetch('https://appcenteryes.appcenteryes.com/db/guardar-mensajes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: {file: base + documentUrl,  text: mensajeData.message.caption},
+          type_comunication: 'message-event', // Puedes ajustar este valor según tus necesidades
+          status: 'sent', // Puedes ajustar este valor según tus necesidades
+          number: numeroEspecifico,
+          type_message: cleanedType,
+          timestamp: `${anio}-${mes}-${dia} ${hora}:${minutos}:${segundos}`,
+          idMessage: idMessage // Puedes ajustar este valor según tus necesidades
+        }),
+      });
+      if (guardarMensajeResponse.ok) {
+        const guardarMensajeData = await guardarMensajeResponse.json();
+        console.log(guardarMensajeData)
+        console.log('Respuesta del servidor de envíos:',content );
+        setInputValue('')
+            } else { 
+      }
+        
+        }
+        
+      } catch (error) {
+        console.error('Error al subir el archivo:', error.message);
+        alert('Error al subir el archivo.');
+      }
+    } else{
     if (!inputValue.trim()){
       
       return;
@@ -560,7 +693,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
         // Puedes manejar el error según tus necesidades
       }
     
-
+    }
   };
   function limpiarLink(dataString) {
     const match = dataString.match(/"file":"([^"]*)"/);
