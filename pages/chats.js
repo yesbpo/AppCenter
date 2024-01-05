@@ -149,31 +149,52 @@ const [file, setFile] = useState(null);
   const minutos = fechaActual.getMinutes().toString().padStart(2, '0');
   const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
           const documentUrl = responseData.url;
-          let cleanedType;
-
-if (file.type.startsWith('image/')) {
-  // Si el tipo comienza con "image/", mantener solo "image"
-  cleanedType = 'image';
-} else if (file.type.startsWith('application/')) {
-  // Si el tipo comienza con "application/", eliminar lo que viene después del punto
-  cleanedType = file.type.replace(/^application\/([^.]+).*$/, 'application/$1');
-} else {
-  // En otros casos, mantener el tipo sin cambios
-  cleanedType = file.type;
-}
+          const cleanedType = file.type.includes('application')
+          ? 'file'
+          :  file.type.replace(/^(image|video)\/(.+)$/, '$1');
+          let tipoadjunto;
+          switch (cleanedType) {
+            case 'file':
+              // Lógica para el tipo 'file'
+              tipoadjunto = {
+                type: cleanedType,
+                url: base + documentUrl,
+                filename: file, 
+              };
+              break;
+            
+            case 'video':
+              // Lógica para el tipo 'video'
+              tipoadjunto = {
+                type: 'video',
+                url: base + videoUrl,
+                caption: inputValue,
+              };
+              break;
+          
+            case 'image':
+              // Lógica para el tipo 'image'
+              tipoadjunto = {
+                type: 'image',
+                originalUrl: base + imageUrl,
+                previewUrl: base + imageUrl,
+                caption: inputValue,
+              };
+              break;
+          
+            default:
+              // Lógica para otros tipos, si es necesario
+              tipoadjunto = null;
+              break;
+          }
+          
               // Preparar datos del mensaje
         const mensajeData = {
           channel: 'whatsapp',
           source: '573202482534',
           'src.name': 'YESVARIOS',
           destination: numeroEspecifico,
-          message: JSON.stringify({
-            
-            type: cleanedType,
-            originalUrl: base + documentUrl,
-            previewUrl: base + documentUrl,
-            caption: inputValue,
-          }),
+          message: JSON.stringify(tipoadjunto),
           disablePreview: true,
         };
         // Enviar mensaje a través de la API de envíos
