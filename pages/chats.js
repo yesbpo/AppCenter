@@ -156,7 +156,7 @@ const [file, setFile] = useState(null);
           'src.name': 'YESVARIOS',
           destination: numeroEspecifico,
           message: JSON.stringify({
-            type: file.type,
+            type: /^image\//.test(file.type),
             originalUrl: base + documentUrl,
             previewUrl: base + documentUrl,
             caption: inputValue,
