@@ -168,7 +168,8 @@ if (file.type.startsWith('image/')) {
           'src.name': 'YESVARIOS',
           destination: numeroEspecifico,
           message: JSON.stringify({
-            type : cleanedType,
+            type : 'file',
+            contentType: cleanedType,
             originalUrl: base + documentUrl,
             previewUrl: base + documentUrl,
             caption: inputValue,
