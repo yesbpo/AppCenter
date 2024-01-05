@@ -167,7 +167,7 @@ const [file, setFile] = useState(null);
               // Lógica para el tipo 'video'
               tipoadjunto = {
                 type: 'video',
-                url: base + videoUrl,
+                url: base + documentUrl,
                 caption: inputValue,
               };
               break;
@@ -176,8 +176,8 @@ const [file, setFile] = useState(null);
               // Lógica para el tipo 'image'
               tipoadjunto = {
                 type: 'image',
-                originalUrl: base + imageUrl,
-                previewUrl: base + imageUrl,
+                originalUrl: base + documentUrl,
+                previewUrl: base + documentUrl,
                 caption: inputValue,
               };
               break;
