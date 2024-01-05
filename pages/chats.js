@@ -648,7 +648,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
     } catch (error) {
       
     }
-  
+  };
 
   const updateuser = async () => {
     const usuario = session.user.name; // Reemplaza con el nombre de usuario que deseas actualizar
@@ -669,7 +669,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
       }
     
   }
-}
+  
   };
   function limpiarLink(dataString) {
     const match = dataString.match(/"file":"([^"]*)"/);
