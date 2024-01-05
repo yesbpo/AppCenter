@@ -650,31 +650,6 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
     }
   
 
-  useEffect(() => {
-    const apiUrl2 = "https://appcenteryes,appcenteryes.com/w/api/users";
-    fetch(apiUrl2, {
-      method: 'GET',
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        const nuevosContactos = data.users.map((usuario) => ({
-          user: usuario.countryCode + usuario.phoneCode,
-          fecha: new Date(usuario.lastMessageTimeStamp).toLocaleString('es-ES', {
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric',
-            second: 'numeric',
-            timeZoneName: 'short',
-          }),
-        }));
-        setContactos(nuevosContactos);
-      })
-      .catch((error) => {
-        
-      });  
-  }, []);
   const updateuser = async () => {
     const usuario = session.user.name; // Reemplaza con el nombre de usuario que deseas actualizar
     const nuevoDato = 'Activo'; // Reemplaza con el nuevo valor que deseas asignar
