@@ -714,18 +714,18 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
             > 
         
               { mensaje.type_message === 'image'  ? (
-                <img src={limpiarLink(mensaje.content) || mensaje.content}  alt="Imagen" className="w-20vw" />
+                <img src={limpiarLink(mensaje.content) || mensaje.content}  alt="Imagen" className="w-15vw" />
               ) :mensaje.type_message === 'image' ? (
-                <img src={limpiarLink(mensaje.content)} alt="Imagen" className="w-20vw" />
+                <img src={limpiarLink(mensaje.content)} alt="Imagen" className="w-15vw" />
               ): mensaje.type_message === 'audio' ? (
                 <audio controls>
                   <source src={mensaje.content} type="audio/mp3" />
                   Tu navegador no soporta el elemento de audio.
                 </audio>
               ) : mensaje.type_message === 'sticker' ? (
-                <img src={mensaje.content} alt="Sticker" className="w-20" />
+                <img src={mensaje.content} alt="Sticker" className="w-15vw" />
               ) : mensaje.type_message === 'video' ? (
-                <video controls className="w-20vw">
+                <video controls className="w-15vw">
                   <source src={limpiarLink(mensaje.content)||mensaje.content} type="video/mp4" />
                   Tu navegador no soporta el elemento de video.
                 </video>
@@ -736,7 +736,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
               ) : (
                 <>
                   <p className="mb-2">{mensaje.content && mensaje.content.trim()}</p>
-                  <span >{mensaje.status}</span>
+                  <span >{mensaje.status && mensaje.timestamp}</span>
                 </>
               )}
             </div>
