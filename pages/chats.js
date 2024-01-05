@@ -661,10 +661,8 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
       <BotonEnviar onClick={actualizarEstadoChat}>Gestionar</BotonEnviar>
       <BotonEnviar onClick={actualizarEstadoChatCerrados}>Cerrar</BotonEnviar>
       <label className="custom-file-input-label" onClick={handleButtonClick}>
-      <PaperClipIcon className="w-5 h-5 mr-2" />
+      <PaperClipIcon className="w-5 h-10 mr-2" />
       </label>
-
-      {/* Este es el input de archivo real, oculto con estilos personalizados */}
       <input
         type="file"
         ref={fileInputRef}
