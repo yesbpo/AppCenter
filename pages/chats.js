@@ -660,9 +660,6 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
       <BotonEnviar onClick={enviarMensaje}><PaperAirplaneIcon className="h-5 w-5" /></BotonEnviar>
       <BotonEnviar onClick={actualizarEstadoChat}>Gestionar</BotonEnviar>
       <BotonEnviar onClick={actualizarEstadoChatCerrados}>Cerrar</BotonEnviar>
-      <div>
-      <div>
-      {/* Este es el botón o etiqueta personalizado */}
       <label className="custom-file-input-label" onClick={handleButtonClick}>
       <PaperClipIcon className="w-5 h-5 mr-2" />
       </label>
@@ -675,6 +672,10 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
         onChange={handleFileChange}
          // Puedes ajustar las extensiones permitidas
       />
+      <div>
+      <div>
+      {/* Este es el botón o etiqueta personalizado */}
+      
     </div> 
        
        <BotonEnviar onClick={handleFileUpload}>subir archivo</BotonEnviar> 
