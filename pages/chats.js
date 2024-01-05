@@ -601,7 +601,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
                 <img src={limpiarLink(mensaje.content)} alt="Imagen" className="w-full" />
               ): mensaje.type_message === 'audio' ? (
                 <audio controls>
-                  <source src={limpiarLink(mensaje.content)||mensaje.content} type="audio/mp3" />
+                  <source src={mensaje.content} type="audio/mp3" />
                   Tu navegador no soporta el elemento de audio.
                 </audio>
               ) : mensaje.type_message === 'sticker' ? (
