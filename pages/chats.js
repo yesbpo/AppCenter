@@ -8,7 +8,9 @@ import { PaperAirplaneIcon } from '@heroicons/react/solid';
 const Chats = () => {
   const [statuschats, setStatuschats] = useState('')
   const containerRef = useRef(null);
-
+  const [pendientes, setPendientes] = useState('');
+  const [engestion, setEngestion] = useState('');
+  
   // Función para mantener el scroll en la parte inferior
   const scrollToBottom = () => {
     if (containerRef.current) {
@@ -70,6 +72,7 @@ const Chats = () => {
       const data = await response.json();
       setMensajes1(data);
       setContactos1(withoutGest);
+      setPendientes(withoutGest.length)
     } catch (error) {
     
       // Puedes manejar el error según tus necesidades
@@ -96,6 +99,7 @@ const Chats = () => {
       const data = await response.json();
       setMensajes1(data);
       setContactos1(withoutGest);
+      setEngestion(withoutGest.length)
     } catch (error) {
     
       // Puedes manejar el error según tus necesidades
@@ -117,14 +121,7 @@ const [file, setFile] = useState(null);
   };
   const handleFileUpload = async () => {
     if (file) {
-      const audioElement = new Audio('https://appcenteryes.appcenteryes.com/w/uploads/short-success-sound-glockenspiel-treasure-video-game-6346.mp3');
-      
-        handleEvent()
-      
-        const handleEvent = () => {
-          // Reproducir el sonido cuando ocurra el evento
-          audioElement.play();
-        };
+     
       try {
         const formData = new FormData();
         formData.append('archivo', file);
@@ -568,9 +565,9 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
                 
         <Box className='estados' onLoad={updateuser()}>
           <ButtonContainer>
-            <CustomButton onClick={handleEngestionClick}>En gestion</CustomButton>
+            <CustomButton onClick={handleEngestionClick}>{"En gestion: "+engestion}</CustomButton>
              {/* Mostrar Activos si 'mostrarActivos' es true */}
-            <CustomButton onClick={handlePendientesClick}>Pendientes</CustomButton>
+            <CustomButton onClick={handlePendientesClick}>{"Pendientes: "+pendientes}</CustomButton>
             <CustomButton onClick={() => console.log('Agregar Número')}>Agregar Número</CustomButton>
           </ButtonContainer>
         </Box>
