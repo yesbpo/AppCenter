@@ -112,7 +112,7 @@ const Chats = () => {
     ]   
 );
 
-const [file, setFile] = useState(null);
+const [file, setFile] = useState('');
 
 const fileInputRef = useRef(null);
 
@@ -772,7 +772,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
       <BotonEnviar onClick={actualizarEstadoChat}>Gestionar</BotonEnviar>
       <BotonEnviar onClick={actualizarEstadoChatCerrados}>Cerrar</BotonEnviar>
       <label className="custom-file-input-label" onClick={handleButtonClick}>
-      <PaperClipIcon className="w-5 h-10 mr-2" />{file.name || "adjuntos"}
+      <PaperClipIcon className="w-5 h-10 mr-2" />{file.name }
       </label>
       <input
         type="file"
