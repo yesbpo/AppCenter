@@ -690,7 +690,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
                   Tu navegador no soporta el elemento de video.
                 </video>
               ) : mensaje.type_message === 'file' ? (
-                <a href={ mensaje.content[file[0]]||mensaje.content} target="_blank" rel="noopener noreferrer" className="text-blue-500">
+                <a href={ mensaje.content.file||mensaje.content} target="_blank" rel="noopener noreferrer" className="text-blue-500">
                   Descargar documento
                 </a>
               ) : (
