@@ -736,7 +736,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
               ) : (
                 <>
                   <p className="mb-2">{mensaje.content && mensaje.content.trim()}</p>
-                  <span >{mensaje.status && mensaje.timestamp}</span>
+                  <span >{mensaje.status +" "+ mensaje.timestamp}</span>
                 </>
               )}
             </div>
