@@ -636,6 +636,10 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
     
 
   };
+  function limpiarLink(dataString) {
+    const match = dataString.match(/"file":"([^"]*)"/);
+    return match ? match[1] : null;
+  }
   
   if(session){
     return (
@@ -674,9 +678,9 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
             > 
         
               { mensaje.type_message === 'image'  ? (
-                <img src={mensaje.content.file || mensaje.content}  alt="Imagen" className="w-full" />
+                <img src={limpiarLink(mensaje.content.file) || mensaje.content}  alt="Imagen" className="w-full" />
               ) :mensaje.type_message === 'image' ? (
-                <img src={mensaje.content.file} alt="Imagen" className="w-full" />
+                <img src={limpiarLink(mensaje.content.file)} alt="Imagen" className="w-full" />
               ): mensaje.type_message === 'audio' ? (
                 <audio controls>
                   <source src={mensaje.content} type="audio/mp3" />
@@ -690,7 +694,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
                   Tu navegador no soporta el elemento de video.
                 </video>
               ) : mensaje.type_message === 'file' ? (
-                <a href={ mensaje.content.file||mensaje.content} target="_blank" rel="noopener noreferrer" className="text-blue-500">
+                <a href={ limpiarLink(mensaje.content.file)||mensaje.content} target="_blank" rel="noopener noreferrer" className="text-blue-500">
                   Descargar documento
                 </a>
               ) : (
