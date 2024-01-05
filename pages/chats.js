@@ -695,10 +695,10 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
         <Container>
         <Box className='container-messages w-50vw h-40vh flex'>
   {/* Contenedor del chat */}
-  <div className='chat-container'>
+  <div className='chat-container bg-primary'>
     <h2>Chat {numeroEspecifico}</h2>
     <ContainerBox ref={containerRef} className='bg-primary'>
-      <div className='message-list bg-primary'>
+      <div className='message-list '>
         {(() => {
           // Filtra los mensajes por el número específico y contenido no vacío
           const mensajesFiltrados = mensajes1
