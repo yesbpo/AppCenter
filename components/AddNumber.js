@@ -189,7 +189,7 @@ function AddNumber (){
           template.params && (
             <div key={template.id} className="mt-4">
               <h3 className="text-lg font-semibold">Parámetros:</h3>
-              {contarOcurrencias(template.data, '{{.*?}}').length > 0&& contarOcurrencias(template.data, '{{.*?}}').map((param) => (
+              {contarOcurrencias(template.data, '{{.*?}}').length > 0 && contarOcurrencias(template.data, '{{.*?}}').map((param) => (
                 <div key={param} className="mt-2">
                   <label htmlFor={param} className="block text-sm font-medium text-gray-700">
                     {param}:
