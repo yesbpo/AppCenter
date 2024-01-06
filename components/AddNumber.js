@@ -215,8 +215,6 @@ const ContainerBox = styled.div`
 ;
 
 overflow-y: scroll;
-max-height: 300px;
-max-width: 500px;
 scroll-behavior: smooth;
 `;
 
