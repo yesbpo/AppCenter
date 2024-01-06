@@ -23,7 +23,11 @@ const Chats = () => {
   const [selectedTemplateId, setSelectedTemplateId] = useState('');
   const [templateParams, setTemplateParams] = useState({}); // Nuevo estado para los parámetros
   const [error, setError] = useState(null);
-
+  function contarOcurrencias(texto, patron) {
+    const regex = new RegExp(patron, 'g');
+    const coincidencias = texto.match(regex);
+    return coincidencias ? coincidencias.length : 0;
+  }
   const handleParamChange = (param, value) => {
     setTemplateParams((prevParams) => {
       const updatedParams = {
@@ -711,8 +715,9 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
       >
         <option value="" disabled>Select a template</option>
         {templates.map((template) => (
+         
           <option key={template.id} value={template.id}>
-            {template.params.length}
+            {template.data}{contarOcurrencias(template.data, '{{.*?}}')}
           </option>
         ))}
       </select>
