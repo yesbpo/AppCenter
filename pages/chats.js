@@ -7,7 +7,17 @@ import EmojiPicker from 'emoji-picker-react';
 import { PaperAirplaneIcon, PaperClipIcon } from '@heroicons/react/solid';
 import AddNumber from '../components/AddNumber';
 const Chats = () => {
- 
+  const [showPopup, setShowPopup] = useState(false);
+
+  // Función para abrir la ventana emergente
+  const openPopup = () => {
+    setShowPopup(true);
+  };
+
+  // Función para cerrar la ventana emergente
+  const closePopup = () => {
+    setShowPopup(false);
+  };
 
   // logica chats
   const [statuschats, setStatuschats] = useState('')
