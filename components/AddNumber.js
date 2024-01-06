@@ -197,7 +197,6 @@ function AddNumber (){
                   <input
                     type="text"
                     id={param}
-                    value={templateParams[param] || ''}
                     onChange={(e) => handleParamChange(param, e.target.value)}
                     className="mt-1 p-2 border border-gray-300 rounded-md"
                   />
