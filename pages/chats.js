@@ -6,6 +6,138 @@ import { useSession, signIn } from 'next-auth/react';
 import EmojiPicker from 'emoji-picker-react';
 import { PaperAirplaneIcon, PaperClipIcon } from '@heroicons/react/solid';
 const Chats = () => {
+  //logica agregar numero 
+  const [showPopup, setShowPopup] = useState(false);
+
+  // Función para abrir la ventana emergente
+  const openPopup = () => {
+    setShowPopup(true);
+  };
+
+  // Función para cerrar la ventana emergente
+  const closePopup = () => {
+    setShowPopup(false);
+  };
+  const [numericInputValue, setNumericInputValue] = useState('');
+  const [templates, setTemplates] = useState([]);
+  const [selectedTemplateId, setSelectedTemplateId] = useState('');
+  const [templateParams, setTemplateParams] = useState({}); // Nuevo estado para los parámetros
+  const [error, setError] = useState(null);
+
+  const handleParamChange = (param, value) => {
+    setTemplateParams((prevParams) => {
+      const updatedParams = {
+        ...prevParams,
+        [param]: value,
+      };
+      console.log('Updated Params:', updatedParams);
+      return updatedParams;
+    });
+  };
+
+  // GET TEMPLATES
+  useEffect(() => {
+    // Traer las plantillas al cargar el componente
+    const fetchTemplates = async () => {
+      try {
+        // Utilizar el servidor proxy en lugar de la URL directa
+        const response = await fetch('https://appcenteryes.appcenteryes.com/w/gupshup-templates');
+
+        if (!response.ok) {
+          throw new Error(HTTP `error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data.status === "success") {
+          const processedTemplates = data.templates.map(template => ({
+            id: template.id, // Asegúrate de incluir el ID
+            category: template.category,
+            createdOn: template.createdOn,
+            data: template.data,
+            elementName: template.elementName,
+            languageCode: template.languageCode,
+            status: template.status,
+            templateType: template.templateType,
+            modifiedOn: template.modifiedOn,
+            params: template.params || [], // Asegúrate de que tu plantilla tenga una propiedad params
+          }));
+
+          setTemplates(processedTemplates);
+        } else {
+          setError(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        setError(Fetch `error: ${error.message}`);
+      }
+    };
+
+    fetchTemplates();
+  }, []);
+
+  const handleTemplateChange = (event) => {
+    const selectedTemplateId = event.target.value;
+    setSelectedTemplateId(selectedTemplateId);
+  };
+
+  const enviarSolicitud = async () => {
+    if (!selectedTemplateId) {
+      console.error('Error: No se ha seleccionado ninguna plantilla.');
+      return;
+    }
+
+    const selectedTemplate = templates.find((template) => template.id === selectedTemplateId);
+
+    if (!selectedTemplate) {
+      console.error('Error: No se encontró la plantilla seleccionada.');
+      return;
+    }
+
+    const url = 'https://api.gupshup.io/wa/api/v1/template/msg';
+    const apiKey = '6ovjpik6ouhlyoalchzu4r2csmeqwlbg';
+
+    const data = new URLSearchParams();
+    data.append('channel', 'whatsapp');
+    data.append('source', '573202482534');
+    data.append('destination', numericInputValue);
+    data.append('src.name', 'YESVARIOS');
+    data.append('template', JSON.stringify({
+      id: selectedTemplate.id,
+      params: selectedTemplate.params || [] // Asegúrate de que tu plantilla tenga una propiedad params
+    }));
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'apikey': apiKey,
+          'cache-control': 'no-cache',
+        },
+        body: data,
+      });
+
+      const responseData = await response.json();
+      console.log('Respuesta:', responseData);
+    } catch (error) {
+      console.error('Error al enviar la solicitud:', error);
+    }
+  };
+
+  const handleNumericInputChange = (value) => {
+    // Permite solo números y limita a 10 caracteres
+    const newValue = value.replace(/[^0-9]/g, '').slice(0, 10);
+    setNumericInputValue(newValue);
+    console.log('Valor numérico ingresado:', newValue);
+  };
+
+  const handleAgregarNumeroClick = () => {
+    // Llamamos a la función enviarSolicitud al hacer clic en el botón
+    enviarSolicitud();
+  };
+
+  // logica chats
   const [statuschats, setStatuschats] = useState('')
   const containerRef = useRef(null);
   const [pendientes, setPendientes] = useState('');
@@ -681,7 +813,44 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
   if(session){
     return (
     <>
-      
+      {showPopup && <div>
+        <button onClick={closePopup}>Cerrar</button>
+      <label htmlFor="destinationInput">Número de destino (máximo 10 dígitos):</label>
+      <input
+        type="text"
+        id="destinationInput"
+        value={numericInputValue}
+        onChange={(e) => handleNumericInputChange(e.target.value)}
+      />
+      <button onClick={handleAgregarNumeroClick}>Agregar Número</button>
+
+      <h2>Plantillas:</h2>
+      <select value={selectedTemplateId} onChange={handleTemplateChange}>
+        <option value="" disabled>Select a template</option>
+        {templates.map((template) => (
+          <option key={template.id} value={template.id}>{template.data}</option>
+        ))}
+      </select>
+
+      {templates.map((template) => (
+        template.id === selectedTemplateId && template.params && (
+          <div key={template.id}>
+            <h3>Parámetros:</h3>
+            {template.params.map((param) => (
+              <div key={param}>
+                <label htmlFor={param}>{param}:</label>
+                <input
+                  type="text"
+                  id={param}
+                  value={templateParams[param] || ''}
+                  onChange={(e) => handleParamChange(param, e.target.value)}
+                />
+              </div>
+            ))}
+          </div>
+        )
+      ))}
+    </div>}
         <Layout className='big-box'>
                 
         <Box className='estados' onLoad={updateuser()}>
@@ -689,12 +858,12 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
             <CustomButton onClick={handleEngestionClick}>{"En gestion: "+engestion}</CustomButton>
              {/* Mostrar Activos si 'mostrarActivos' es true */}
             <CustomButton onClick={handlePendientesClick}>{"Pendientes: "+pendientes}</CustomButton>
-            <CustomButton onClick={() => console.log('Agregar Número')}>Agregar Número</CustomButton>
+            <CustomButton onClick={openPopup}>Agregar Número</CustomButton>
           </ButtonContainer>
         </Box>
         <Container>
         <Box className='container-messages w-50vw h-40vh flex'>
-  {/* Contenedor del chat */}
+  {/* Contenedor del cha  t */}
   <div className='chat-container '>
     <h2>Chat {numeroEspecifico}</h2>
     <ContainerBox ref={containerRef} className='bg-primary'>
