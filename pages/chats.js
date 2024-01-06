@@ -18,6 +18,7 @@ const Chats = () => {
   const closePopup = () => {
     setShowPopup(false);
   };
+  const [paramentros, setParametros] = useState('')
   const [numericInputValue, setNumericInputValue] = useState('');
   const [templates, setTemplates] = useState([]);
   const [selectedTemplateId, setSelectedTemplateId] = useState('');
@@ -26,6 +27,7 @@ const Chats = () => {
   function contarOcurrencias(texto, patron) {
     const regex = new RegExp(patron, 'g');
     const coincidencias = texto.match(regex);
+    setParametros(coincidencias)
     return coincidencias ? coincidencias.length : 0;
   }
   const handleParamChange = (param, value) => {
@@ -728,7 +730,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
           template.params && (
             <div key={template.id} className="mt-4">
               <h3 className="text-lg font-semibold">Parámetros:</h3>
-              {template.params.map((param) => (
+              {parametros.map((param) => (
                 <div key={param} className="mt-2">
                   <label htmlFor={param} className="block text-sm font-medium text-gray-700">
                     {param}:
