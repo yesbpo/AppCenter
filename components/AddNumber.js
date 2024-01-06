@@ -54,7 +54,7 @@ function AddNumber (){
             status: template.status,
             templateType: template.templateType,
             modifiedOn: template.modifiedOn,
-            params: template.params || [], // Asegúrate de que tu plantilla tenga una propiedad params
+            params: templateParams || [], // Asegúrate de que tu plantilla tenga una propiedad params
           }));
 
           setTemplates(processedTemplates);
