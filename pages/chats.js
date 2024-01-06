@@ -815,7 +815,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
     <>
      {showPopup && (
   <div className="fixed inset-0 flex items-center justify-center">
-    <div className="bg-black bg-opacity-50 absolute inset-0" onClick={closePopup}></div>
+    <div className="bg-black bg-opacity-50 " ></div>
     <div className="bg-white p-6 rounded shadow-lg w-96">
       <button
         onClick={closePopup}
