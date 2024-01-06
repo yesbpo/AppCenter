@@ -24,19 +24,10 @@ function AddNumber (){
     const regex = new RegExp(patron, 'g');
     const coincidencias = texto.match(regex);
     const componentes = Array.from({ length: coincidencias }, (v, index) => index);
-    setParametros(componentes)
+    setTemplateParams(componentes)
     return coincidencias ? coincidencias.length : 0;
   }
-  const handleParamChange = (param, value) => {
-    setTemplateParams((prevParams) => {
-      const updatedParams = {
-        ...prevParams,
-        [param]: value,
-      };
-      console.log('Updated Params:', updatedParams);
-      return updatedParams;
-    });
-  };
+  
 
   // GET TEMPLATES
   useEffect(() => {
@@ -188,7 +179,7 @@ function AddNumber (){
           template.params && (
             <div key={template.id} className="mt-4">
               <h3 className="text-lg font-semibold">Parámetros:</h3>
-              {parametros.map((param) => (
+              {templateParams.map((param) => (
                 <div key={param} className="mt-2">
                   <label htmlFor={param} className="block text-sm font-medium text-gray-700">
                     {param}:
