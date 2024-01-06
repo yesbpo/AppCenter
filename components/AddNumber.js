@@ -54,7 +54,7 @@ function AddNumber (){
             status: template.status,
             templateType: template.templateType,
             modifiedOn: template.modifiedOn,
-            params: templateParams || [], // Asegúrate de que tu plantilla tenga una propiedad params
+            params: template.params || [], // Asegúrate de que tu plantilla tenga una propiedad params
           }));
 
           setTemplates(processedTemplates);
@@ -107,7 +107,7 @@ function AddNumber (){
     data.append('src.name', 'YESVARIOS');
     data.append('template', JSON.stringify({
       id: selectedTemplate.id,
-      params: selectedTemplate.params || [] // Asegúrate de que tu plantilla tenga una propiedad params
+      params: templateParams || [] // Asegúrate de que tu plantilla tenga una propiedad params
     }));
 
     try {
@@ -212,8 +212,12 @@ function AddNumber (){
 }
 
 const ContainerBox = styled.div`
-
+background-color: #f7f7f7;
+padding: 15px;
+border-radius: 10px;
 overflow-y: scroll;
+max-height: 300px;
+max-width: 500px;
 scroll-behavior: smooth;
 `;
 
