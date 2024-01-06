@@ -212,12 +212,8 @@ function AddNumber (){
 }
 
 const ContainerBox = styled.div`
-background-color: #f7f7f7;
-padding: 15px;
-border-radius: 10px;
+
 overflow-y: scroll;
-max-height: 300px;
-max-width: 500px;
 scroll-behavior: smooth;
 `;
 
