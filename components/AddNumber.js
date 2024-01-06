@@ -3,7 +3,17 @@ import React, {useState, useEffect} from "react";
 
 function AddNumber (){
      //logica agregar numero 
-  
+     const [showPopup, setShowPopup] = useState(false);
+
+     // Función para abrir la ventana emergente
+     const openPopup = () => {
+       setShowPopup(true);
+     };
+   
+     // Función para cerrar la ventana emergente
+     const closePopup = () => {
+       setShowPopup(false);
+     };
   const [numericInputValue, setNumericInputValue] = useState('');
   const [templates, setTemplates] = useState([]);
   const [selectedTemplateId, setSelectedTemplateId] = useState('');
