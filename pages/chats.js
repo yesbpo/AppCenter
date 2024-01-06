@@ -712,7 +712,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
         <option value="" disabled>Select a template</option>
         {templates.map((template) => (
           <option key={template.id} value={template.id}>
-            {template.data},{template.params}
+            {template.params}
           </option>
         ))}
       </select>
