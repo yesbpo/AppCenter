@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
  
 
 function AddNumber (){
+  const [parametros, setParametros] = useState('')
      //logica agregar numero 
      const [showPopup, setShowPopup] = useState(false);
 
@@ -22,7 +23,8 @@ function AddNumber (){
   function contarOcurrencias(texto, patron) {
     const regex = new RegExp(patron, 'g');
     const coincidencias = texto.match(regex);
-    
+    const componentes = Array.from({ length: coincidencias }, (v, index) => index);
+    setParametros(componentes)
     return coincidencias ? coincidencias.length : 0;
   }
   const handleParamChange = (param, value) => {
@@ -186,7 +188,7 @@ function AddNumber (){
           template.params && (
             <div key={template.id} className="mt-4">
               <h3 className="text-lg font-semibold">Parámetros:</h3>
-              {contarOcurrencias(template.data, '{{.*?}}').map((param) => (
+              {parametros.map((param) => (
                 <div key={param} className="mt-2">
                   <label htmlFor={param} className="block text-sm font-medium text-gray-700">
                     {param}:
