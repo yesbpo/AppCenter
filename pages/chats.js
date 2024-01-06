@@ -813,44 +813,74 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
   if(session){
     return (
     <>
-      {showPopup && <div>
-        <button onClick={closePopup}>Cerrar</button>
-      <label htmlFor="destinationInput">Número de destino (máximo 10 dígitos):</label>
+     {showPopup && (
+  <div className="fixed inset-0 flex items-center justify-center">
+    <div className="bg-black bg-opacity-50 absolute inset-0" onClick={closePopup}></div>
+    <div className="bg-white p-6 rounded shadow-lg w-96">
+      <button
+        onClick={closePopup}
+        className="mb-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Cerrar
+      </button>
+
+      <label htmlFor="destinationInput" className="block text-sm font-medium text-gray-700">
+        Número de destino (máximo 10 dígitos):
+      </label>
       <input
         type="text"
         id="destinationInput"
         value={numericInputValue}
         onChange={(e) => handleNumericInputChange(e.target.value)}
+        className="mt-1 p-2 border border-gray-300 rounded-md"
       />
-      <button onClick={handleAgregarNumeroClick}>Agregar Número</button>
+      <button
+        onClick={handleAgregarNumeroClick}
+        className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Agregar Número
+      </button>
 
-      <h2>Plantillas:</h2>
-      <select value={selectedTemplateId} onChange={handleTemplateChange}>
+      <h2 className="mt-4 text-lg font-semibold">Plantillas:</h2>
+      <select
+        value={selectedTemplateId}
+        onChange={handleTemplateChange}
+        className="mt-1 p-2 border border-gray-300 rounded-md"
+      >
         <option value="" disabled>Select a template</option>
         {templates.map((template) => (
-          <option key={template.id} value={template.id}>{template.data}</option>
+          <option key={template.id} value={template.id}>
+            {template.data}
+          </option>
         ))}
       </select>
 
-      {templates.map((template) => (
-        template.id === selectedTemplateId && template.params && (
-          <div key={template.id}>
-            <h3>Parámetros:</h3>
-            {template.params.map((param) => (
-              <div key={param}>
-                <label htmlFor={param}>{param}:</label>
-                <input
-                  type="text"
-                  id={param}
-                  value={templateParams[param] || ''}
-                  onChange={(e) => handleParamChange(param, e.target.value)}
-                />
-              </div>
-            ))}
-          </div>
-        )
-      ))}
-    </div>}
+      {templates.map(
+        (template) =>
+          template.id === selectedTemplateId &&
+          template.params && (
+            <div key={template.id} className="mt-4">
+              <h3 className="text-lg font-semibold">Parámetros:</h3>
+              {template.params.map((param) => (
+                <div key={param} className="mt-2">
+                  <label htmlFor={param} className="block text-sm font-medium text-gray-700">
+                    {param}:
+                  </label>
+                  <input
+                    type="text"
+                    id={param}
+                    value={templateParams[param] || ''}
+                    onChange={(e) => handleParamChange(param, e.target.value)}
+                    className="mt-1 p-2 border border-gray-300 rounded-md"
+                  />
+                </div>
+              ))}
+            </div>
+          )
+      )}
+    </div>
+  </div>
+)}
         <Layout className='big-box'>
                 
         <Box className='estados' onLoad={updateuser()}>
