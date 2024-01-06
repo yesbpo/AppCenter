@@ -141,7 +141,7 @@ function AddNumber (){
     enviarSolicitud();
   };
     return(
-        <div className="fixed inset-0 flex items-center justify-center">
+        <ContainerBox className="fixed inset-0 flex items-center justify-center">
     <div className="bg-black bg-opacity-50 " ></div>
     <div className="bg-white p-6 rounded shadow-lg w-96">
       <button
@@ -207,7 +207,18 @@ function AddNumber (){
           )
       )}
     </div>
-  </div>
+  </ContainerBox>
     )
 }
+
+const ContainerBox = styled.div`
+background-color: #f7f7f7;
+padding: 15px;
+border-radius: 10px;
+overflow-y: scroll;
+max-height: 300px;
+max-width: 500px;
+scroll-behavior: smooth;
+`;
+
 export default AddNumber
