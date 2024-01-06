@@ -68,6 +68,16 @@ function AddNumber (){
 
     fetchTemplates();
   }, []);
+  const handleParamChange = (param, value) => {
+    setTemplateParams((prevParams) => {
+      const updatedParams = {
+        ...prevParams,
+        [param]: value,
+      };
+      console.log('Updated Params:', updatedParams);
+      return updatedParams;
+    });
+  };
 
   const handleTemplateChange = (event) => {
     const selectedTemplateId = event.target.value;
