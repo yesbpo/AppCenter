@@ -112,7 +112,7 @@ const enviarSolicitud = async () => {
  data.append('src.name', 'YESVARIOS');
  data.append('template', JSON.stringify({
    id: selectedTemplate.id,
-   params: Object.values(templateParams).map(clave) || [] // Asegúrate de que tu plantilla tenga una propiedad params
+   params: Object.values(templateParams) || [] // Asegúrate de que tu plantilla tenga una propiedad params
  }));
 
  try {
