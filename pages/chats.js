@@ -819,7 +819,6 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
       </div>
       
     </ContainerBox >
-    </Box>
     {/* Contenedor de entrada y botones */}
     <div className='input-container'>
       <InputContainer className='input-box'>
@@ -853,6 +852,8 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
       )}
     </div>
 
+    </Box>
+    
     {/* Botones de acción */}
     <div className='action-buttons'>
       
