@@ -145,7 +145,7 @@ function AddNumber (){
          <button
         onClick={closePopup}
         className="mb-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-      >
+        style={{ position: 'absolute', top: '0', right: '0' }}>
         Cerrar
       </button>
       {showPopup &&  <ContainerBox className="fixed inset-0 flex items-center justify-center">
