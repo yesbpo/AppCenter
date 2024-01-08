@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import io from 'socket.io-client';
 import { useSession, signIn } from 'next-auth/react';
 import EmojiPicker from 'emoji-picker-react';
-import { PaperAirplaneIcon, PaperClipIcon } from '@heroicons/react/solid';
+import { PaperAirplaneIcon, PaperClipIcon, UserGroupIcon } from '@heroicons/react/solid';
 import AddNumber from '../components/AddNumber';
 const Chats = () => {
   const [showPopup, setShowPopup] = useState(false);
@@ -877,7 +877,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
         {contactos1.map((contacto, index) => (
           <li key={index}>
             <CustomButton onClick={() => setNumeroEspecifico(contacto.idChat2)}>
-              Usuario: {contacto.idChat2}
+              <UserGroupIcon/> {contacto.idChat2}
             </CustomButton>
           </li>
         ))}
