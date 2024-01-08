@@ -683,7 +683,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
   if(session){
     return (
     <>
-     {showPopup &&  <ContainerBox className="fixed inset-0 flex items-center justify-center">
+     {showPopup &&  <div className="fixed inset-0 flex items-center justify-center">
       <button
         onClick={closePopup}
         className="mb-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
@@ -749,7 +749,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
           )
       )}
     </div>
-  </ContainerBox>}
+  </div>}
         <Layout className='big-box'>
                 
         <Box className='estados' onLoad={updateuser()}>
