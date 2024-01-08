@@ -740,7 +740,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
                   <input
                     type="text"
                     id={param}
-                    onChange={(e) => handleParamChange(param, e.target.value)}
+                    onChange={(e) => handleParamChange(e.target.value)}
                     className="mt-1 p-2 border border-gray-300 rounded-md"
                   />
                 </div>
