@@ -128,7 +128,7 @@ const enviarSolicitud = async () => {
    });
 
    const responseData = await response.json();
-   console.log('Respuesta:', responseData);
+   console.log('Respuesta:', data.params);
  } catch (error) {
    console.error('Error al enviar la solicitud:', error);
  }
