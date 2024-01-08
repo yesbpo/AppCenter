@@ -782,12 +782,12 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
             <div
               key={index}
               className={`mensaje ${mensaje.type_message} ${
-                mensaje.type_comunication === 'message-event' ? 'bg-white text-right' : 'bg-green text-left'
+                mensaje.type_comunication === 'message-event' ? 'bg-white text-right shadow-md p-4 bg-gray rounded-md' : 'bg-green text-left shadow-md p-4 bg-gray rounded-md'
               } p-4 mb-4`}
             > 
         
               { mensaje.type_message === 'image'  ? (
-                <img src={limpiarLink(mensaje.content) || mensaje.content}  alt="Imagen" className="w-15vw" />
+                <img src={limpiarLink(mensaje.content) || mensaje.content}  alt="Imagen" className="w-15vw shadow-md p-4 bg-gray rounded-md" />
               ) :mensaje.type_message === 'image' ? (
                 <img src={limpiarLink(mensaje.content)} alt="Imagen" className="w-15vw" />
               ): mensaje.type_message === 'audio' ? (
