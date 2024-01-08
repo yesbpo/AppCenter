@@ -75,10 +75,10 @@ useEffect(() => {
 }, []);
 const handleParamChange = (param, value) => {
  setTemplateParams((prevParams) => {
-   const updatedParams = {
+   const updatedParams = [
      ...prevParams,
-     [param]: value,
-   };
+      value,
+   ];
    console.log('Updated Params:', updatedParams);
    return updatedParams;
  });
@@ -112,7 +112,7 @@ const enviarSolicitud = async () => {
  data.append('src.name', 'YESVARIOS');
  data.append('template', JSON.stringify({
    id: selectedTemplate.id,
-   params: ["hola","hola"] || [] // Asegúrate de que tu plantilla tenga una propiedad params
+   params: templateParams || [] // Asegúrate de que tu plantilla tenga una propiedad params
  }));
 
  try {
