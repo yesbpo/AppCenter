@@ -762,9 +762,11 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
         </Box>
         <Container>
         <Box className='container-messages w-50vw h-40vh flex'>
-  {/* Contenedor del cha  t */}
+  {/* Contenedor del chat */}
   <div className='chat-container '>
     <h2>Chat {numeroEspecifico}</h2>
+    <BotonEnviar onClick={actualizarEstadoChat}>Gestionar</BotonEnviar>
+    <BotonEnviar onClick={actualizarEstadoChatCerrados}>Cerrar</BotonEnviar>
     <ContainerBox ref={containerRef} className='bg-primary'>
       <div className='message-list '>
         {(() => {
@@ -826,8 +828,17 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
         />
         <BotonEnviar onClick={enviarMensaje}><PaperAirplaneIcon className="h-5 w-5" /></BotonEnviar>
         <button onClick={toggleEmojiPicker}>😊</button>
-      <BotonEnviar onClick={actualizarEstadoChat}>Gestionar</BotonEnviar>
-      <BotonEnviar onClick={actualizarEstadoChatCerrados}>Cerrar</BotonEnviar>
+        <label className="custom-file-input-label" onClick={handleButtonClick}>
+      <PaperClipIcon className="w-5 h-10 mr-2" />{file.name }
+      </label>
+      <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+         // Puedes ajustar las extensiones permitidas
+      />
+      
         
       </InputContainer>
       {showEmojiPicker && (
@@ -841,16 +852,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
     {/* Botones de acción */}
     <div className='action-buttons'>
       
-      <label className="custom-file-input-label" onClick={handleButtonClick}>
-      <PaperClipIcon className="w-5 h-10 mr-2" />{file.name }
-      </label>
-      <input
-        type="file"
-        ref={fileInputRef}
-        style={{ display: 'none' }}
-        onChange={handleFileChange}
-         // Puedes ajustar las extensiones permitidas
-      />
+      
       <div>
       <div>
       
