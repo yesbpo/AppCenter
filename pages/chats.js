@@ -73,7 +73,7 @@ useEffect(() => {
 
  fetchTemplates();
 }, []);
-const handleParamChange = (param, value) => {
+const handleParamChange = (value) => {
  setTemplateParams((prevParams) => {
    const updatedParams = [
      ...prevParams,
