@@ -766,7 +766,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
   
   <div className='chat-container '>
     <Box className="bg-primary">
-    <h2 className='bg-white'>Chat {numeroEspecifico}</h2>
+    <h2 className='text-white'>Chat {numeroEspecifico}</h2>
     <BotonEnviar onClick={actualizarEstadoChat}>Gestionar</BotonEnviar>
     <BotonEnviar onClick={actualizarEstadoChatCerrados}>Cerrar</BotonEnviar>
     <ContainerBox ref={containerRef} className='bg-primary'>
