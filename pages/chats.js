@@ -878,7 +878,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
         {contactos1.map((contacto, index) => (
           <li key={index}>
             <CustomButton onClick={() => setNumeroEspecifico(contacto.idChat2)}>
-              <UserGroupIcon className="w-2vw"/> {contacto.idChat2}
+              <UserGroupIcon className="w-5 h-10"/> {contacto.idChat2}
             </CustomButton>
           </li>
         ))}
