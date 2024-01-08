@@ -73,12 +73,12 @@ useEffect(() => {
 
  fetchTemplates();
 }, []);
-const handleParamChange = (value) => {
+const handleParamChange = (param, value) => {
  setTemplateParams((prevParams) => {
-   const updatedParams = [
+   const updatedParams = {
      ...prevParams,
-      value,
-   ];
+     [param]: value,
+   };
    console.log('Updated Params:', updatedParams);
    return updatedParams;
  });
@@ -740,7 +740,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
                   <input
                     type="text"
                     id={param}
-                    onChange={(e) => handleParamChange(e.target.value)}
+                    onChange={(e) => handleParamChange(param, e.target.value)}
                     className="mt-1 p-2 border border-gray-300 rounded-md"
                   />
                 </div>
