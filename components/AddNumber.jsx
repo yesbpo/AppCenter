@@ -141,15 +141,17 @@ function AddNumber (){
     enviarSolicitud();
   };
     return(
-        <ContainerBox className="fixed inset-0 flex items-center justify-center">
-    <div className="bg-black bg-opacity-50 " ></div>
-    <div className="bg-white p-6 rounded shadow-lg w-96">
-      <button
+      <div>
+         <button
         onClick={closePopup}
         className="mb-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
       >
         Cerrar
       </button>
+        <ContainerBox className="fixed inset-0 flex items-center justify-center">
+    <div className="bg-black bg-opacity-50 " ></div>
+    <div className="bg-white p-6 rounded shadow-lg w-96">
+     
 
       <label htmlFor="destinationInput" className="block text-sm font-medium text-gray-700">
         Número de destino (máximo 10 dígitos):
@@ -207,6 +209,8 @@ function AddNumber (){
       )}
     </div>
   </ContainerBox>
+      </div>
+        
     )
 }
 
