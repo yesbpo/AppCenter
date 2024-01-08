@@ -824,7 +824,11 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
           onKeyDown={manejarPresionarEnter}
           onChange={(e) => setInputValue(e.target.value)}
         />
+        <BotonEnviar onClick={enviarMensaje}><PaperAirplaneIcon className="h-5 w-5" /></BotonEnviar>
         <button onClick={toggleEmojiPicker}>😊</button>
+      <BotonEnviar onClick={actualizarEstadoChat}>Gestionar</BotonEnviar>
+      <BotonEnviar onClick={actualizarEstadoChatCerrados}>Cerrar</BotonEnviar>
+        
       </InputContainer>
       {showEmojiPicker && (
         <EmojiPicker
@@ -836,9 +840,7 @@ const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
 
     {/* Botones de acción */}
     <div className='action-buttons'>
-      <BotonEnviar onClick={enviarMensaje}><PaperAirplaneIcon className="h-5 w-5" /></BotonEnviar>
-      <BotonEnviar onClick={actualizarEstadoChat}>Gestionar</BotonEnviar>
-      <BotonEnviar onClick={actualizarEstadoChatCerrados}>Cerrar</BotonEnviar>
+      
       <label className="custom-file-input-label" onClick={handleButtonClick}>
       <PaperClipIcon className="w-5 h-10 mr-2" />{file.name }
       </label>
