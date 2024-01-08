@@ -148,7 +148,7 @@ function AddNumber (){
       >
         Cerrar
       </button>
-        <ContainerBox className="fixed inset-0 flex items-center justify-center">
+      {showPopup &&  <ContainerBox className="fixed inset-0 flex items-center justify-center">
     <div className="bg-black bg-opacity-50 " ></div>
     <div className="bg-white p-6 rounded shadow-lg w-96">
      
@@ -208,7 +208,7 @@ function AddNumber (){
           )
       )}
     </div>
-  </ContainerBox>
+  </ContainerBox>}
       </div>
         
     )
